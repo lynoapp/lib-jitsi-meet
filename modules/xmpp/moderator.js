@@ -1,6 +1,5 @@
-/* global $, Promise */
-
 import { getLogger } from 'jitsi-meet-logger';
+import $ from 'jquery';
 import { $iq, Strophe } from 'strophe.js';
 
 import Settings from '../settings/Settings';

@@ -1,4 +1,4 @@
-/* global $ */
+import $ from 'jquery';
 
 import MediaDirection from '../../service/RTC/MediaDirection';
 import browser from '../browser';

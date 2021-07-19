@@ -1,7 +1,6 @@
-/* global __filename, $, Promise */
-
 import EventEmitter from 'events';
 import { getLogger } from 'jitsi-meet-logger';
+import $ from 'jquery';
 import isEqual from 'lodash.isequal';
 import { Strophe } from 'strophe.js';
 

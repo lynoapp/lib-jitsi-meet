@@ -88,6 +88,9 @@ module.exports = {
     resolve: {
         extensions: [ '.ts', '.js' ]
     },
+    externals: {
+        jquery: 'jQuery'
+    },
     plugins: [
         analyzeBundle
             && new BundleAnalyzerPlugin({

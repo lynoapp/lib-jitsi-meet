@@ -1,4 +1,4 @@
-/* globals $ */
+import $ from 'jquery';
 import { $iq } from 'strophe.js';
 
 import SDP from './SDP';

@@ -1,4 +1,3 @@
-/* global __filename, module */
 import EventEmitter from 'events';
 import { getLogger } from 'jitsi-meet-logger';
 

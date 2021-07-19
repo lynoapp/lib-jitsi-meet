@@ -1,5 +1,3 @@
-/* global __filename */
-
 import { getLogger } from 'jitsi-meet-logger';
 
 import SDPUtil from './SDPUtil';

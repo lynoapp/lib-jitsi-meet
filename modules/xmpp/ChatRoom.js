@@ -1,6 +1,5 @@
-/* global $, __filename */
-
 import { getLogger } from 'jitsi-meet-logger';
+import $ from 'jquery';
 import isEqual from 'lodash.isequal';
 import { $iq, $msg, $pres, Strophe } from 'strophe.js';
 

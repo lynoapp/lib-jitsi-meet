@@ -1,5 +1,3 @@
-/* global __filename */
-
 import { queue } from 'async';
 import { getLogger } from 'jitsi-meet-logger';
 

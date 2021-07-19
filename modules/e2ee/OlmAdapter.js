@@ -1,4 +1,4 @@
-/* global __filename, Olm */
+/* global Olm */
 
 import base64js from 'base64-js';
 import { getLogger } from 'jitsi-meet-logger';
