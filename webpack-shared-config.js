@@ -89,7 +89,7 @@ module.exports = {
         extensions: [ '.ts', '.js' ]
     },
     externals: {
-        jquery: 'jQuery'
+        jquery: 'jquery'
     },
     plugins: [
         analyzeBundle
