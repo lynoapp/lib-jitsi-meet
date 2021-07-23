@@ -1,6 +1,6 @@
 {
   "name": "@lyno/lib-jitsi-meet",
-  "version": "2.5963.0-beta.5",
+  "version": "2.5963.1",
   "description": "JS library for accessing Jitsi server side deployments",
   "repository": {
     "type": "git",
@@ -92,7 +92,6 @@
     "watch": "webpack --config webpack.config.js --watch --mode development",
     "types": "tsc JitsiMeetJS.js --declaration --allowJs --emitDeclarationOnly --outDir types/generated"
   },
-  "browser": "./lib-jitsi-meet.min.js",
   "module": "./dist/JitsiMeetJS.js",
   "types": "./types/hand-crafted/JitsiMeetJS.d.ts",
   "license": "Apache-2.0"
