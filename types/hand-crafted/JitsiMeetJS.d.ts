@@ -15,7 +15,7 @@ import { ParticipantConnectionStatus } from './modules/connectivity/ParticipantC
 import { DetectionEvents } from './modules/detection/DetectionEvents';
 import TrackVADEmitter, { VADProcessor } from './modules/detection/TrackVADEmitter';
 import RecordingConstants from './modules/recording/recordingConstants';
-import JitsiTrack from './modules/RTC/JitsiTrack';
+import JitsiLocalTrack from './modules/RTC/JitsiLocalTrack';
 import PrecallTest from './modules/statistics/PrecallTest';
 import AuthUtil from './modules/util/AuthUtil';
 import ScriptUtil from './modules/util/ScriptUtil';
@@ -117,7 +117,7 @@ export type JitsiMeetJSType = {
 
   setGlobalLogOptions: ( options: unknown ) => void; // TODO:
 
-  createLocalTracks: ( options: CreateLocalTracksOptions, firePermissionPromptIsShownEvent?: boolean, originalOptions?: CreateLocalTracksOptions ) => Promise<Array<JitsiTrack> | JitsiConferenceErrors>; // TODO:
+  createLocalTracks: ( options: CreateLocalTracksOptions, firePermissionPromptIsShownEvent?: boolean, originalOptions?: CreateLocalTracksOptions ) => Promise<Array<JitsiLocalTrack> | JitsiConferenceErrors>; // TODO:
 
   createTrackVADEmitter: ( localAudioDeviceId: string, sampleRate: 256 | 512 | 1024 | 4096 | 8192 | 16384, vadProcessor: VADProcessor ) => Promise<TrackVADEmitter>;
 

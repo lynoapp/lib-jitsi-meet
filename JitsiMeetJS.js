@@ -292,7 +292,7 @@ export default _mergeNamespaceAndModule({
      * will finish the execution with rejected Promise.
      *
      * @deprecated old firePermissionPromptIsShownEvent
-     * @returns {Promise.<{Array.<JitsiTrack>}, JitsiConferenceError>} A promise
+     * @returns {Promise.<{Array.<JitsiLocalTrack>}, JitsiConferenceError>} A promise
      * that returns an array of created JitsiTracks if resolved, or a
      * JitsiConferenceError if rejected.
      */
