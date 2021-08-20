@@ -33,12 +33,12 @@ export default class StatsCollector {
     currentStatsReport: any;
     previousStatsReport: any;
     audioLevelReportHistory: {};
-    audioLevelsIntervalId: NodeJS.Timeout;
+    audioLevelsIntervalId: NodeJS.Timer;
     eventEmitter: any;
     conferenceStats: ConferenceStats;
     audioLevelsIntervalMilis: any;
     speakerList: any[];
-    statsIntervalId: NodeJS.Timeout;
+    statsIntervalId: NodeJS.Timer;
     statsIntervalMilis: any;
     /**
      * Maps SSRC numbers to {@link SsrcStats}.

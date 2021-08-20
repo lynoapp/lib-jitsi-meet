@@ -24,9 +24,10 @@ export default class ChatRoom extends Listenable {
     constructor(connection: XmppConnection, jid: any, password: any, XMPP: any, options: any);
     xmpp: any;
     connection: XmppConnection;
-    roomjid: any;
+    roomjid: string;
     myroomjid: any;
     password: any;
+    replaceParticipant: boolean;
     members: {};
     presMap: {};
     presHandlers: {};
@@ -57,7 +58,7 @@ export default class ChatRoom extends Listenable {
      * @returns {Promise} - resolved when join completes. At the time of this
      * writing it's never rejected.
      */
-    join(password: string): Promise<any>;
+    join(password: string, replaceParticipant: any): Promise<any>;
     /**
      *
      * @param fromJoin - Whether this is initial presence to join the room.
@@ -91,7 +92,7 @@ export default class ChatRoom extends Listenable {
      *
      * @param {Strophe.Status} status - The Strophe connection status.
      */
-    onConnStatusChanged(status: any): void;
+    onConnStatusChanged(status: Strophe.Status): void;
     /**
      *
      * @param pres
@@ -375,4 +376,5 @@ import XmppConnection from "./XmppConnection";
 import Moderator from "./moderator";
 import Lobby from "./Lobby";
 import AVModeration from "./AVModeration";
+import { Strophe } from "strophe.js";
 import * as MediaType from "../../service/RTC/MediaType";

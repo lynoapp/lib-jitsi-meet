@@ -11,6 +11,7 @@ export default class RTC extends Listenable {
   static obtainAudioAndVideoPermissions: ( options: { devices: unknown[], resolution: string, cameraDeviceId: string, micDeviceId: string } ) => Promise<unknown>; // TODO:
   initializeBridgeChannel: ( perrconnection: RTCPeerConnection, wsUrl: string ) => void;
   onCallEnded: () => void;
+  setDesktopSharingFrameRate: (maxFps: number) => void;
   setReceiverVideoConstraint: ( maxFrameHeight: number ) => void;
   selectEndpoints: ( ids: string[] ) => void;
   static addListener: ( eventType: string, listener: unknown ) => void; // TODO: this should be typed to an enum of eventTypes with appropriate definition for the listeners

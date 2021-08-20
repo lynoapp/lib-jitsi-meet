@@ -10,6 +10,7 @@ declare class RTCUtils extends Listenable {
   stopMediaStream: ( mediaStream: MediaStream ) => void;
   isDesktopSharingEnabled: () => boolean;
   setAudioOutputDevice: ( deviceId: string ) => Promise<unknown>; // TODO:
+  setDesktopSharingFrameRate: (maxFps: number) => void;
   getAudioOutputDevice: () => string;
   getCurrentlyAvailableMediaDevices: () => unknown[]; // TODO:
   getEventDataForActiveDevice: ( device: MediaDeviceInfo ) => unknown; // TODO:

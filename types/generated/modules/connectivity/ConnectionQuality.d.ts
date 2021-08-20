@@ -29,6 +29,10 @@ export default class ConnectionQuality {
      */
     _lastConnectionQualityUpdate: number;
     /**
+     * Conference options.
+     */
+    _options: any;
+    /**
      * Maps a participant ID to an object holding connection quality
      * statistics received from this participant.
      */
@@ -58,7 +62,6 @@ export default class ConnectionQuality {
     _calculateConnectionQuality(videoType: {
         CAMERA: string;
         DESKTOP: string;
-        NONE: string;
     }, isMuted: boolean, resolutionName: any): any;
     /**
      * Updates the localConnectionQuality value

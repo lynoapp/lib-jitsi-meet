@@ -12,7 +12,7 @@ declare namespace parser {
 export default class ChatRoom extends Listenable {
   constructor( connection: XmppConnection, jid: string, password: string, XMPP: unknown, options?: { disableFocus?: boolean, disableDiscoInfo?: boolean, enableLobby?: boolean } );
   initPresenceMap: ( options?: { statsId: string, deploymentInfo?: { userRegion: string } } ) => void; // TODO: check the options
-  join: ( password: string ) => Promise<unknown>; // TODO:
+  join: ( password: string, replaceParticipant?: boolean ) => Promise<unknown>; // TODO:
   sendPresence: ( fromJoin: boolean ) => void;
   doLeave: () => void;
   discoRoomInfo: () => unknown;

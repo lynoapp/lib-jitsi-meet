@@ -205,8 +205,10 @@ declare class JitsiConference {
     /**
      * Joins the conference.
      * @param password {string} the password
+     * @param replaceParticipant {boolean} whether the current join replaces
+     * an existing participant with same jwt from the meeting.
      */
-    join(password: string): void;
+    join(password: string, replaceParticipant?: boolean): void;
     /**
      * Authenticates and upgrades the role of the local participant/user.
      *
@@ -238,6 +240,7 @@ declare class JitsiConference {
     leave(): Promise<any>;
     private _getActiveMediaSession;
     private _getMediaSessions;
+    private _sendBridgeVideoTypeMessage;
     /**
      * Returns name of this conference.
      */
@@ -575,8 +578,10 @@ declare class JitsiConference {
      * @param botType the member botType, if any
      * @param fullJid the member full jid, if any
      * @param features the member botType, if any
+     * @param isReplaceParticipant whether this join replaces a participant with
+     * the same jwt.
      */
-    onMemberJoined(jid: any, nick: any, role: any, isHidden: any, statsID: any, status: any, identity: any, botType: any, fullJid: any, features: any): void;
+    onMemberJoined(jid: any, nick: any, role: any, isHidden: any, statsID: any, status: any, identity: any, botType: any, fullJid: any, features: any, isReplaceParticipant: any): void;
     private _onMucJoined;
     private _updateFeatures;
     private _onMemberBotTypeChanged;
@@ -590,8 +595,10 @@ declare class JitsiConference {
      * @param {string?} kickedParticipantId - when it is not a kick for local participant,
      * this is the id of the participant which was kicked.
      * @param {string} reason - reason of the participant to kick
+     * @param {boolean?} isReplaceParticipant - whether this is a server initiated kick in order
+     * to replace it with a participant with same jwt.
      */
-    onMemberKicked(isSelfPresence: boolean, actorId: string, kickedParticipantId: string | null, reason: string): void;
+    onMemberKicked(isSelfPresence: boolean, actorId: string, kickedParticipantId: string | null, reason: string, isReplaceParticipant: boolean | null): void;
     /**
      * Method called on local MUC role change.
      * @param {string} role the name of new user's role as defined by XMPP MUC.
@@ -613,7 +620,7 @@ declare class JitsiConference {
      * received.
      * @param {jQuery} answer a jQuery selector pointing to 'jingle' IQ element
      */
-    onCallAccepted(session: any, answer: any): void;
+    onCallAccepted(session: any, answer: JQueryStatic): void;
     /**
      * Callback called by the Jingle plugin when 'transport-info' is received.
      * @param {JingleSessionPC} session the Jingle session for which the IQ was
@@ -621,7 +628,7 @@ declare class JitsiConference {
      * @param {jQuery} transportInfo a jQuery selector pointing to 'jingle' IQ
      * element
      */
-    onTransportInfo(session: any, transportInfo: any): void;
+    onTransportInfo(session: any, transportInfo: JQueryStatic): void;
     /**
      * Notifies this JitsiConference that a JitsiRemoteTrack was removed from
      * the conference.
@@ -650,7 +657,7 @@ declare class JitsiConference {
      * @param {TraceablePeerConnection} pc the peer connection which will be used
      * to listen for new WebRTC Data Channels (in the 'datachannel' mode).
      */
-    _setBridgeChannel(offerIq: any, pc: any): void;
+    _setBridgeChannel(offerIq: JQueryStatic, pc: any): void;
     private _rejectIncomingCall;
     /**
      * Handles the call ended event.
@@ -921,6 +928,14 @@ declare class JitsiConference {
      * no P2P connection.
      */
     getP2PConnectionState(): string | null;
+    /**
+     * Configures the peerconnection so that a given framre rate can be achieved for desktop share.
+     *
+     * @param {number} maxFps The capture framerate to be used for desktop tracks.
+     * @returns {boolean} true if the operation is successful, false otherwise.
+     */
+    setDesktopSharingFrameRate(maxFps: number): boolean;
+    _desktopSharingFrameRate: number;
     /**
      * Manually starts new P2P session (should be used only in the tests).
      */

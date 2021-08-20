@@ -31,7 +31,7 @@ export default class Moderator {
     focusUserJid: any;
     getFocusUserJid(): any;
     getFocusComponent(): any;
-    createConferenceIq(): any;
+    createConferenceIq(): Strophe.Builder;
     parseSessionId(resultIq: any): void;
     parseConfigOptions(resultIq: any): void;
     /**
@@ -76,3 +76,4 @@ export default class Moderator {
     getPopupLoginUrl(urlCallback: any, failureCallback: any): void;
     logout(callback: any): void;
 }
+import { Strophe } from "strophe.js";

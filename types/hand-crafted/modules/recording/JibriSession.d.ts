@@ -10,14 +10,14 @@ export default class JibriSession {
   } );
   getError: () => Jibri.error | undefined;
   getID: () => string | undefined;
-  getInitiator: () => JitsiParticipant | undefined;
+  getInitiator: () => JitsiParticipant | string;
   getLiveStreamViewURL: () => string | undefined;
   getStatus: () => Jibri.status | undefined;
-  getTerminator: () => JitsiParticipant | undefined;
+  getTerminator: () => JitsiParticipant | string;
   getMode: () => Jibri.mode;
   setError: ( error: Jibri.error ) => void;
   setLiveStreamViewURL: ( url: string ) => void;
   setStatus: ( status: Jibri.status ) => void;
-  setInitiator: ( participant: JitsiParticipant ) => void;
-  setTerminator: ( participant: JitsiParticipant ) => void;
+  setInitiator: ( participant: JitsiParticipant | string ) => void;
+  setTerminator: ( participant: JitsiParticipant | string ) => void;
 }

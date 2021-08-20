@@ -213,6 +213,10 @@ export default class TraceablePeerConnection {
     stats: {};
     statsinterval: number;
     /**
+     * Flag used to indicate if simulcast is turned off and a cap of 500 Kbps is applied on screensharing.
+     */
+    _capScreenshareBitrate: any;
+    /**
     * Flag used to indicate if the browser is running in unified  plan mode.
     */
     _usesUnifiedPlan: boolean;
@@ -371,7 +375,6 @@ export default class TraceablePeerConnection {
     _createRemoteTrack(ownerEndpointId: string, stream: MediaStream, track: MediaStreamTrack, mediaType: typeof MediaType, videoType?: {
         CAMERA: string;
         DESKTOP: string;
-        NONE: string;
     }, ssrc: number, muted: boolean): void;
     /**
      * Handles remote stream removal.
@@ -414,6 +417,12 @@ export default class TraceablePeerConnection {
      */
     _removeRemoteTrackById(streamId: string, trackId: string): JitsiRemoteTrack | undefined;
     /**
+     * Returns a map with keys msid/mediaType and <tt>TrackSSRCInfo</tt> values.
+     * @param {RTCSessionDescription} desc the local description.
+     * @return {Map<string,TrackSSRCInfo>}
+     */
+    _extractSSRCMap(desc: RTCSessionDescription): Map<string, any>;
+    /**
      *
      * @param {JitsiLocalTrack} localTrack
      */
@@ -451,6 +460,7 @@ export default class TraceablePeerConnection {
             ssrcs: Array<number>;
         }[];
     };
+    private _isSharingLowFpsScreen;
     /**
      * Checks if screensharing is in progress.
      *
@@ -511,6 +521,12 @@ export default class TraceablePeerConnection {
         VP8: string;
         VP9: string;
     };
+    /**
+     * Enables or disables simulcast for screenshare based on the frame rate requested for desktop track capture.
+     *
+     * @param {number} maxFps framerate to be used for desktop track capture.
+     */
+    setDesktopSharingFrameRate(maxFps: number): void;
     /**
      * Sets the codec preference on the peerconnection. The codec preference goes into effect when
      * the next renegotiation happens.
@@ -707,7 +723,7 @@ export default class TraceablePeerConnection {
      * @param {TrackSSRCInfo} ssrcObj
      * @return {number|null} the primary SSRC or <tt>null</tt>
      */
-    _extractPrimarySSRC(ssrcObj: TrackSSRCInfo): number | null;
+    _extractPrimarySSRC(ssrcObj: any): number | null;
     private _processLocalSSRCsMap;
     addIceCandidate(candidate: any): Promise<void>;
     /**
@@ -753,29 +769,18 @@ export default class TraceablePeerConnection {
         }[];
     };
     /**
+     * Returns if the peer connection uses Unified plan implementation.
+     *
+     * @returns {boolean} True if the pc uses Unified plan, false otherwise.
+     */
+    usesUnifiedPlan(): boolean;
+    /**
      * Creates a text representation of this <tt>TraceablePeerConnection</tt>
      * instance.
      * @return {string}
      */
     toString(): string;
 }
-export type SSRCGroupInfo = {
-    /**
-     * group's SSRCs
-     */
-    ssrcs: Array<number>;
-    semantics: string;
-};
-export type TrackSSRCInfo = {
-    /**
-     * track's SSRCs
-     */
-    ssrcs: Array<number>;
-    /**
-     * track's SSRC groups
-     */
-    groups: Array<SSRCGroupInfo>;
-};
 import RTC from "./RTC";
 import * as MediaType from "../../service/RTC/MediaType";
 import JitsiRemoteTrack from "./JitsiRemoteTrack";

@@ -92,6 +92,7 @@ export default class TraceablePeerConnection {
   addTrack: ( track: JitsiLocalTrack, isInitiator?: boolean ) => Promise<void>;
   addTrackUnmute: ( track: JitsiLocalTrack ) => Promise<boolean>;
   getConfiguredVideoCodec: () => CodecMimeType;
+  setDesktopSharingFrameRate: (maxFps: number) => void;
   setVideoCodecs: ( preferredCodec?: CodecMimeType, disabledCodec?: CodecMimeType ) => void;
   isMediaStreamInPc: ( mediaStream: MediaStream ) => boolean;
   removeTrack: ( localTrack: JitsiLocalTrack ) => void;
@@ -116,6 +117,7 @@ export default class TraceablePeerConnection {
   createOffer: ( constraints: unknown ) => unknown; // TODO:
   addIceCandidate: ( candidate: unknown ) => unknown; // TODO:
   generateNewStreamSSRCInfo: (track: JitsiLocalTrack) => TraceablePeerConnection['localSSRCs'];
+  usesUnifiedPlan: () => boolean;
   getActiveSimulcastStreams: () => number;
   getStats: () => unknown; // TODO:
   toString: () => string;

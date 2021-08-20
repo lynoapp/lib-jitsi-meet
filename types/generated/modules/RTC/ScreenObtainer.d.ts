@@ -101,4 +101,18 @@ declare namespace ScreenObtainer {
      * @param errorCallback - The error callback.
      */
     function obtainScreenFromGetDisplayMediaRN(callback: any, errorCallback: any): void;
+    /**
+     * Sets the max frame rate to be used for a desktop track capture.
+     *
+     * @param {number} maxFps capture frame rate to be used for desktop tracks.
+     * @returns {void}
+     */
+    function setDesktopSharingFrameRate(maxFps: number): void;
+    /**
+     * Sets the max frame rate to be used for a desktop track capture.
+     *
+     * @param {number} maxFps capture frame rate to be used for desktop tracks.
+     * @returns {void}
+     */
+    function setDesktopSharingFrameRate(maxFps: number): void;
 }

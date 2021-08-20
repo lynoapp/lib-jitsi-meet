@@ -74,6 +74,10 @@ export default class JitsiTrack {
     protected _setStream(stream: MediaStream): void;
     stream: any;
     /**
+     * Returns the video type (camera or desktop) of this track.
+     */
+    getVideoType(): any;
+    /**
      * Returns the type (audio or video) of this track.
      */
     getType(): any;

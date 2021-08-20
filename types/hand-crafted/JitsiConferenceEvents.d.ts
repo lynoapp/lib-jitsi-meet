@@ -29,6 +29,7 @@ export enum JitsiConferenceEvents {
   MESSAGE_RECEIVED = 'conference.messageReceived',
   NO_AUDIO_INPUT = 'conference.no_audio_input',
   NOISY_MIC = 'conference.noisy_mic',
+  NON_PARTICIPANT_MESSAGE_RECEIVED = 'conference.non_participant_message_received',
   PRIVATE_MESSAGE_RECEIVED = 'conference.privateMessageReceived',
   PARTICIPANT_CONN_STATUS_CHANGED = 'conference.participant_conn_status_changed',
   PARTCIPANT_FEATURES_CHANGED = 'conference.partcipant_features_changed',

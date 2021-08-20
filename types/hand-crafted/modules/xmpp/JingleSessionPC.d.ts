@@ -15,8 +15,8 @@ export default class JingleSessionPC extends JingleSession {
   sendIceFailedNotification: () => void;
   addIceCandidates: ( elem: unknown ) => void; // TODO:
   readSsrcInfo: ( contents: unknown ) => void; // TODO:
-  //generateRecvonlySsrc: () => void;
-  getConfiguredVideoCodec: () => unknown; // TODO:
+  generateRecvonlySsrc: () => void;
+  getConfiguredVideoCodec: () => CodecMimeType;
   acceptOffer: ( jingleOffer: JQuery, success: ( params: unknown ) => unknown, failure: ( params: unknown ) => unknown, localTracks?: JitsiLocalTrack[] ) => void; // TODO:
   invite: ( localTracks?: JitsiLocalTrack[] ) => void;
   sendSessionInitiate: ( offerSdp: string ) => void;

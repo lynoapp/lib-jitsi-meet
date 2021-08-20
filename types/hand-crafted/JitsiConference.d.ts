@@ -25,7 +25,7 @@ export default class JitsiConference {
     },
     connection: unknown
   } ); // TODO:
-  join: ( password: string ) => void;
+  join(password: string, replaceParticipant?: boolean): void;
   authenticateAndUpgradeRole: ( options: unknown ) => Promise<unknown>; // TODO:
   isJoined: () => boolean;
   isP2PEnabled: () => boolean;
@@ -78,15 +78,15 @@ export default class JitsiConference {
   revokeOwner: ( id: string ) => void;
   kickParticipant: ( id: string, reason?: string ) => void;
   muteParticipant: ( id: string, mediaType?: MediaType ) => void;
-  onMemberJoined: ( jid: string, nick: string, role: string, isHidden: boolean, statsID?: unknown, status?: string, identity?: unknown, botType?: unknown, fullJid?: string, features?: unknown ) => void;
+  onMemberJoined: ( jid: string, nick: string, role: string, isHidden: boolean, statsID?: unknown, status?: string, identity?: unknown, botType?: unknown, fullJid?: string, features?: unknown, isReplaceParticipant?: boolean ) => void;
   onMemberLeft: ( jid: string ) => void;
-  onMemberKicked: ( isSelfPresence: boolean, actorId: string, kickedParticipantId?: string, reason?: string ) => void;
+  onMemberKicked: ( isSelfPresence: boolean, actorId: string, kickedParticipantId?: string, reason?: string, isReplaceParticipant?: boolean ) => void;
   onLocalRoleChanged: ( role: string ) => void;
   onUserRoleChanged: ( jid: string, role: string ) => void;
   onDisplayNameChanged: ( jid: string, displayName: string ) => void;
   onRemoteTrackAdded: ( track: JitsiRemoteTrack ) => void;
-  onCallAccepted: ( session: unknown, answer: unknown ) => void; // TODO: answer is a jQuery object, unknown = JingleSessionPC which doesn't exist
-  onTransportInfo: ( session: unknown, transportInfo: unknown ) => void; // TODO: transportInfo is a jQuery object, unknown = JingleSessionPC which doesn't exist
+  onCallAccepted: ( session: unknown, answer: JQuery ) => void; // TODO: answer is a jQuery object, unknown = JingleSessionPC which doesn't exist
+  onTransportInfo: ( session: unknown, transportInfo: JQuery ) => void; // TODO: transportInfo is a jQuery object, unknown = JingleSessionPC which doesn't exist
   onRemoteTrackRemoved: ( removedTrack: JitsiRemoteTrack ) => void;
   onIncomingCall: ( jingleSession: unknown, jingleOffer: unknown, now: unknown ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
   onCallEnded: ( jingleSession: unknown, reasonCondition: string, reasonText: string ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
@@ -127,6 +127,7 @@ export default class JitsiConference {
   getProperty: ( key: string ) => unknown; // TODO:
   isP2PActive: () => boolean;
   getP2PConnectionState: () => string | null;
+  setDesktopSharingFrameRate: (maxFps: number) => boolean;
   startP2PSession: () => void;
   stopP2PSession: () => void;
   getSpeakerStats: () => unknown; // TODO:

@@ -3,7 +3,7 @@ import JitsiTrack from './modules/RTC/JitsiTrack';
 import { MediaType } from './service/RTC/MediaType';
 
 export default class JitsiParticipant {
-  constructor( jid: unknown, conference: unknown, displayName: unknown, hidden: boolean, statsID: string, status: string, identity: unknown ); // TODO:
+  constructor( jid: unknown, conference: unknown, displayName: unknown, hidden: boolean, statsID: string, status: string, identity: unknown, isReplacing?: boolean, isReplaced?: boolean ); // TODO:
   getConference: () => JitsiConference;
   getProperty: ( name: string ) => string;
   hasAnyVideoTrackWebRTCMuted: () => boolean;
@@ -18,10 +18,14 @@ export default class JitsiParticipant {
   getStatus: () => string;
   isModerator: () => boolean;
   isHidden: () => boolean;
+  isReplacing: () => boolean;
+  isReplaced: () => boolean;
   isAudioMuted: () => boolean;
   isVideoMuted: () => boolean;
   getRole: () => string;
   setRole: ( role: string ) => void;
+  setIsReplacing: (newIsReplacing: string) => void;
+  setIsReplaced: (newIsReplaced: boolean) => void;
   supportsDTMF: () => boolean;
   hasFeature: ( feature: string ) => boolean;
   getFeatures: () => Promise<Set<string> | Error>;

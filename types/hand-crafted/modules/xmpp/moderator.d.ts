@@ -8,7 +8,7 @@ export default class Moderator {
   setFocusUserJid: ( focusJid: string ) => void;
   getFocusUserJid: () => string;
   getFocusComponent: () => unknown; // TODO:
-  createConferenceIq: () => unknown; // TODO:
+  createConferenceIq: () => Strophe.Builder; // TODO:
   parseSessionId: ( resultIq: unknown ) => void; // TODO:
   parseConfigOptions: ( resultIq: unknown ) => void; // TODO:
   allocateConferenceFocus: () => Promise<unknown>; // TODO: jsdoc suggests an argument

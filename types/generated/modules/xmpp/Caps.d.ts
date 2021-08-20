@@ -17,7 +17,7 @@ export default class Caps extends Listenable {
      * @param {String} node the value of the node attribute of the "c" xml node
      * that will be sent to the other participants
      */
-    constructor(connection?: any, node?: string);
+    constructor(connection?: Strophe.Connection, node?: string);
     node: string;
     disco: any;
     version: string;
@@ -96,3 +96,4 @@ export default class Caps extends Listenable {
     _generateVersion(): void;
 }
 import Listenable from "../util/Listenable";
+import { Strophe } from "strophe.js";

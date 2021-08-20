@@ -25,9 +25,9 @@ export default class JibriSession {
     /**
      * Returns the initiator of the session instance.
      *
-     * @returns {JitsiParticipant|undefined} The participant that started the session.
+     * @returns {JitsiParticipant|string} The participant that started the session.
      */
-    getInitiator(): any | undefined;
+    getInitiator(): any | string;
     /**
      * Returns the streaming URL of the session.
      *
@@ -43,9 +43,9 @@ export default class JibriSession {
     /**
      * Returns the jid of the participant that stopped the session.
      *
-     * @returns {JitsiParticipant|undefined} The participant that stopped the session.
+     * @returns {JitsiParticipant|string} The participant that stopped the session.
      */
-    getTerminator(): any | undefined;
+    getTerminator(): any | string;
     /**
      * Returns the current recording mode of the session, such as "file".
      *
@@ -79,17 +79,18 @@ export default class JibriSession {
     setStatus(status: string): void;
     _status: string;
     /**
-     * Sets the creator's jid of the session.
-     * @param {JitsiParticipant} participant - The creator of the session.
+     * Sets the participant that started the session.
+     * @param {JitsiParticipant | string} participant - The participant or resource id
+     * if local participant.
      */
-    setInitiator(participant: any): void;
+    setInitiator(participant: any | string): void;
     _initiator: any;
     /**
-     * Sets the jid of the participant that stopped the session.
-     * @param {JitsiParticipant} participant  - The participant's jid,
-     * that stopped the session.
+     * Sets the participant that stopped the session.
+     * @param {JitsiParticipant | string} participant - The participant or the resource id
+     * if local participant.
      */
-    setTerminator(participant: any): void;
+    setTerminator(participant: any | string): void;
     _terminator: any;
     /**
      * Sends a message to start the actual recording.
@@ -143,7 +144,7 @@ export default class JibriSession {
      * streaming service provider.
      * @returns Object - The XMPP IQ message.
      */
-    _createIQ({ action, appData, broadcastId, focusMucJid, streamId }: string): any;
+    _createIQ({ action, appData, broadcastId, focusMucJid, streamId }: string): import("strophe.js").Strophe.Builder;
     /**
      * Handles the error from an iq and stores the error.
      *

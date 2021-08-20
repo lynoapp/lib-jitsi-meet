@@ -18,7 +18,7 @@ declare class LocalStatsCollector {
      */
     constructor(stream: any, interval: any, callback: any);
     stream: any;
-    intervalId: NodeJS.Timeout;
+    intervalId: NodeJS.Timer;
     intervalMilis: any;
     audioLevel: number;
     callback: any;

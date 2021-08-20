@@ -13,7 +13,7 @@ export default class XmppConnection extends Listenable {
      *
      * @returns {Strophe.Status}
      */
-    static get Status(): any;
+    static get Status(): Strophe.Status;
     /**
      * Initializes new connection instance.
      *
@@ -45,7 +45,7 @@ export default class XmppConnection extends Listenable {
         websocketKeepAlive: number;
         websocketKeepAliveUrl: number;
     };
-    _stropheConn: any;
+    _stropheConn: Strophe.Connection;
     _usesWebsocket: boolean;
     _rawInputTracker: LastSuccessTracker;
     _resumeTask: ResumeTask;
@@ -132,7 +132,7 @@ export default class XmppConnection extends Listenable {
      *
      * @returns {Strophe.Status}
      */
-    get status(): any;
+    get status(): Strophe.Status;
     /**
      * Adds a connection plugin to this instance.
      *
@@ -171,7 +171,7 @@ export default class XmppConnection extends Listenable {
      * @private
      */
     private _stropheConnectionCb;
-    _status: any;
+    _status: Strophe.Status;
     /**
      * Clears the list of IQs and rejects deferred Promises with an error.
      *
@@ -242,7 +242,7 @@ export default class XmppConnection extends Listenable {
      * @param {Element|Strophe.Builder} stanza - The stanza to send.
      * @returns {void}
      */
-    send(stanza: Element | any): void;
+    send(stanza: Element | Strophe.Builder): void;
     /**
      * Helper function to send IQ stanzas.
      *
@@ -298,5 +298,6 @@ export default class XmppConnection extends Listenable {
     private _tryResumingConnection;
 }
 import Listenable from "../util/Listenable";
+import { Strophe } from "strophe.js";
 import LastSuccessTracker from "./StropheLastSuccess";
 import ResumeTask from "./ResumeTask";

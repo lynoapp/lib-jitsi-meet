@@ -6,7 +6,7 @@ import TraceablePeerConnection from './TraceablePeerConnection';
 export default class JitsiTrack {
   constructor( conference: JitsiConference, stream: unknown, track: unknown, streamInactiveHandler: unknown, trackMediaType: unknown, videoType: unknown ); // TODO:
   disposed: boolean;
-  videoType: VideoType;
+  getVideoType: () => VideoType;
   getType: () => MediaType;
   isAudioTrack: () => boolean;
   isWebRTCTrackMuted: () => boolean;
