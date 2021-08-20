@@ -37,22 +37,23 @@ export default class BrowserCapabilities extends BrowserDetection {
     }
 
     /**
-     * Checks if the current browser is Chromium based, that is, it's either
-     * Chrome / Chromium or uses it as its engine, but doesn't identify as
-     * Chrome.
+     * Checks if the current browser is Chromium based, i.e., it's either Chrome / Chromium or uses it as its engine,
+     * but doesn't identify as Chrome.
      *
      * This includes the following browsers:
-     * - Chrome and Chromium
-     * - Other browsers which use the Chrome engine, but are detected as Chrome,
-     *   such as Brave and Vivaldi
-     * - Browsers which are NOT Chrome but use it as their engine, and have
-     *   custom detection code: Opera, Electron and NW.JS
+     * - Chrome and Chromium.
+     * - Other browsers which use the Chrome engine, but are detected as Chrome, such as Brave and Vivaldi.
+     * - Browsers which are NOT Chrome but use it as their engine, and have custom detection code: Opera, Electron
+     *   and NW.JS.
+     * This excludes
+     * - Chrome on iOS since it uses WKWebView.
      */
     isChromiumBased() {
-        return this.isChrome()
+        return (this.isChrome()
             || this.isElectron()
             || this.isNWJS()
-            || this.isOpera();
+            || this.isOpera())
+            && !this.isWebKitBased();
     }
 
     /**
@@ -111,7 +112,7 @@ export default class BrowserCapabilities extends BrowserDetection {
      * otherwise.
      */
     supportsVideoMuteOnConnInterrupted() {
-        return this.isChromiumBased() || this.isReactNative() || this.isWebKitBased();
+        return this.isChromiumBased() || this.isReactNative();
     }
 
     /**
@@ -131,7 +132,7 @@ export default class BrowserCapabilities extends BrowserDetection {
      */
     supportsCodecPreferences() {
         return Boolean(window.RTCRtpTransceiver
-            && typeof window.RTCRtpTransceiver.setCodecPreferences !== 'undefined'
+            && 'setCodecPreferences' in window.RTCRtpTransceiver.prototype
             && window.RTCRtpReceiver
             && typeof window.RTCRtpReceiver.getCapabilities !== 'undefined')
 
@@ -240,8 +241,7 @@ export default class BrowserCapabilities extends BrowserDetection {
      */
     supportsInsertableStreams() {
         if (!(typeof window.RTCRtpSender !== 'undefined'
-            && (window.RTCRtpSender.prototype.createEncodedStreams
-                || window.RTCRtpSender.prototype.createEncodedVideoStreams))) {
+            && window.RTCRtpSender.prototype.createEncodedStreams)) {
             return false;
         }
 
