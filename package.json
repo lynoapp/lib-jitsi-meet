@@ -4,7 +4,7 @@
   "description": "JS library for accessing Jitsi server side deployments",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jitsi/lib-jitsi-meet"
+    "url": "git://github.com/lynoapp/lib-jitsi-meet"
   },
   "keywords": [
     "jingle",
