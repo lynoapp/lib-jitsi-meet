@@ -1,6 +1,6 @@
 {
   "name": "@lyno/lib-jitsi-meet",
-  "version": "2.6173.0",
+  "version": "2.6173.1",
   "description": "JS library for accessing Jitsi server side deployments",
   "repository": {
     "type": "git",
