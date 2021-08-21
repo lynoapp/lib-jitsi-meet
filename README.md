@@ -15,6 +15,8 @@ Changes to the [original repo](https://github.com/jitsi/lib-jitsi-meet):
 yarn add @lyno/lib-jitsi-meet
 ```
 
+### Usage
+
 ```typescript
 import JitsiMeetJS from '@lyno/lib-jitsi-meet';
 
@@ -22,7 +24,7 @@ JitsiMeetJS.init(initOptions);
 const connection = new JitsiMeetJS.JitsiConnection(null, token, options);
 ```
 
-### Alternative use
+### Alternative useage
 
 We also provide a prebundled version with jQuery bundled in.
 
