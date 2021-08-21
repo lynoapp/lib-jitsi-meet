@@ -7,6 +7,7 @@ Changes to the [original repo](https://github.com/jitsi/lib-jitsi-meet):
 - export unbundled code
 - TypeScript support
 - published to [npm](https://www.npmjs.com/package/@lyno/lib-jitsi-meet)
+- updated dependencies
 
 ## Installation
 
