@@ -1229,12 +1229,17 @@ JitsiConference.prototype.replaceTrack = function(oldTrack, newTrack) {
             return Promise.reject(
                 new JitsiTrackError(JitsiTrackErrors.TRACK_IS_DISPOSED));
         }
+        this.onLocalTrackRemoved(oldTrack);
     }
     if (newTrack) {
         if (newTrack.disposed) {
             return Promise.reject(
                 new JitsiTrackError(JitsiTrackErrors.TRACK_IS_DISPOSED));
         }
+
+        // Now handle the addition of the newTrack at the
+        // JitsiConference level
+        this._setupNewTrack(newTrack);
     }
 
     if (oldTrack && !oldTrackBelongsToConference) {
@@ -1244,9 +1249,6 @@ JitsiConference.prototype.replaceTrack = function(oldTrack, newTrack) {
     // Now replace the stream at the lower levels
     return this._doReplaceTrack(oldTrackBelongsToConference ? oldTrack : null, newTrack)
         .then(() => {
-            oldTrackBelongsToConference && this.onLocalTrackRemoved(oldTrack);
-            newTrack && this._setupNewTrack(newTrack);
-
             // Send 'VideoTypeMessage' on the bridge channel when a video track is added/removed.
             if ((oldTrackBelongsToConference && oldTrack?.isVideoTrack()) || newTrack?.isVideoTrack()) {
                 this._sendBridgeVideoTypeMessage(newTrack);
