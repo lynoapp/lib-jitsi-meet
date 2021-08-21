@@ -3230,10 +3230,7 @@ JitsiConference.prototype._updateProperties = function(properties = {}) {
 
             // The number of jitsi-videobridge instances currently used for the
             // conference.
-            'bridge-count',
-
-            // The conference creation time (set by jicofo).
-            'created-ms'
+            'bridge-count'
         ];
 
         analyticsKeys.forEach(key => {
