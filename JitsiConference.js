@@ -1964,6 +1964,9 @@ JitsiConference.prototype.onLocalRoleChanged = function(role) {
     // Emit role changed for local  JID
     this.eventEmitter.emit(
         JitsiConferenceEvents.USER_ROLE_CHANGED, this.myUserId(), role);
+
+    // if local user became moderator then he should share startMutedPolicy with others
+    this.setStartMutedPolicy(this.startMutedPolicy);
 };
 
 JitsiConference.prototype.onUserRoleChanged = function(jid, role) {
