@@ -268,6 +268,11 @@ export default function JitsiConference(options) {
     this.recordingManager = new RecordingManager(this.room);
 
     /**
+     * State flag, check if the conference was destroyed.
+     */
+    this.destroyed = false;
+
+    /**
      * If the conference.joined event has been sent this will store the timestamp when it happened.
      *
      * @type {undefined|number}
@@ -700,6 +705,7 @@ JitsiConference.prototype.leave = async function() {
     this._signalingLayer.setChatRoom(null);
 
     this.room = null;
+    this.destroyed = true;
 
     let leaveError;
 
