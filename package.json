@@ -17,7 +17,7 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "@jitsi/js-utils": "1.0.6",
-    "@jitsi/sdp-interop": "github:jitsi/sdp-interop#5fc4af6dcf8a6e6af9fedbcd654412fd47b1b4ae",
+    "@jitsi/sdp-interop": "github:jitsi/sdp-interop#4669790bb9020cc8f10c1d1f3823c26b08497547",
     "@jitsi/sdp-simulcast": "0.4.0",
     "async": "3.2.1",
     "base64-js": "1.5.1",

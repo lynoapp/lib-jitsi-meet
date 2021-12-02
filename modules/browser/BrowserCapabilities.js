@@ -57,6 +57,18 @@ export default class BrowserCapabilities extends BrowserDetection {
     }
 
     /**
+     * Checks if the current platform is iOS.
+     *
+     * @returns {boolean}
+     */
+    isIosBrowser() {
+        const { userAgent, maxTouchPoints, platform } = navigator;
+
+        return Boolean(userAgent.match(/iP(ad|hone|od)/i))
+            || (maxTouchPoints && maxTouchPoints > 2 && /MacIntel/.test(platform));
+    }
+
+    /**
      * Checks if the current browser is WebKit based. It's either
      * Safari or uses WebKit as its engine.
      *
@@ -233,6 +245,19 @@ export default class BrowserCapabilities extends BrowserDetection {
             || (typeof navigator.mediaDevices !== 'undefined'
                 && typeof navigator.mediaDevices.getDisplayMedia
                     !== 'undefined');
+    }
+
+    /**
+     * Checks if the browser supports WebRTC Encoded Transform, an alternative
+     * to insertable streams.
+     *
+     * NOTE: At the time of this writing the only browser supporting this is
+     * Safari / WebKit, behind a flag.
+     *
+     * @returns {boolean} {@code true} if the browser supports it.
+     */
+    supportsEncodedTransform() {
+        return Boolean(window.RTCRtpScriptTransform);
     }
 
     /**

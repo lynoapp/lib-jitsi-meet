@@ -1,3 +1,5 @@
+/* global RTCRtpScriptTransform */
+
 import { getLogger } from 'jitsi-meet-logger';
 
 const logger = getLogger(__filename);
@@ -72,14 +74,23 @@ export default class E2EEcontext {
         }
         receiver[kJitsiE2EE] = true;
 
-        const receiverStreams = receiver.createEncodedStreams();
+        if (window.RTCRtpScriptTransform) {
+            const options = {
+                operation: 'decode',
+                participantId
+            };
 
-        this._worker.postMessage({
-            operation: 'decode',
-            readableStream: receiverStreams.readable,
-            writableStream: receiverStreams.writable,
-            participantId
-        }, [ receiverStreams.readable, receiverStreams.writable ]);
+            receiver.transform = new RTCRtpScriptTransform(this._worker, options);
+        } else {
+            const receiverStreams = receiver.createEncodedStreams();
+
+            this._worker.postMessage({
+                operation: 'decode',
+                readableStream: receiverStreams.readable,
+                writableStream: receiverStreams.writable,
+                participantId
+            }, [ receiverStreams.readable, receiverStreams.writable ]);
+        }
     }
 
     /**
@@ -96,14 +107,23 @@ export default class E2EEcontext {
         }
         sender[kJitsiE2EE] = true;
 
-        const senderStreams = sender.createEncodedStreams();
+        if (window.RTCRtpScriptTransform) {
+            const options = {
+                operation: 'encode',
+                participantId
+            };
 
-        this._worker.postMessage({
-            operation: 'encode',
-            readableStream: senderStreams.readable,
-            writableStream: senderStreams.writable,
-            participantId
-        }, [ senderStreams.readable, senderStreams.writable ]);
+            sender.transform = new RTCRtpScriptTransform(this._worker, options);
+        } else {
+            const senderStreams = sender.createEncodedStreams();
+
+            this._worker.postMessage({
+                operation: 'encode',
+                readableStream: senderStreams.readable,
+                writableStream: senderStreams.writable,
+                participantId
+            }, [ senderStreams.readable, senderStreams.writable ]);
+        }
     }
 
     /**

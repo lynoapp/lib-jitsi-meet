@@ -1527,22 +1527,17 @@ export default class ChatRoom extends Listenable {
     /**
      *
      * @param mute
-     * @param callback
      */
-    setVideoMute(mute, callback) {
+    setVideoMute(mute) {
         this.sendVideoInfoPresence(mute);
-        if (callback) {
-            callback(mute);
-        }
     }
 
     /**
      *
      * @param mute
-     * @param callback
      */
-    setAudioMute(mute, callback) {
-        return this.sendAudioInfoPresence(mute, callback);
+    setAudioMute(mute) {
+        this.sendAudioInfoPresence(mute);
     }
 
     /**
@@ -1567,14 +1562,10 @@ export default class ChatRoom extends Listenable {
     /**
      *
      * @param mute
-     * @param callback
      */
-    sendAudioInfoPresence(mute, callback) {
+    sendAudioInfoPresence(mute) {
         // FIXME resend presence on CONNECTED
         this.addAudioInfoToPresence(mute) && this.sendPresence();
-        if (callback) {
-            callback();
-        }
     }
 
     /**

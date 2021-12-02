@@ -29,7 +29,7 @@ export default class AsyncQueue {
         try {
             task(finishedCallback);
         } catch (error) {
-            logger.error(`Task failed: ${error}`);
+            logger.error(`Task failed: ${error?.stack}`);
             finishedCallback(error);
         }
     }

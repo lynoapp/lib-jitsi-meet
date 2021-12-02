@@ -101,7 +101,6 @@ Moderator.prototype.isSipGatewayEnabled = function() {
 };
 
 Moderator.prototype.onMucMemberLeft = function(jid) {
-    logger.info(`Someone left is it focus ? ${jid}`);
     const resource = Strophe.getResourceFromJid(jid);
 
     if (resource === 'focus') {

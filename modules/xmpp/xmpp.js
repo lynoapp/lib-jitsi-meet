@@ -174,7 +174,7 @@ export default class XMPP extends Listenable {
 
         this._initStrophePlugins();
 
-        this.caps = new Caps(this.connection, this.options.clientNode);
+        this.caps = new Caps(this.connection, /* clientNode */ 'https://jitsi.org/jitsi-meet');
 
         // Initialize features advertised in disco-info
         this.initFeaturesList();
@@ -205,10 +205,11 @@ export default class XMPP extends Listenable {
         this.caps.addFeature('urn:xmpp:jingle:transports:dtls-sctp:1');
         this.caps.addFeature('urn:xmpp:jingle:apps:rtp:audio');
         this.caps.addFeature('urn:xmpp:jingle:apps:rtp:video');
+        this.caps.addFeature('http://jitsi.org/json-encoded-sources');
 
         // Disable RTX on Firefox 83 and older versions because of
         // https://bugzilla.mozilla.org/show_bug.cgi?id=1668028
-        if (!(this.options.disableRtx || (browser.isFirefox() && browser.isVersionLessThan(84)))) {
+        if (!(this.options.disableRtx || (browser.isFirefox() && browser.isVersionLessThan(94)))) {
             this.caps.addFeature('urn:ietf:rfc:4588');
         }
         if (this.options.enableOpusRed === true && browser.supportsAudioRed()) {
@@ -439,6 +440,10 @@ export default class XMPP extends Listenable {
                         .catch(e => logger.warn('Error getting features from lobby.', e && e.message));
                 }
             }
+
+            if (identity.type === 'shard') {
+                this.options.deploymentInfo.shard = this.connection.shard = identity.name;
+            }
         });
 
         if (this.avModerationComponentAddress
@@ -541,13 +546,6 @@ export default class XMPP extends Listenable {
 
         this._processDiscoInfoIdentities(identities, features);
 
-        // check for shard name in identities
-        identities.forEach(i => {
-            if (i.type === 'shard') {
-                this.options.deploymentInfo.shard = i.name;
-            }
-        });
-
         if (foundIceServers || identities.size > 0 || features.size > 0) {
             this.connection._stropheConn.deleteHandler(this._sysMessageHandler);
             this._sysMessageHandler = null;
@@ -636,8 +634,7 @@ export default class XMPP extends Listenable {
      */
     createRoom(roomName, options, onCreateResource) {
         // There are cases (when using subdomain) where muc can hold an uppercase part
-        let roomjid = `${roomName}@${options.customDomain
-            ? options.customDomain : this.options.hosts.muc.toLowerCase()}/`;
+        let roomjid = `${this.getRoomJid(roomName, options.customDomain)}/`;
 
         const mucNickname = onCreateResource
             ? onCreateResource(this.connection.jid, this.authenticatedUser)
@@ -647,6 +644,27 @@ export default class XMPP extends Listenable {
         roomjid += mucNickname;
 
         return this.connection.emuc.createRoom(roomjid, null, options);
+    }
+
+    /**
+     * Returns the room JID based on the passed room name and domain.
+     *
+     * @param {string} roomName - The room name.
+     * @param {string} domain - The domain.
+     * @returns {string} - The room JID.
+     */
+    getRoomJid(roomName, domain) {
+        return `${roomName}@${domain ? domain : this.options.hosts.muc.toLowerCase()}`;
+    }
+
+    /**
+     * Check if a room with the passed JID is already created.
+     *
+     * @param {string} roomJid - The JID of the room.
+     * @returns {boolean}
+     */
+    isRoomCreated(roomName, domain) {
+        return this.connection.emuc.isRoomCreated(this.getRoomJid(roomName, domain));
     }
 
     /**
