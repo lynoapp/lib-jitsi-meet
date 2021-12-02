@@ -49,7 +49,7 @@ export default class JingleSessionPC extends JingleSession {
      * @param {XmppConnection} connection - The XMPP connection instance.
      * @param mediaConstraints the media constraints object passed to createOffer/Answer, as defined
      * by the WebRTC standard
-     * @param iceConfig the ICE servers config object as defined by the WebRTC standard.
+     * @param pcConfig The {@code RTCConfiguration} to use for the WebRTC peer connection.
      * @param {boolean} isP2P indicates whether this instance is meant to be used in a direct, peer to
      * peer connection or <tt>false</tt> if it's a JVB connection.
      * @param {boolean} isInitiator indicates if it will be the side which initiates the session.
@@ -57,7 +57,7 @@ export default class JingleSessionPC extends JingleSession {
      *
      * @implements {SignalingLayer}
      */
-    constructor(sid: string, localJid: string, remoteJid: string, connection: XmppConnection, mediaConstraints: any, iceConfig: any, isP2P: boolean, isInitiator: boolean);
+    constructor(sid: string, localJid: string, remoteJid: string, connection: XmppConnection, mediaConstraints: any, pcConfig: any, isP2P: boolean, isInitiator: boolean);
     /**
      * The bridge session's identifier. One Jingle session can during
      * it's lifetime participate in multiple bridge sessions managed by
@@ -251,7 +251,7 @@ export default class JingleSessionPC extends JingleSession {
      * added, before the offer/answer cycle executes (for the local track
      * addition to be an atomic operation together with the offer/answer).
      */
-    invite(localTracks?: Array<any>): void;
+    invite(localTracks?: Array<JitsiLocalTrack>): void;
     /**
      * Sends 'session-initiate' to the remote peer.
      *
@@ -282,7 +282,7 @@ export default class JingleSessionPC extends JingleSession {
      * executes (for the local track addition to be an atomic operation together
      * with the offer/answer).
      */
-    setOfferAnswerCycle(jingleOfferAnswerIq: any, success: any, failure: any, localTracks?: Array<any>): void;
+    setOfferAnswerCycle(jingleOfferAnswerIq: any, success: any, failure: any, localTracks?: Array<JitsiLocalTrack>): void;
     /**
      * Updates the codecs on the peerconnection and initiates a renegotiation for the
      * new codec config to take effect.
@@ -398,7 +398,7 @@ export default class JingleSessionPC extends JingleSession {
      * @returns {list} a list of SDP line strings that should
      *  be added to the remote SDP
      */
-    _parseSsrcInfoFromSourceAdd(sourceAddElem: any, currentRemoteSdp: any): any;
+    _parseSsrcInfoFromSourceAdd(sourceAddElem: any, currentRemoteSdp: any): list;
     /**
      * Handles a Jingle source-add message for this Jingle session.
      * @param elem An array of Jingle "content" elements.
@@ -416,7 +416,7 @@ export default class JingleSessionPC extends JingleSession {
      * @returns {Promise<JitsiRemoteTrack>} Promise that resolves with the tracks that are removed or error if the
      * operation fails.
      */
-    removeRemoteStreamsOnLeave(id: string): Promise<any>;
+    removeRemoteStreamsOnLeave(id: string): Promise<JitsiRemoteTrack>;
     /**
      * Handles either Jingle 'source-add' or 'source-remove' message for this
      * Jingle session.
@@ -439,7 +439,7 @@ export default class JingleSessionPC extends JingleSession {
      * @returns type {SDP Object} the new remote SDP (after removing the lines
      *  in removeSsrcInfo
      */
-    _processRemoteRemoveSource(removeSsrcInfo: any): SDP;
+    _processRemoteRemoveSource(removeSsrcInfo: list): SDP;
     /**
      * Add the given ssrc lines to the current remote sdp
      * @param {list} addSsrcInfo a list of SDP line strings that
@@ -447,7 +447,7 @@ export default class JingleSessionPC extends JingleSession {
      * @returns type {SDP Object} the new remote SDP (after removing the lines
      *  in removeSsrcInfo
      */
-    _processRemoteAddSource(addSsrcInfo: any): SDP;
+    _processRemoteAddSource(addSsrcInfo: list): SDP;
     /**
      * Do a new o/a flow using the existing remote description
      * @param {string} [optionalRemoteSdp] optional, raw remote sdp
@@ -484,7 +484,7 @@ export default class JingleSessionPC extends JingleSession {
      * @returns {Promise} which resolves once the replacement is complete
      *  with no arguments or rejects with an error {string}
      */
-    replaceTrack(oldTrack: any | null, newTrack: any | null): Promise<any>;
+    replaceTrack(oldTrack: JitsiLocalTrack | null, newTrack: JitsiLocalTrack | null): Promise<any>;
     /**
      * Parse the information from the xml sourceRemoveElem and translate it
      *  into sdp lines
@@ -495,7 +495,7 @@ export default class JingleSessionPC extends JingleSession {
      * @returns {list} a list of SDP line strings that should
      *  be removed from the remote SDP
      */
-    _parseSsrcInfoFromSourceRemove(sourceRemoveElem: any, currentRemoteSdp: any): any;
+    _parseSsrcInfoFromSourceRemove(sourceRemoveElem: any, currentRemoteSdp: any): list;
     /**
      * Will print an error if there is any difference, between the SSRCs given
      * in the <tt>oldSDP</tt> and the ones currently described in
@@ -517,7 +517,7 @@ export default class JingleSessionPC extends JingleSession {
      * with a <tt>string</tt> that provides some error details in case something
      * goes wrong.
      */
-    addTrackAsUnmute(track: any): Promise<any>;
+    addTrackAsUnmute(track: JitsiLocalTrack): Promise<any>;
     /**
      * Remove local track as part of the mute operation.
      * @param {JitsiLocalTrack} track the local track to be removed
@@ -526,7 +526,7 @@ export default class JingleSessionPC extends JingleSession {
      * The promise will be rejected with a <tt>string</tt> that the describes
      * the error if anything goes wrong.
      */
-    removeTrackAsMute(track: any): Promise<any>;
+    removeTrackAsMute(track: JitsiLocalTrack): Promise<any>;
     /**
      * See {@link addTrackAsUnmute} and {@link removeTrackAsMute}.
      * @param {boolean} isMute <tt>true</tt> for "remove as mute" or

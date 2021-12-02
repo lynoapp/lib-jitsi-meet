@@ -62,7 +62,7 @@ export default class ConnectionQuality {
     _calculateConnectionQuality(videoType: {
         CAMERA: string;
         DESKTOP: string;
-    }, isMuted: boolean, resolutionName: any): any;
+    }, isMuted: boolean, resolutionName: Resolution): any;
     /**
      * Updates the localConnectionQuality value
      * @param values {number} the new value. Should be in [0, 100].
@@ -79,7 +79,7 @@ export default class ConnectionQuality {
      * the stats
      * @param data new statistics
      */
-    _updateLocalStats(tpc: any, data: any): void;
+    _updateLocalStats(tpc: TraceablePeerConnection, data: any): void;
     /**
      * Updates remote statistics
      * @param id the id of the remote participant

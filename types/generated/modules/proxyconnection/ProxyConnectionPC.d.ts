@@ -10,23 +10,19 @@ export default class ProxyConnectionPC {
      * Initializes a new {@code ProxyConnectionPC} instance.
      *
      * @param {Object} options - Values to initialize the instance with.
-     * @param {Object} [options.iceConfig] - The {@code RTCConfiguration} to use
-     * for the peer connection.
-     * @param {boolean} [options.isInitiator] - If true, the local client should
-     * send offers. If false, the local client should send answers. Defaults to
-     * false.
-     * @param {Function} options.onRemoteStream - Callback to invoke when a
-     * remote media stream has been received through the peer connection.
-     * @param {string} options.peerJid - The jid of the remote client with which
-     * the peer connection is being establish and which should receive direct
-     * messages regarding peer connection updates.
-     * @param {boolean} [options.receiveVideo] - Whether or not the peer
-     * connection should accept incoming video streams. Defaults to false.
-     * @param {Function} options.onSendMessage - Callback to invoke when a
-     * message has to be sent (signaled) out.
+     * @param {Object} [options.pcConfig] - The {@code RTCConfiguration} to use for the WebRTC peer connection.
+     * @param {boolean} [options.isInitiator] - If true, the local client should send offers. If false, the local
+     * client should send answers. Defaults to false.
+     * @param {Function} options.onRemoteStream - Callback to invoke when a remote media stream has been received
+     * through the peer connection.
+     * @param {string} options.peerJid - The jid of the remote client with which the peer connection is being establish
+     * and which should receive direct messages regarding peer connection updates.
+     * @param {boolean} [options.receiveVideo] - Whether or not the peer connection should accept incoming video
+     * streams. Defaults to false.
+     * @param {Function} options.onSendMessage - Callback to invoke when a message has to be sent (signaled) out.
      */
     constructor(options?: {
-        iceConfig?: any;
+        pcConfig?: any;
         isInitiator?: boolean;
         onRemoteStream: Function;
         peerJid: string;
@@ -34,7 +30,7 @@ export default class ProxyConnectionPC {
         onSendMessage: Function;
     });
     _options: {
-        iceConfig: any;
+        pcConfig: any;
         isInitiator: boolean;
         onRemoteStream: Function;
         peerJid: string;
@@ -48,7 +44,7 @@ export default class ProxyConnectionPC {
      *
      * @type {Array<JitsiTrack>}
      */
-    _tracks: Array<any>;
+    _tracks: Array<JitsiTrack>;
     /**
      * The active instance of {@code JingleSessionPC}.
      *
@@ -107,7 +103,7 @@ export default class ProxyConnectionPC {
      * to add to the peer connection.
      * @returns {void}
      */
-    start(localTracks?: Array<any>): void;
+    start(localTracks?: Array<JitsiLocalTrack>): void;
     /**
      * Begins the process of disconnecting from a remote peer and cleaning up
      * the peer connection.

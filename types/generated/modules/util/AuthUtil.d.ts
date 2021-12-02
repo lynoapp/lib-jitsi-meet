@@ -19,7 +19,7 @@
  * <tt>null</tt> if 'urlPattern' is not a string and the URL can not be
  * constructed.
  */
-export function getTokenAuthUrl(urlPattern: any, roomName: any, roleUpgrade: any): string;
+export function getTokenAuthUrl(urlPattern: any, roomName: any, roleUpgrade: bool): string;
 /**
  * Creates the URL pointing to JWT token authentication service. It is
  * formatted from the 'urlPattern' argument which can contain the following
@@ -41,4 +41,4 @@ export function getTokenAuthUrl(urlPattern: any, roomName: any, roleUpgrade: any
  * <tt>null</tt> if 'urlPattern' is not a string and the URL can not be
  * constructed.
  */
-export function getTokenAuthUrl(urlPattern: any, roomName: any, roleUpgrade: any): string;
+export function getTokenAuthUrl(urlPattern: any, roomName: any, roleUpgrade: bool): string;

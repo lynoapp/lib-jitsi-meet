@@ -5,10 +5,10 @@ import RTC from '../RTC/RTC';
 import Listenable from '../util/Listenable';
 
 export default class JingleSession extends Listenable {
-  constructor( sid: string, localJid: string, remoteJid: string, connection: XmppConnection, mediaConstraints: unknown, iceConfig: unknown, isInitiator: boolean ); // TODO:
+  constructor( sid: string, localJid: string, remoteJid: string, connection: XmppConnection, mediaConstraints: unknown, pcConfig: unknown, isInitiator: boolean ); // TODO:
   initiatorJid: () => string;
   responderJid: () => string;
-  initialize: ( room: ChatRoom, rtc: RTC, options: unknown ) => void; // TODO:
+  initialize: ( room: ChatRoom, rtc: RTC, options: object ) => void; // TODO:
   doInitialize: ( options: unknown ) => void; // TODO:
   addIceCandidates: ( contents: unknown ) => void; // TODO:
   getState: () => JingleSessionState;

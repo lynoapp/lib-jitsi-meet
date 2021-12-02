@@ -2,6 +2,7 @@ import XmppConnection from './XmppConnection';
 import Lobby from './Lobby';
 import Listenable from '../util/Listenable';
 import { MediaType } from '../../service/RTC/MediaType';
+import { PeerMediaInfo } from '../../service/RTC/SignalingLayer';
 import AVModeration from "./AVModeration";
 
 declare namespace parser {
@@ -42,13 +43,13 @@ export default class ChatRoom extends Listenable {
   isFocus: ( mucJid: string ) => boolean | null;
   isModerator: () => boolean;
   getMemberRole: ( peerJid: string ) => string | null;
-  setVideoMute: ( mute: unknown, callback: ( params: unknown ) => unknown ) => void; // TODO:
-  setAudioMute: ( mute: unknown, callback: ( params: unknown ) => unknown ) => void; // TODO:
+  setVideoMute: ( mute: unknown ) => void; // TODO:
+  setAudioMute: ( mute: unknown ) => void; // TODO:
   addAudioInfoToPresence: ( mute: unknown ) => void; // TODO:
-  sendAudioInfoPresence: ( mute: unknown, callback: ( params: unknown ) => unknown ) => void; // TODO:
+  sendAudioInfoPresence: ( mute: unknown ) => void; // TODO:
   addVideoInfoToPresence: ( mute: unknown ) => void; // TODO:
   sendVideoInfoPresence: ( mute: unknown ) => void; // TODO:
-  getMediaPresenceInfo: ( endpointId: string, mediaType: MediaType ) => unknown; // TODO: what is PeerMediaInfo
+  getMediaPresenceInfo: ( endpointId: string, mediaType: MediaType ) => PeerMediaInfo;
   isSIPCallingSupported: () => boolean;
   dial: ( number: string ) => unknown; // TODO:
   hangup: () => unknown; // TODO:

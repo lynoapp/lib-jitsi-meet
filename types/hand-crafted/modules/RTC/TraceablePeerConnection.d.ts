@@ -9,8 +9,9 @@ import SignalingLayer from '../../service/RTC/SignalingLayer';
 import { MediaType } from '../../service/RTC/MediaType';
 import { CodecMimeType } from '../../service/RTC/CodecMimeType';
 import TPCUtils from './TPCUtils';
+import EventEmitter from '../../EventEmitter';
 
-export default function TraceablePeerConnection( rtc: RTC, id: number, signalingLayer: unknown, iceConfig: unknown, constraints: unknown, isP2P: boolean, options: {
+export default function TraceablePeerConnection( rtc: RTC, id: number, signalingLayer: SignalingLayer, pcConfig: unknown, constraints: unknown, isP2P: boolean, options: {
   disableSimulcast: boolean;
   disableRtx: boolean;
   disabledCodec: string;
@@ -49,7 +50,7 @@ export default class TraceablePeerConnection {
     }[];
   }>;
   localUfrag: unknown; // TODO:
-  signalingLayer: SignalingLayer; // TODO:
+  signalingLayer: SignalingLayer;
   options: unknown; // TODO:
   peerconnection: RTCPeerConnection; // TODO: JSDocs refers to RTCPeerConnectionType = RTCPeerConnection
   videoBitrates: unknown; // TODO:
@@ -62,7 +63,7 @@ export default class TraceablePeerConnection {
   simulcast: unknown; // TODO: unknown = Simulcast refers to @jitsi/sdp-simulcast
   sdpConsistency: SdpConsistency; // TODO:
   localSdpMunger: LocalSdpMunger; // TODO:
-  eventEmitter: unknown; // TODO:
+  eventEmitter: EventEmitter<unknown>; // TODO:
   rtxModifier: RtxModifier; // TODO:
   senderVideoMaxHeight: unknown;
   trace: ( what: unknown, info: unknown ) => void; // TODO:
@@ -70,6 +71,7 @@ export default class TraceablePeerConnection {
   onsignalingstatechange: unknown; // TODO:
   oniceconnectionstatechange: unknown; // TODO:
   onnegotiationneeded: unknown; // TODO:
+  onconnectionstatechange: unknown; // TODO:
   ondatachannel: unknown; // TODO:
   getConnectionState: () => string;
   isSimulcastOn: () => boolean;

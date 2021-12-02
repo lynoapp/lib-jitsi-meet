@@ -23,6 +23,13 @@ export default class MucConnectionPlugin extends MucConnectionPlugin_base {
      */
     createRoom(jid: any, password: any, options: any): any;
     /**
+     *  Check if a room with the passed JID is already created.
+     *
+     * @param {string} roomJid - The JID of the room.
+     * @returns {boolean}
+     */
+    isRoomCreated(roomJid: string): boolean;
+    /**
      *
      * @param jid
      */

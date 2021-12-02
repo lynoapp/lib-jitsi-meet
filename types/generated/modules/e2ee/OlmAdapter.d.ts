@@ -25,10 +25,6 @@ export class OlmAdapter extends Listenable {
      * @returns {boolean}
      */
     static isSupported(): boolean;
-    /**
-     * Creates an adapter instance for the given conference.
-     */
-    constructor(conference: any);
     _conf: any;
     _init: Deferred;
     _key: boolean | Uint8Array;
@@ -124,7 +120,7 @@ export class OlmAdapter extends Listenable {
      * @param {string} error - The error message.
      * @returns {void}
      */
-    _sendError(participant: any, error: string): void;
+    _sendError(participant: JitsiParticipant, error: string): void;
     /**
      * Internal helper to send the given object to the given participant ID.
      * This function merely exists so the transport can be easily swapped.

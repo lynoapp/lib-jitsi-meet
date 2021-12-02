@@ -7,10 +7,10 @@ export default class AVModeration {
      *
      * @param {ChatRoom} room the main room.
      */
-    constructor(room: any);
+    constructor(room: ChatRoom);
     _xmpp: any;
-    _mainRoom: any;
-    _momderationEnabledByType: {
+    _mainRoom: ChatRoom;
+    _moderationEnabledByType: {
         audio: boolean;
         video: boolean;
     };
@@ -30,6 +30,10 @@ export default class AVModeration {
      * Approves that a participant can unmute by sending a msg with its jid to the component.
      */
     approve(mediaType: any, jid: any): void;
+    /**
+     * Rejects that a participant can unmute by sending a msg with its jid to the component.
+     */
+    reject(mediaType: any, jid: any): void;
     /**
      * Receives av_moderation parsed messages as json.
      * @param obj the parsed json content of the message to process.

@@ -20,8 +20,8 @@ export default class JitsiRemoteTrack extends JitsiTrack {
      * @throws {TypeError} if <tt>ssrc</tt> is not a number.
      * @constructor
      */
-    constructor(rtc: any, conference: any, ownerEndpointId: string, stream: MediaStream, track: MediaStreamTrack, mediaType: any, videoType: any, ssrc: number, muted: boolean, isP2P: boolean);
-    rtc: any;
+    constructor(rtc: RTC, conference: JitsiConference, ownerEndpointId: string, stream: MediaStream, track: MediaStreamTrack, mediaType: MediaType, videoType: VideoType, ssrc: number, muted: boolean, isP2P: boolean);
+    rtc: RTC;
     ssrc: number;
     ownerEndpointId: string;
     muted: boolean;
@@ -60,7 +60,7 @@ export default class JitsiRemoteTrack extends JitsiTrack {
      * @returns {boolean|*|JitsiRemoteTrack.muted} <tt>true</tt> if the track is
      * muted and <tt>false</tt> otherwise.
      */
-    isMuted(): boolean | any | any;
+    isMuted(): boolean | any | JitsiRemoteTrack.muted;
     /**
      * Returns the participant id which owns the track.
      *

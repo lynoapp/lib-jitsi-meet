@@ -2,7 +2,7 @@ import JitsiLocalTrack from '../RTC/JitsiLocalTrack';
 
 export default class ProxyConnectionPC {
   constructor( options?: {
-    iceConfig: unknown; // TODO:
+    pcConfig: unknown; // TODO:
     isInitiator: boolean;
     onRemoteStream: ( params: unknown ) => unknown; // TODO:
     peerJid: string;

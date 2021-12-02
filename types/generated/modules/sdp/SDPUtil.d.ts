@@ -230,7 +230,7 @@ declare namespace SDPUtil {
      * @returns {list<number>} a list of the ssrcs in the group
      *  parsed as numbers
      */
-    function parseGroupSsrcs(ssrcGroup: any): any;
+    function parseGroupSsrcs(ssrcGroup: any): list<number>;
     /**
      * Parses the ssrcs from the group sdp line and
      *  returns them as a list of numbers
@@ -239,7 +239,7 @@ declare namespace SDPUtil {
      * @returns {list<number>} a list of the ssrcs in the group
      *  parsed as numbers
      */
-    function parseGroupSsrcs(ssrcGroup: any): any;
+    function parseGroupSsrcs(ssrcGroup: any): list<number>;
     /**
      * Get the mline of the given type from the given sdp
      * @param {object} sdp sdp as parsed from transform.parse

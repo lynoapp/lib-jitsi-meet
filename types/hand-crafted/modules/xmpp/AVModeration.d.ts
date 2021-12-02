@@ -15,4 +15,8 @@ export default class AVModeration {
    * Approves that a participant can unmute by sending a msg with its jid to the component.
    */
   approve(mediaType: MediaType, jid: string): void;
+  /**
+   * Rejects that a participant can unmute by sending a msg with its jid to the component.
+   */
+  reject(mediaType: MediaType, jid: string): void;
 }

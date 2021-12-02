@@ -24,6 +24,12 @@ export default class BrowserCapabilities {
      */
     isChromiumBased(): boolean;
     /**
+     * Checks if the current platform is iOS.
+     *
+     * @returns {boolean}
+     */
+    isIosBrowser(): boolean;
+    /**
      * Checks if the current browser is WebKit based. It's either
      * Safari or uses WebKit as its engine.
      *
@@ -117,6 +123,16 @@ export default class BrowserCapabilities {
      * @returns {boolean} {@code true} if the browser supports getDisplayMedia.
      */
     supportsGetDisplayMedia(): boolean;
+    /**
+     * Checks if the browser supports WebRTC Encoded Transform, an alternative
+     * to insertable streams.
+     *
+     * NOTE: At the time of this writing the only browser supporting this is
+     * Safari / WebKit, behind a flag.
+     *
+     * @returns {boolean} {@code true} if the browser supports it.
+     */
+    supportsEncodedTransform(): boolean;
     /**
      * Checks if the browser supports insertable streams, needed for E2EE.
      * @returns {boolean} {@code true} if the browser supports insertable streams.

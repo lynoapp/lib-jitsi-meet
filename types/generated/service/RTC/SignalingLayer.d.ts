@@ -29,7 +29,7 @@ export default class SignalingLayer extends Listenable {
      * info or <tt>null</tt> either if there is no presence available for given
      * JID or if the media type given is invalid.
      */
-    getPeerMediaInfo(owner: string, mediaType: any): PeerMediaInfo | null;
+    getPeerMediaInfo(owner: string, mediaType: MediaType): PeerMediaInfo | null;
 }
 /**
  * An object that carries the info about specific media type advertised by
@@ -43,6 +43,6 @@ export type PeerMediaInfo = {
     /**
      * the type of the video if applicable
      */
-    videoType: any | undefined;
+    videoType: VideoType | undefined;
 };
 import Listenable from "../../modules/util/Listenable";

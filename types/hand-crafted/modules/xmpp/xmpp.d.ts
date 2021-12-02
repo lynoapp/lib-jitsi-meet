@@ -16,6 +16,8 @@ export default class XMPP extends Listenable {
   attach: ( options: { jid: string, sid: string, rid: string, password: string } ) => void;
   connect: ( jid: string, password: string ) => unknown; // TODO:
   createRoom: ( roomName: string, options: unknown, onCreateResource?: ( params: unknown ) => unknown ) => Promise<unknown>; // TODO:
+  getRoomJid: ( roomName: string, domain: string ) => string;
+  isRoomCreated: ( roomName: string, domain: string ) => boolean;
   getJid: () => string;
   getJingleLog: () => unknown; // TODO:
   getXmppLog: () => unknown | null; // TODO:

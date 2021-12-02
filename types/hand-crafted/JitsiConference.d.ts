@@ -8,6 +8,7 @@ import JitsiTrack from './modules/RTC/JitsiTrack';
 import Transcriber from './modules/transcription/transcriber';
 import JitsiVideoSIPGWSession from './modules/videosipgw/JitsiVideoSIPGWSession';
 import TraceablePeerConnection from './modules/RTC/TraceablePeerConnection';
+import JingleSessionPC from './modules/xmpp/JingleSessionPC';
 import { MediaType } from './service/RTC/MediaType';
 
 export default class JitsiConference {
@@ -23,7 +24,7 @@ export default class JitsiConference {
       channelLastN?: number,
       forceJVB121Ratio?: number
     },
-    connection: unknown
+    connection: JitsiConnection
   } ); // TODO:
   join(password: string, replaceParticipant?: boolean): void;
   authenticateAndUpgradeRole: ( options: unknown ) => Promise<unknown>; // TODO:
@@ -59,8 +60,8 @@ export default class JitsiConference {
   getTranscriptionStatus: () => 'on' | 'off';
   addTrack: ( track: JitsiLocalTrack ) => Promise<JitsiLocalTrack>;
   onLocalTrackRemoved: ( track: JitsiLocalTrack ) => void;
-  removeTrack: ( track: JitsiLocalTrack ) => void;
-  replaceTrack: ( oldTrack: JitsiLocalTrack, newTrack: JitsiLocalTrack ) => Promise<unknown | JitsiTrackError>;
+  removeTrack: ( track: JitsiLocalTrack ) => Promise<void | JitsiTrackError>;
+  replaceTrack: ( oldTrack: JitsiLocalTrack, newTrack: JitsiLocalTrack ) => Promise<void | JitsiTrackError>;
   getRole: () => string;
   isHidden: () => boolean | null;
   isModerator: () => boolean | null;
@@ -85,12 +86,12 @@ export default class JitsiConference {
   onUserRoleChanged: ( jid: string, role: string ) => void;
   onDisplayNameChanged: ( jid: string, displayName: string ) => void;
   onRemoteTrackAdded: ( track: JitsiRemoteTrack ) => void;
-  onCallAccepted: ( session: unknown, answer: JQuery ) => void; // TODO: answer is a jQuery object, unknown = JingleSessionPC which doesn't exist
-  onTransportInfo: ( session: unknown, transportInfo: JQuery ) => void; // TODO: transportInfo is a jQuery object, unknown = JingleSessionPC which doesn't exist
+  onCallAccepted: ( session: JingleSessionPC, answer: JQuery ) => void; // TODO: answer is a jQuery object, unknown = JingleSessionPC which doesn't exist
+  onTransportInfo: ( session: JingleSessionPC, transportInfo: JQuery ) => void; // TODO: transportInfo is a jQuery object, unknown = JingleSessionPC which doesn't exist
   onRemoteTrackRemoved: ( removedTrack: JitsiRemoteTrack ) => void;
-  onIncomingCall: ( jingleSession: unknown, jingleOffer: unknown, now: unknown ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
-  onCallEnded: ( jingleSession: unknown, reasonCondition: string, reasonText: string ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
-  onSuspendDetected: ( jingleSession: unknown ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
+  onIncomingCall: ( jingleSession: JingleSessionPC, jingleOffer: unknown, now: unknown ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
+  onCallEnded: ( jingleSession: JingleSessionPC, reasonCondition: string, reasonText: string ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
+  onSuspendDetected: ( jingleSession: JingleSessionPC ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
   updateDTMFSupport: () => void;
   isDTMFSupported: () => boolean;
   myUserId: () => string;
@@ -118,6 +119,7 @@ export default class JitsiConference {
   sendFeedback: ( overallFeedback: number, detailedFeedback: unknown ) => Promise<unknown>;
   isCallstatsEnabled: () => boolean;
   getSsrcByTrack: ( track: JitsiTrack ) => number | undefined;
+  isFocus: ( mucJid: string ) => boolean | null;
   sendApplicationLog: ( message: string ) => void;
   // sendEndpointMessage: (to: string, payload: unknown) => unknown; // TODO: deprecated
   // broadcastEndpointMessage: (payload: unknown) => void; // TODO: deprecated
@@ -148,4 +150,5 @@ export default class JitsiConference {
   enableAVModeration: ( mediaType: MediaType ) => void;
   disableAVModeration: ( mediaType: MediaType ) => void;
   avModerationApprove: ( mediaType: MediaType, id: string ) => void;
+  avModerationReject: ( mediaType: MediaType, id: string ) => void;
 }

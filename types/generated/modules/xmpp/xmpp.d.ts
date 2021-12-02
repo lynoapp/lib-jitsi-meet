@@ -158,6 +158,21 @@ export default class XMPP extends Listenable {
      */
     createRoom(roomName: string, options: any, onCreateResource?: Function): Promise<any>;
     /**
+     * Returns the room JID based on the passed room name and domain.
+     *
+     * @param {string} roomName - The room name.
+     * @param {string} domain - The domain.
+     * @returns {string} - The room JID.
+     */
+    getRoomJid(roomName: string, domain: string): string;
+    /**
+     * Check if a room with the passed JID is already created.
+     *
+     * @param {string} roomJid - The JID of the room.
+     * @returns {boolean}
+     */
+    isRoomCreated(roomName: any, domain: any): boolean;
+    /**
      * Returns the jid of the participant associated with the Strophe connection.
      *
      * @returns {string} The jid of the participant.

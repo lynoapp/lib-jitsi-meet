@@ -7,8 +7,8 @@ export default class VideoSIPGW {
      *
      * @param {ChatRoom} chatRoom - Tha chat room to handle.
      */
-    constructor(chatRoom: any);
-    chatRoom: any;
+    constructor(chatRoom: ChatRoom);
+    chatRoom: ChatRoom;
     eventEmitter: any;
     sessions: {};
     sessionStateChangeListener: any;
@@ -34,6 +34,6 @@ export default class VideoSIPGW {
      *
      * @param {options} event - { address, oldState, newState, displayName }
      */
-    sessionStateChanged(event: any): void;
+    sessionStateChanged(event: options): void;
 }
 import JitsiVideoSIPGWSession from "./JitsiVideoSIPGWSession";

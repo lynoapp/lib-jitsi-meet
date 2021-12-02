@@ -1,7 +1,9 @@
-export default function Moderator( roomName: string, xmpp: unknown, emitter: unknown, options: unknown ): void; // TODO:
+import XMPP from "./xmpp";
+
+export default function Moderator( roomName: string, xmpp: XMPP, emitter: unknown, options: unknown ): void; // TODO:
 
 export default class Moderator {
-  constructor( roomName: string, xmpp: unknown, emitter: unknown, options: unknown ); // TODO:
+  constructor( roomName: string, xmpp: XMPP, emitter: unknown, options: unknown ); // TODO:
   isExternalAuthEnabled: () => boolean;
   isSipGatewayEnabled: () => boolean;
   onMucMemberLeft: ( jid: string ) => void;

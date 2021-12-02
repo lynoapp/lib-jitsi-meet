@@ -10,12 +10,12 @@ export default class SpeakerStatsCollector {
      * @param {JitsiConference} conference - The conference to track.
      * @returns {void}
      */
-    constructor(conference: any);
+    constructor(conference: JitsiConference);
     stats: {
         users: {};
         dominantSpeakerId: any;
     };
-    conference: any;
+    conference: JitsiConference;
     /**
      * Reacts to dominant speaker change events by changing its speaker stats
      * models to reflect the current dominant speaker.
@@ -58,9 +58,8 @@ export default class SpeakerStatsCollector {
      *
      * @returns {Object} The keys are the user ids and the values are the
      * associated user's SpeakerStats model.
-     * @private
      */
-    private getStats;
+    getStats(): any;
     /**
      * Updates of the current stats is requested, passing the new values.
      *

@@ -10,20 +10,17 @@ export default class JingleSession extends Listenable {
      * @param {string} localJid our JID
      * @param {string} remoteJid the JID of the remote peer
      * @param {XmppConnection} connection the XMPP connection
-     * @param {Object} mediaConstraints the media constraints object passed to
-     * the PeerConnection onCreateAnswer/Offer as defined by the WebRTC.
-     * @param {Object} iceConfig the ICE servers config object as defined by
-     * the WebRTC. Passed to the PeerConnection's constructor.
-     * @param {boolean} isInitiator indicates if it will be the side which
-     * initiates the session.
+     * @param {Object} mediaConstraints the media constraints object passed to the PeerConnection onCreateAnswer/Offer.
+     * @param {Object} pcConfig The {@code RTCConfiguration} object passed to the PeerConnection's constructor.
+     * @param {boolean} isInitiator indicates if it will be the side which initiates the session.
      */
-    constructor(sid: string, localJid: string, remoteJid: string, connection: any, mediaConstraints: any, iceConfig: any, isInitiator: boolean);
+    constructor(sid: string, localJid: string, remoteJid: string, connection: XmppConnection, mediaConstraints: any, pcConfig: any, isInitiator: boolean);
     sid: string;
     localJid: string;
     remoteJid: string;
-    connection: any;
+    connection: XmppConnection;
     mediaConstraints: any;
-    iceConfig: any;
+    pcConfig: any;
     /**
      * Indicates whether this instance is an initiator or an answerer of
      * the Jingle session.
@@ -43,7 +40,7 @@ export default class JingleSession extends Listenable {
      * The chat room instance associated with the session.
      * @type {ChatRoom}
      */
-    room: any;
+    room: ChatRoom;
     /**
      * Jingle session state - uninitialized until {@link initialize} is
      * called @type {JingleSessionState}
@@ -53,7 +50,7 @@ export default class JingleSession extends Listenable {
      * The RTC service instance
      * @type {RTC}
      */
-    rtc: any;
+    rtc: RTC;
     /**
      * Returns XMPP address of this session's initiator.
      * @return {string}
@@ -72,7 +69,7 @@ export default class JingleSession extends Listenable {
      * @param {object} options - the options, see implementing class's
      * {@link #doInitialize} description for more details.
      */
-    initialize(room: any, rtc: any, options: object): void;
+    initialize(room: ChatRoom, rtc: RTC, options: object): void;
     /**
      * The implementing class finishes initialization here. Called at the end of
      * {@link initialize}.

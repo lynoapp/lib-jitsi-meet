@@ -13,10 +13,10 @@ export class SendVideoController {
      * the send video quality constraints.
      * @param {RTC} rtc - the rtc instance that is responsible for sending the messages on the bridge channel.
      */
-    constructor(conference: any, rtc: any);
-    conference: any;
+    constructor(conference: JitsiConference, rtc: RTC);
+    conference: JitsiConference;
     layerSuspensionEnabled: any;
-    rtc: any;
+    rtc: RTC;
     _senderVideoConstraints: any;
     /**
      * Handles the {@link JitsiConferenceEvents.MEDIA_SESSION_STARTED}, that is when the conference creates new media

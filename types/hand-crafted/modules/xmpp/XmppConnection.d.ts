@@ -17,6 +17,7 @@ export default class XmppConnection extends Listenable {
   readonly pingDomain: unknown; // TODO:
   readonly service: string;
   readonly status: Strophe.Status;
+  set shard ( value: string );
   addConnectionPlugin: ( name: string, plugin: ConnectionPluginListenable ) => void;
   addHandler: ( ...args: unknown[] ) => void; // TODO:
   attach: ( jid: string, sid: string, rid: string, callback: ( params: unknown ) => unknown, ...args: unknown[] ) => void; // TODO:

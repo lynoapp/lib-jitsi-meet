@@ -74,7 +74,7 @@ export default class XmppConnection extends Listenable {
      *
      * @returns {Strophe.Connection.disco}
      */
-    get disco(): any;
+    get disco(): Strophe.Connection.disco;
     /**
      * A getter for the disconnecting state.
      *
@@ -128,6 +128,11 @@ export default class XmppConnection extends Listenable {
      */
     get service(): string;
     /**
+     * Sets new value for shard.
+     * @param value the new shard value.
+     */
+    set shard(arg: any);
+    /**
      * Returns the current connection status.
      *
      * @returns {Strophe.Status}
@@ -140,7 +145,7 @@ export default class XmppConnection extends Listenable {
      * instance.
      * @param {ConnectionPluginListenable} plugin - The plugin to add.
      */
-    addConnectionPlugin(name: string, plugin: any): void;
+    addConnectionPlugin(name: string, plugin: ConnectionPluginListenable): void;
     /**
      * See {@link Strophe.Connection.addHandler}
      *

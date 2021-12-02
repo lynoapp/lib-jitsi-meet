@@ -11,12 +11,12 @@ declare class RecordingManager {
      * @param {ChatRoom} chatRoom - The chat room to handle.
      * @returns {void}
      */
-    constructor(chatRoom: any);
+    constructor(chatRoom: ChatRoom);
     /**
      * All known recording sessions from the current conference.
      */
     _sessions: {};
-    _chatRoom: any;
+    _chatRoom: ChatRoom;
     /**
      * Callback to invoke to parse through a presence update to find recording
      * related updates (from Jibri participant doing the recording and the

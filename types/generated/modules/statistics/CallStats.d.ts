@@ -76,6 +76,8 @@ declare class CallStats {
      * the <tt>userID</tt> aka endpoint ID, see CallStats docs for more info.
      * @param {string} options.userName the <tt>userName</tt> part of
      * the <tt>userID</tt> aka display name, see CallStats docs for more info.
+     * @param {object} options.configParams the set of parameters
+     * to enable/disable certain features in the library. See CallStats docs for more info.
      *
      */
     static initBackend(options: {
@@ -83,6 +85,7 @@ declare class CallStats {
         callStatsSecret: string;
         aliasName: string;
         userName: string;
+        configParams: object;
     }): boolean;
     /**
      * Checks if the CallStats backend has been created. It does not mean that
@@ -146,12 +149,12 @@ declare class CallStats {
      * @param {string} [options.remoteUserID='jitsi'] the remote user ID to
      * which given <tt>tpc</tt> is connected.
      */
-    constructor(tpc: any, options: {
+    constructor(tpc: TraceablePeerConnection, options: {
         confID: string;
         remoteUserID?: string;
     });
     confID: string;
-    tpc: any;
+    tpc: TraceablePeerConnection;
     peerconnection: any;
     remoteUserID: string;
     hasFabric: boolean;
@@ -236,7 +239,7 @@ declare class CallStats {
     sendAddIceCandidateFailed(e: Error): void;
 }
 declare namespace CallStats {
-    const backend: any;
+    const backend: callstats;
     const reportsQueue: any[];
     const backendInitialized: boolean;
     const callStatsID: string;

@@ -58,8 +58,7 @@ declare class JitsiMediaDevices {
      */
     isDevicePermissionGranted(type?: 'audio' | 'video'): Promise<boolean>;
     /**
-     * Returns true if it is possible to be simultaneously capturing audio
-     * from more than one device.
+     * Returns true if it is possible to be simultaneously capturing audio from more than one device.
      *
      * @returns {boolean}
      */

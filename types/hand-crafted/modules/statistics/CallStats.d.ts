@@ -7,10 +7,11 @@ declare class CallStats {
   } );
   static readonly fabrics: Set<CallStats>;
   static initBackend: ( options: {
-    callStatsID: string,
-    callStatsSecret: string,
-    aliasName: string
-    userName: string
+    callStatsID: string;
+    callStatsSecret: string;
+    aliasName: string;
+    userName: string;
+    configParams: object;
   } ) => boolean;
   static isBackendInitialized: () => boolean;
   static sendActiveDeviceListEvent: ( devicesData: { deviceList: { string: string } }, cs: CallStats ) => void; // TODO: not convinced by this definition

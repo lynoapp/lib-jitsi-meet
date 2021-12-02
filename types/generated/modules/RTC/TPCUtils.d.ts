@@ -40,13 +40,13 @@ export class TPCUtils {
      * @param {JitsiLocalTrack} localTrack - local track to be used for lookup.
      * @returns {RTCRtpTransceiver}
      */
-    _findTransceiver(mediaType: string, localTrack?: any): RTCRtpTransceiver;
+    _findTransceiver(mediaType: string, localTrack?: JitsiLocalTrack): RTCRtpTransceiver;
     /**
      * Obtains stream encodings that need to be configured on the given track based
      * on the track media type and the simulcast setting.
      * @param {JitsiLocalTrack} localTrack
      */
-    _getStreamEncodings(localTrack: any): {
+    _getStreamEncodings(localTrack: JitsiLocalTrack): {
         active: boolean;
         maxBitrate: any;
         rid: string;
@@ -92,7 +92,7 @@ export class TPCUtils {
      * @param {JitsiLocalTrack} localTrack - track to be unmuted.
      * @returns {Promise<void>} - resolved when done.
      */
-    addTrackUnmute(localTrack: any): Promise<void>;
+    addTrackUnmute(localTrack: JitsiLocalTrack): Promise<void>;
     /**
      * Obtains the current local video track's height constraints based on the
      * initial stream encodings configuration on the sender and the resolution
@@ -107,14 +107,14 @@ export class TPCUtils {
      * @param {JitsiLocalTrack} localTrack - track to be removed.
      * @returns {Promise<void>} - resolved when done.
      */
-    removeTrackMute(localTrack: any): Promise<void>;
+    removeTrackMute(localTrack: JitsiLocalTrack): Promise<void>;
     /**
      * Replaces the existing track on a RTCRtpSender with the given track.
      * @param {JitsiLocalTrack} oldTrack - existing track on the sender that needs to be removed.
      * @param {JitsiLocalTrack} newTrack - new track that needs to be added to the sender.
      * @returns {Promise<void>} - resolved when done.
      */
-    replaceTrack(oldTrack: any, newTrack: any): Promise<void>;
+    replaceTrack(oldTrack: JitsiLocalTrack, newTrack: JitsiLocalTrack): Promise<void>;
     /**
     * Enables/disables audio transmission on the peer connection. When
     * disabled the audio transceiver direction will be set to 'inactive'
@@ -131,7 +131,7 @@ export class TPCUtils {
      * the encodings are to be set.
      * @returns {Promise<void>} - resolved when done.
      */
-    setEncodings(track: any): Promise<void>;
+    setEncodings(track: JitsiLocalTrack): Promise<void>;
     /**
      * Enables/disables media transmission on the peerconnection by changing the direction
      * on the transceiver for the specified media type.

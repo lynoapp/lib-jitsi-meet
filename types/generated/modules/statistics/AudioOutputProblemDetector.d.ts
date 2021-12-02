@@ -8,8 +8,8 @@ export default class AudioOutputProblemDetector {
      *
      * @param {JitsiCofnerence} conference - The conference instance to be monitored.
      */
-    constructor(conference: any);
-    _conference: any;
+    constructor(conference: JitsiCofnerence);
+    _conference: JitsiCofnerence;
     _localAudioLevelCache: {};
     _reportedParticipants: any[];
     _audioProblemCandidates: {};
@@ -21,7 +21,7 @@ export default class AudioOutputProblemDetector {
      * @param {Object} avgAudioLevels - The average audio levels per participant.
      * @returns {void}
      */
-    _onLocalAudioLevelsReport(tpc: any, { avgAudioLevels }: any): void;
+    _onLocalAudioLevelsReport(tpc: TraceablePeerConnection, { avgAudioLevels }: any): void;
     /**
      * A listener for audio level data received by a remote participant.
      *

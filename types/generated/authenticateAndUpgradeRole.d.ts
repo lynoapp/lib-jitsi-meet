@@ -59,7 +59,7 @@ export type UpgradeRoleError = {
      * {@link JitsiConnectionErrors } which occurred when trying to connect to the
      * XMPP server.
      */
-    connectionError?: any;
+    connectionError?: JitsiConnectionErrors;
     /**
      * - One of XMPP error conditions
      * returned by Jicofo on authentication attempt. See

@@ -4,7 +4,7 @@ import JitsiLocalTrack from '../RTC/JitsiLocalTrack';
 export default class ProxyConnectionService {
   constructor( options: {
     convertVideoToDesktop: boolean,
-    iceConfig: unknown, // TODO:
+    pcConfig: unknown, // TODO:
     jitsiConnection: JitsiConnection,
     onRemoteStream: ( params: unknown ) => unknown, // TODO:
     onSendMessage: ( params: unknown ) => unknown // TODO:

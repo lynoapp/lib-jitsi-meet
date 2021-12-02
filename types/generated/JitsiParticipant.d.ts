@@ -38,7 +38,7 @@ export default class JitsiParticipant {
      * @returns {JitsiConference} The conference that this participant belongs
      * to.
      */
-    getConference(): any;
+    getConference(): JitsiConference;
     /**
      * Gets the value of a property of this participant.
      */
@@ -78,13 +78,13 @@ export default class JitsiParticipant {
      * @returns {Array.<JitsiTrack>} The list of media tracks for this
      * participant.
      */
-    getTracks(): Array<any>;
+    getTracks(): Array<JitsiTrack>;
     /**
      * @param {MediaType} mediaType
      * @returns {Array.<JitsiTrack>} an array of media tracks for this
      * participant, for given media type.
      */
-    getTracksByMediaType(mediaType: typeof MediaType): Array<any>;
+    getTracksByMediaType(mediaType: typeof MediaType): Array<JitsiTrack>;
     /**
      * @returns {String} The ID of this participant.
      */
@@ -161,9 +161,9 @@ export default class JitsiParticipant {
     setIsReplacing(newIsReplacing: string): void;
     /**
      * Sets whether participant is being replaced by another based on jwt.
-     * @param {String} newIsReplacing - whether is being replaced.
+     * @param {boolean} newIsReplaced - whether is being replaced.
      */
-    setIsReplaced(newIsReplaced: any): void;
+    setIsReplaced(newIsReplaced: boolean): void;
     /**
      *
      */

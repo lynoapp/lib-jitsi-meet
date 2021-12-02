@@ -292,33 +292,22 @@ export default class RTC extends Listenable {
     selectEndpoints(ids: Array<string>): void;
     /**
      * Creates new <tt>TraceablePeerConnection</tt>
-     * @param {SignalingLayer} signaling The signaling layer that will
-     *      provide information about the media or participants which is not
-     *      carried over SDP.
-     * @param {object} iceConfig An object describing the ICE config like
-     *      defined in the WebRTC specification.
-     * @param {boolean} isP2P Indicates whether or not the new TPC will be used
-     *      in a peer to peer type of session.
+     * @param {SignalingLayer} signaling The signaling layer that will provide information about the media or
+     * participants which is not carried over SDP.
+     * @param {object} pcConfig The {@code RTCConfiguration} to use for the WebRTC peer connection.
+     * @param {boolean} isP2P Indicates whether or not the new TPC will be used in a peer to peer type of session.
      * @param {object} options The config options.
      * @param {boolean} options.enableInsertableStreams - Set to true when the insertable streams constraints is to be
      * enabled on the PeerConnection.
-     * @param {boolean} options.disableSimulcast If set to 'true' will disable
-     *      the simulcast.
-     * @param {boolean} options.disableRtx If set to 'true' will disable the
-     *      RTX.
-     * @param {boolean} options.disableH264 If set to 'true' H264 will be
-     *      disabled by removing it from the SDP.
-     * @param {boolean} options.preferH264 If set to 'true' H264 will be
-     *      preferred over other video codecs.
+     * @param {boolean} options.disableSimulcast If set to 'true' will disable the simulcast.
+     * @param {boolean} options.disableRtx If set to 'true' will disable the RTX.
      * @param {boolean} options.startSilent If set to 'true' no audio will be sent or received.
      * @return {TraceablePeerConnection}
      */
-    createPeerConnection(signaling: any, iceConfig: object, isP2P: boolean, options: {
+    createPeerConnection(signaling: SignalingLayer, pcConfig: object, isP2P: boolean, options: {
         enableInsertableStreams: boolean;
         disableSimulcast: boolean;
         disableRtx: boolean;
-        disableH264: boolean;
-        preferH264: boolean;
         startSilent: boolean;
     }): TraceablePeerConnection;
     /**
@@ -362,7 +351,7 @@ export default class RTC extends Listenable {
      *      by their media type if this argument is specified.
      * @return {Array<JitsiRemoteTrack>}
      */
-    getRemoteTracks(mediaType?: typeof MediaType): Array<any>;
+    getRemoteTracks(mediaType?: typeof MediaType): Array<JitsiRemoteTrack>;
     /**
      * Set mute for all local audio streams attached to the conference.
      * @param value The mute value.

@@ -43,13 +43,13 @@ export default class NoAudioSignalDetection {
      * @param {number} audioLevel - The audio level of the ssrc.
      * @param {boolean} isLocal - true for local/send streams or false for remote/receive streams.
      */
-    _audioLevel(tpc: any, ssrc: number, audioLevel: number, isLocal: boolean): void;
+    _audioLevel(tpc: TraceablePeerConnection, ssrc: number, audioLevel: number, isLocal: boolean): void;
     /**
      * Notifies NoAudioSignalDetection that a JitsiTrack was added to the associated JitsiConference.
      * Only take into account local audio tracks.
      *
      * @param {JitsiTrack} track - The added JitsiTrack.
      */
-    _trackAdded(track: any): void;
-    _audioTrack: any;
+    _trackAdded(track: JitsiTrack): void;
+    _audioTrack: JitsiTrack;
 }

@@ -1,9 +1,11 @@
 import ConnectionPluginListenable from './ConnectionPlugin';
+import XMPP from './xmpp';
 
 export default class MucConnectionPlugin extends ConnectionPluginListenable {
-  constructor( xmpp: unknown ); // TODO:
+  constructor( xmpp: XMPP );
   init: ( connection: unknown ) => void; // TODO:
   createRoom: ( jid: string, password: string, options: unknown ) => void; // TODO:
+  isRoomCreated: ( roomJid: string ) => boolean;
   doLeave: ( jid: string ) => void;
   onPresence: ( pres: unknown ) => boolean; // TODO:
   onPresenceUnavailable: ( pres: unknown ) => boolean; // TODO:

@@ -19,8 +19,8 @@ export class CodecSelection {
      * @param {string} options.jvbCodec the codec that is preferred on jvb connection.
      * @param {string} options.p2pCodec the codec that is preferred on p2p connection.
      */
-    constructor(conference: any, options: any);
-    conference: any;
+    constructor(conference: JitsiConference, options: any);
+    conference: JitsiConference;
     options: any;
     disabledCodec: any;
     jvbPreferredCodec: any;
@@ -58,7 +58,7 @@ export class CodecSelection {
      * @param {CodecMimeType} preferredCodec preferred codec.
      * @param {CodecMimeType} disabledCodec codec that needs to be disabled.
      */
-    _selectPreferredCodec(mediaSession?: any, preferredCodec?: any, disabledCodec?: any): void;
+    _selectPreferredCodec(mediaSession?: JingleSessionPC, preferredCodec?: CodecMimeType, disabledCodec?: CodecMimeType): void;
     /**
      * Returns the preferred codec for the conference. The preferred codec for the JVB media session
      * is the one that gets published in presence and a comparision is made whenever a participant joins
@@ -66,5 +66,5 @@ export class CodecSelection {
      *
      * @returns {CodecMimeType} preferred codec.
      */
-    getPreferredCodec(): any;
+    getPreferredCodec(): CodecMimeType;
 }

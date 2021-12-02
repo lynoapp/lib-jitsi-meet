@@ -1,4 +1,5 @@
 import SDP from './SDP';
+import { MLineWrap } from './SdpTransformUtil';
 
 export type SDPUtil = {
   filterSpecialChars: ( text: string ) => string;
@@ -25,7 +26,7 @@ export type SDPUtil = {
   findLines: ( haystack: string, needle: string, sessionpart?: string ) => string[];
   candidateToJingle: ( line: string ) => unknown; // TODO:
   candidateFromJingle: ( cand: unknown ) => unknown; // TODO:
-  parsePrimaryVideoSsrc: ( videoMLine: unknown ) => number; // TODO:
+  parsePrimaryVideoSsrc: ( videoMLine: MLineWrap ) => number;
   generateSsrc: () => number;
   getSsrcAttribute: ( mLine: unknown, ssrc: number, attributeName: string ) => string;
   parseGroupSsrcs: ( ssrcGroup: unknown ) => number[]; // TODO:

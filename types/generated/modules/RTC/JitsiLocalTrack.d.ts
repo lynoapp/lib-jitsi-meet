@@ -191,7 +191,7 @@ export default class JitsiLocalTrack extends JitsiTrack {
      *
      * @param {boolean} mute - If track is muted.
      * @private
-     * @returns {Promise}
+     * @returns {void}
      */
     private _sendMuteStatus;
     /**
@@ -229,14 +229,14 @@ export default class JitsiLocalTrack extends JitsiTrack {
      * @param {number} bytesSent the new value
      * NOTE: used only for audio tracks to detect audio issues.
      */
-    _onByteSentStatsReceived(tpc: any, bytesSent: number): void;
+    _onByteSentStatsReceived(tpc: TraceablePeerConnection, bytesSent: number): void;
     /**
      * Returns facing mode for video track from camera. For other cases (e.g.
      * audio track or 'desktop' video track) returns undefined.
      *
      * @returns {CameraFacingMode|undefined}
      */
-    getCameraFacingMode(): any | undefined;
+    getCameraFacingMode(): CameraFacingMode | undefined;
     /**
      * Stops the associated MediaStream.
      */

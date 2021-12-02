@@ -264,15 +264,13 @@ export default class ChatRoom extends Listenable {
     /**
      *
      * @param mute
-     * @param callback
      */
-    setVideoMute(mute: any, callback: any): void;
+    setVideoMute(mute: any): void;
     /**
      *
      * @param mute
-     * @param callback
      */
-    setAudioMute(mute: any, callback: any): void;
+    setAudioMute(mute: any): void;
     /**
      *
      * @param mute
@@ -281,9 +279,8 @@ export default class ChatRoom extends Listenable {
     /**
      *
      * @param mute
-     * @param callback
      */
-    sendAudioInfoPresence(mute: any, callback: any): void;
+    sendAudioInfoPresence(mute: any): void;
     /**
      *
      * @param mute
@@ -305,7 +302,7 @@ export default class ChatRoom extends Listenable {
      * info or <tt>null</tt> either if there is no presence available or if
      * the media type given is invalid.
      */
-    getMediaPresenceInfo(endpointId: string, mediaType: typeof MediaType): any;
+    getMediaPresenceInfo(endpointId: string, mediaType: typeof MediaType): PeerMediaInfo;
     /**
      * Returns true if the SIP calls are supported and false otherwise
      */

@@ -1,5 +1,8 @@
+import EventEmitter from "../../EventEmitter";
+import { ReceiverVideoConstraints } from "../../modules/qualitycontrol/ReceiveVideoController";
+
 export default class BridgeChannel {
-  constructor( peerconnection: unknown, wsUrl: unknown, emitter: unknown ); // TODO:
+  constructor( peerconnection: unknown, wsUrl: unknown, emitter: EventEmitter<unknown> ); // TODO:
   mode: () => null | "datachannel" | "websocket";
   close: () => void;
   isOpen: () => boolean;

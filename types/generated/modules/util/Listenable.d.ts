@@ -9,8 +9,8 @@ export default class Listenable {
      * @param {EventEmitter} eventEmitter
      * @constructor
      */
-    constructor(eventEmitter?: any);
-    eventEmitter: any;
+    constructor(eventEmitter?: EventEmitter);
+    eventEmitter: EventEmitter;
     addEventListener: (eventName: string, listener: Function) => Function;
     on: (eventName: string, listener: Function) => Function;
     removeEventListener: (eventName: string, listener: Function) => void;

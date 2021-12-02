@@ -20,12 +20,12 @@ export default class SignalingLayerImpl extends SignalingLayer {
      *
      * @type {ChatRoom|null}
      */
-    chatRoom: any | null;
+    chatRoom: ChatRoom | null;
     /**
      * Sets the <tt>ChatRoom</tt> instance used and binds presence listeners.
      * @param {ChatRoom} room
      */
-    setChatRoom(room: any): void;
+    setChatRoom(room: ChatRoom): void;
     _audioMuteHandler: (node: any, from: any) => void;
     _videoMuteHandler: (node: any, from: any) => void;
     _videoTypeHandler: (node: any, from: any) => void;

@@ -221,7 +221,7 @@ export default class JitsiTrack {
      * a local track if the audio level was measured outside of the
      * peerconnection (see /modules/statistics/LocalStatsCollector.js).
      */
-    setAudioLevel(audioLevel: number, tpc?: any): void;
+    setAudioLevel(audioLevel: number, tpc?: TraceablePeerConnection): void;
     /**
      * Returns the msid of the stream attached to the JitsiTrack object or null
      * if no stream is attached.

@@ -1,7 +1,8 @@
 export default class BrowserCapabilities {
   doesVideoMuteByStreamRemove: () => boolean;
-  isWebKitBased: () => boolean;
   isChromiumBased: () => boolean;
+  isIosBrowser: () => boolean;
+  isWebKitBased: () => boolean;
   isTwa: () => boolean;
   isSupported: () => boolean;
   isUserInteractionRequiredForUnmute: () => boolean;
@@ -17,6 +18,7 @@ export default class BrowserCapabilities {
   usesAdapter: () => boolean;
   usesRidsForSimulcast: () => boolean;
   supportsGetDisplayMedia: () => boolean;
+  supportsEncodedTransform: () => boolean;
   supportsInsertableStreams: () => boolean;
   supportsAudioRed: () => boolean;
   supportsUnifiedPlan: () => boolean;

@@ -1,20 +1,22 @@
 import TraceablePeerConnection from '../RTC/TraceablePeerConnection';
+import XMPP from '../xmpp/xmpp';
 
 export type StatisticsOptions = {
-  applicationName: string,
-  aliasName: string,
-  userName: string,
-  confID: string,
-  callStatsID: string,
-  callStatsSecret: string,
-  customScriptUrl: string,
-  roomName: string
+  applicationName: string;
+  aliasName: string;
+  userName: string;
+  confID: string;
+  callStatsID: string;
+  callStatsSecret: string;
+  customScriptUrl: string;
+  roomName: string;
+  configParams: object;
 }
 
-declare function Statistics( xmpp: unknown, options: StatisticsOptions ): void;
+declare function Statistics( xmpp: XMPP, options: StatisticsOptions ): void;
 
 declare class Statistics {
-  constructor( xmpp: unknown, options: StatisticsOptions ); // TODO:
+  constructor( xmpp: XMPP, options: StatisticsOptions );
   readonly instances: Set<Statistics>;
   localStats: unknown[]; // TODO:
   startRemoteStats: ( peerconnection: TraceablePeerConnection ) => void;
