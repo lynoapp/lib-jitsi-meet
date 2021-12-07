@@ -1,4 +1,4 @@
-import XMPP from "./xmpp";
+import XMPP from './xmpp';
 
 export default function Moderator( roomName: string, xmpp: XMPP, emitter: unknown, options: unknown ): void; // TODO:
 

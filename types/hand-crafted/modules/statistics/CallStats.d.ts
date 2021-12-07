@@ -18,7 +18,7 @@ declare class CallStats {
   static sendApplicationLog: ( e: Error, cs: CallStats ) => void;
   static sendFeedback: ( conferenceID: string, overall: 1 | 2 | 3 | 4 | 5, comment: unknown ) => Promise<unknown>; // TODO:
   static sendGetUserMediaFailed: ( e: Error, cs: CallStats ) => void;
-  static sendMuteEvent: ( mute: boolean, type: "audio" | "video", cs: CallStats ) => void;
+  static sendMuteEvent: ( mute: boolean, type: 'audio' | 'video', cs: CallStats ) => void;
   associateStreamWithVideoTag: ( ssrc: number, isLocal: boolean, streamEndpointId: string | null, usageLabel: string, containerId: string ) => void;
   sendDominantSpeakerEvent: () => void;
   sendTerminateEvent: () => void;

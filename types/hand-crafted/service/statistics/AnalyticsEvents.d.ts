@@ -1,4 +1,4 @@
-import { MediaType } from "../RTC/MediaType";
+import { MediaType } from '../RTC/MediaType';
 
 export enum AnalyticsEvents {
   TYPE_OPERATIONAL = 'operational',

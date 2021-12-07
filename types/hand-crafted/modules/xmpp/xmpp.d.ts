@@ -3,7 +3,7 @@ import Listenable from '../util/Listenable';
 
 export const DEFAULT_STUN_SERVERS: { urls: string; }[];
 
-export const JITSI_MEET_MUC_TYPE: "type";
+export const JITSI_MEET_MUC_TYPE: 'type';
 
 export const FEATURE_JIGASI: string;
 

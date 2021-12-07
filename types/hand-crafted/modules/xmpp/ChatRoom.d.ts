@@ -3,7 +3,7 @@ import Lobby from './Lobby';
 import Listenable from '../util/Listenable';
 import { MediaType } from '../../service/RTC/MediaType';
 import { PeerMediaInfo } from '../../service/RTC/SignalingLayer';
-import AVModeration from "./AVModeration";
+import AVModeration from './AVModeration';
 
 export function filterNodeFromPresenceJSON(pres: JSON, nodeName: string): object[];
 

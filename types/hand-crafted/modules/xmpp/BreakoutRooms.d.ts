@@ -1,4 +1,4 @@
-import ChatRoom from "./ChatRoom";
+import ChatRoom from './ChatRoom';
 
 /**
  * Helper class for handling breakout rooms.

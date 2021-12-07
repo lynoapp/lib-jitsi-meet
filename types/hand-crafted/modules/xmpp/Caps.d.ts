@@ -1,6 +1,6 @@
 import Listenable from '../util/Listenable';
 
-export const ERROR_FEATURE_VERSION_MISMATCH: "Feature version mismatch";
+export const ERROR_FEATURE_VERSION_MISMATCH: 'Feature version mismatch';
 
 export default class Caps extends Listenable {
   constructor( connection?: Strophe.Connection, node?: string );

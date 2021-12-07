@@ -1,4 +1,4 @@
-import JitsiConference from "../../JitsiConference";
+import JitsiConference from '../../JitsiConference';
 
 export default class IceFailedHandling {
   constructor( conference: JitsiConference );

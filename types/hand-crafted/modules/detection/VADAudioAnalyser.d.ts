@@ -1,4 +1,4 @@
-import { VADProcessor } from "./TrackVADEmitter";
+import { VADProcessor } from './TrackVADEmitter';
 import JitsiConference from '../../JitsiConference';
 import EventEmitter from '../../EventEmitter';
 

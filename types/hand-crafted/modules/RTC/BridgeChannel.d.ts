@@ -1,11 +1,11 @@
-import EventEmitter from "../../EventEmitter";
-import { ReceiverVideoConstraints } from "../../modules/qualitycontrol/ReceiveVideoController";
-import { SourceName } from "../../service/RTC/SignalingLayer";
-import { BridgeVideoType } from "../../service/RTC/BridgeVideoType";
+import EventEmitter from '../../EventEmitter';
+import { ReceiverVideoConstraints } from '../../modules/qualitycontrol/ReceiveVideoController';
+import { SourceName } from '../../service/RTC/SignalingLayer';
+import { BridgeVideoType } from '../../service/RTC/BridgeVideoType';
 
 export default class BridgeChannel {
   constructor( peerconnection: unknown, wsUrl: unknown, emitter: EventEmitter<unknown> ); // TODO:
-  mode: () => null | "datachannel" | "websocket";
+  mode: () => null | 'datachannel' | 'websocket';
   close: () => void;
   isOpen: () => boolean;
   sendMessage: ( to: string, payload: unknown ) => void; // TODO:

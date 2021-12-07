@@ -26,7 +26,7 @@ export type SDPUtil = {
   buildICECandidate: ( cand: unknown ) => unknown; // TODO:
   parseSSRC: ( desc: unknown ) => unknown; // TODO:
   /**
-   * Gets the source name out of the name attribute "a=ssrc:254321 name:name1".
+   * Gets the source name out of the name attribute 'a=ssrc:254321 name:name1'.
    */
   parseSourceNameLine: (ssrcLines: string[]) => string;
   parseRTCPFB: ( cand: unknown ) => unknown; // TODO:

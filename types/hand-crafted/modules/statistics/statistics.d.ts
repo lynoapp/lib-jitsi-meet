@@ -42,7 +42,7 @@ declare class Statistics {
   isCallstatsEnabled: () => boolean;
   sendConnectionResumeOrHoldEvent: ( tpc: TraceablePeerConnection, isResume: boolean ) => void;
   sendIceConnectionFailedEvent: ( tpc: TraceablePeerConnection ) => void;
-  sendMuteEvent: ( tpc: TraceablePeerConnection, muted: boolean, type: "audio" | "video" ) => void;
+  sendMuteEvent: ( tpc: TraceablePeerConnection, muted: boolean, type: 'audio' | 'video' ) => void;
   sendScreenSharingEvent: ( start: boolean, ssrc: string | null ) => void;
   sendDominantSpeakerEvent: ( roomJid: string ) => void;
   sendActiveDeviceListEvent: ( devicesData: { deviceList: { String: string } } ) => void; // TODO: check this definition

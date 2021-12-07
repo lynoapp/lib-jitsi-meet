@@ -1,4 +1,4 @@
-import { VADScore } from "./VADNoiseDetection";
+import { VADScore } from './VADNoiseDetection';
 import EventEmitter from '../../EventEmitter';
 
 export default class VADTalkMutedDetection extends EventEmitter<unknown> { // TODO:

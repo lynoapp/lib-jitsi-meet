@@ -1,5 +1,5 @@
-import { MediaType } from "../../service/RTC/MediaType";
-import ChatRoom from "./ChatRoom";
+import { MediaType } from '../../service/RTC/MediaType';
+import ChatRoom from './ChatRoom';
 
 export default class AVModeration {
   constructor(room: ChatRoom);
