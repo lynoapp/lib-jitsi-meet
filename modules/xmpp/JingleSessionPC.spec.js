@@ -56,6 +56,7 @@ describe('JingleSessionPC', () => {
         jingleSession.initialize(
             /* ChatRoom */ new MockChatRoom(),
             /* RTC */ rtc,
+            /* Signaling layer */ { },
             /* options */ { });
 
         // eslint-disable-next-line no-empty-function

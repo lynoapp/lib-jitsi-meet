@@ -1,4 +1,4 @@
-import { getLogger } from 'jitsi-meet-logger';
+import { getLogger } from '@jitsi/logger';
 import $ from 'jquery';
 import { $iq, Strophe } from 'strophe.js';
 
@@ -10,6 +10,7 @@ import {
 } from '../../service/statistics/AnalyticsEvents';
 import XMPPEvents from '../../service/xmpp/XMPPEvents';
 import { SS_DEFAULT_FRAME_RATE } from '../RTC/ScreenObtainer';
+import FeatureFlags from '../flags/FeatureFlags';
 import SDP from '../sdp/SDP';
 import SDPDiffer from '../sdp/SDPDiffer';
 import SDPUtil from '../sdp/SDPUtil';
@@ -22,7 +23,6 @@ import browser from './../browser';
 import JingleSession from './JingleSession';
 import * as JingleSessionState from './JingleSessionState';
 import MediaSessionEvents from './MediaSessionEvents';
-import SignalingLayerImpl from './SignalingLayerImpl';
 import XmppConnection from './XmppConnection';
 
 const logger = getLogger(__filename);
@@ -262,12 +262,6 @@ export default class JingleSessionPC extends JingleSession {
         this.remoteRecvMaxFrameHeight = undefined;
 
         /**
-         * The signaling layer implementation.
-         * @type {SignalingLayerImpl}
-         */
-        this.signalingLayer = new SignalingLayerImpl();
-
-        /**
          * The queue used to serialize operations done on the peerconnection.
          *
          * @type {AsyncQueue}
@@ -386,7 +380,7 @@ export default class JingleSessionPC extends JingleSession {
 
         this.peerconnection
             = this.rtc.createPeerConnection(
-                    this.signalingLayer,
+                    this._signalingLayer,
                     this.pcConfig,
                     this.isP2P,
                     pcOptions);
@@ -598,20 +592,24 @@ export default class JingleSessionPC extends JingleSession {
             const state = this.peerconnection.signalingState;
             const remoteDescription = this.peerconnection.remoteDescription;
 
-            if (this.usesUnifiedPlan && state === 'stable'
-                && remoteDescription && typeof remoteDescription.sdp === 'string') {
-                logger.debug(`${this} onnegotiationneeded fired on ${this.peerconnection} in state: ${state}`);
+            if (this.usesUnifiedPlan
+                && !this.isP2P
+                && state === 'stable'
+                && remoteDescription
+                && typeof remoteDescription.sdp === 'string') {
+                logger.info(`${this} onnegotiationneeded fired on ${this.peerconnection}`);
+
                 const workFunction = finishedCallback => {
                     const oldSdp = new SDP(this.peerconnection.localDescription.sdp);
 
                     this._renegotiate()
+                        .then(() => this.peerconnection.configureSenderVideoEncodings())
                         .then(() => {
                             const newSdp = new SDP(this.peerconnection.localDescription.sdp);
 
                             this.notifyMySSRCUpdate(oldSdp, newSdp);
-                            finishedCallback();
-                        },
-                        finishedCallback /* will be called with en error */);
+                        })
+                        .then(() => finishedCallback(), error => finishedCallback(error));
                 };
 
                 this.modificationQueue.push(
@@ -625,9 +623,6 @@ export default class JingleSessionPC extends JingleSession {
                     });
             }
         };
-
-        // The signaling layer will bind it's listeners at this point
-        this.signalingLayer.setChatRoom(this.room);
     }
 
     /**
@@ -881,9 +876,17 @@ export default class JingleSessionPC extends JingleSession {
 
             if (this.isP2P) {
                 // In P2P all SSRCs are owner by the remote peer
-                this.signalingLayer.setSSRCOwner(
+                this._signalingLayer.setSSRCOwner(
                     ssrc, Strophe.getResourceFromJid(this.remoteJid));
             } else {
+                if (FeatureFlags.isSourceNameSignalingEnabled()) {
+                    // Only set sourceName for non-P2P case
+                    if (ssrcElement.hasAttribute('name')) {
+                        const sourceName = ssrcElement.getAttribute('name');
+
+                        this._signalingLayer.setTrackSourceName(ssrc, sourceName);
+                    }
+                }
                 $(ssrcElement)
                     .find('>ssrc-info[xmlns="http://jitsi.org/jitmeet"]')
                     .each((i3, ssrcInfoElement) => {
@@ -893,7 +896,7 @@ export default class JingleSessionPC extends JingleSession {
                             if (isNaN(ssrc) || ssrc < 0) {
                                 logger.warn(`${this} Invalid SSRC ${ssrc} value received for ${owner}`);
                             } else {
-                                this.signalingLayer.setSSRCOwner(
+                                this._signalingLayer.setSSRCOwner(
                                     ssrc,
                                     getEndpointId(owner));
                             }
@@ -1476,20 +1479,6 @@ export default class JingleSessionPC extends JingleSession {
     }
 
     /**
-     * Sets the maximum bitrates on the local video track. Bitrate values from
-     * videoQuality settings in config.js will be used for configuring the sender.
-     * @returns {Promise<void>} promise that will be resolved when the operation is
-     * successful and rejected otherwise.
-     */
-    setSenderMaxBitrates() {
-        if (this._assertNotEnded()) {
-            return this.peerconnection.setMaxBitRate();
-        }
-
-        return Promise.resolve();
-    }
-
-    /**
      * Sets the resolution constraint on the local camera track.
      * @param {number} maxFrameHeight - The user preferred max frame height.
      * @returns {Promise} promise that will be resolved when the operation is
@@ -1507,21 +1496,11 @@ export default class JingleSessionPC extends JingleSession {
                 return this.setMediaTransferActive(true, videoActive);
             }
 
-            return this.peerconnection.setSenderVideoConstraint(maxFrameHeight);
-        }
+            const promise = typeof maxFrameHeight === 'undefined'
+                ? this.peerconnection.configureSenderVideoEncodings()
+                : this.peerconnection.setSenderVideoConstraints(maxFrameHeight);
 
-        return Promise.resolve();
-    }
-
-    /**
-     * Sets the degradation preference on the video sender. This setting determines if
-     * resolution or framerate will be preferred when bandwidth or cpu is constrained.
-     * @returns {Promise<void>} promise that will be resolved when the operation is
-     * successful and rejected otherwise.
-     */
-    setSenderVideoDegradationPreference() {
-        if (this._assertNotEnded()) {
-            return this.peerconnection.setSenderVideoDegradationPreference();
+            return promise;
         }
 
         return Promise.resolve();
@@ -1720,20 +1699,17 @@ export default class JingleSessionPC extends JingleSession {
      * Handles the deletion of the remote tracks and SSRCs associated with a remote endpoint.
      *
      * @param {string} id Endpoint id of the participant that has left the call.
-     * @returns {Promise<JitsiRemoteTrack>} Promise that resolves with the tracks that are removed or error if the
-     * operation fails.
+     * @returns {void}
      */
     removeRemoteStreamsOnLeave(id) {
-        let remoteTracks = [];
-
         const workFunction = finishCallback => {
             const removeSsrcInfo = this.peerconnection.getRemoteSourceInfoByParticipant(id);
 
             if (removeSsrcInfo.length) {
+                this.peerconnection.removeRemoteTracks(id);
                 const oldLocalSdp = new SDP(this.peerconnection.localDescription.sdp);
                 const newRemoteSdp = this._processRemoteRemoveSource(removeSsrcInfo);
 
-                remoteTracks = this.peerconnection.removeRemoteTracks(id);
                 this._renegotiate(newRemoteSdp.raw)
                     .then(() => {
                         const newLocalSDP = new SDP(this.peerconnection.localDescription.sdp);
@@ -1747,21 +1723,17 @@ export default class JingleSessionPC extends JingleSession {
             }
         };
 
-        return new Promise((resolve, reject) => {
-            logger.debug(`${this} Queued removeRemoteStreamsOnLeave task for participant ${id}`);
+        logger.debug(`${this} Queued removeRemoteStreamsOnLeave task for participant ${id}`);
 
-            this.modificationQueue.push(
-                workFunction,
-                error => {
-                    if (error) {
-                        logger.error(`${this} removeRemoteStreamsOnLeave error:`, error);
-                        reject(error);
-                    } else {
-                        logger.info(`${this} removeRemoteStreamsOnLeave done!`);
-                        resolve(remoteTracks);
-                    }
-                });
-        });
+        this.modificationQueue.push(
+            workFunction,
+            error => {
+                if (error) {
+                    logger.error(`${this} removeRemoteStreamsOnLeave error:`, error);
+                } else {
+                    logger.info(`${this} removeRemoteStreamsOnLeave done!`);
+                }
+            });
     }
 
     /**
@@ -1879,21 +1851,15 @@ export default class JingleSessionPC extends JingleSession {
                     const mid = remoteSdp.media.findIndex(mLine => mLine.includes(line));
 
                     if (mid > -1) {
-                        // Remove the ssrcs from the m-line in
-                        // 1. Plan-b mode always.
-                        // 2. Unified mode but only for jvb connection. In p2p mode if the ssrc is removed and added
-                        // back to the same m-line, Chrome/Safari do not render the media even if it being received
-                        // and decoded from the remote peer. The webrtc spec is not clear about m-line re-use and
-                        // the browser vendors have implemented this differently. Currently workaround this by changing
-                        // the media direction, that should be enough for the browser to fire the "removetrack" event
-                        // on the associated MediaStream.
-                        if (!this.usesUnifiedPlan || (this.usesUnifiedPlan && !this.isP2P)) {
-                            remoteSdp.media[mid] = remoteSdp.media[mid].replace(`${line}\r\n`, '');
-                        }
-
-                        // The current direction of the transceiver for p2p will depend on whether a local sources is
-                        // added or not. It will be 'sendrecv' if the local source is present, 'sendonly' otherwise.
                         if (this.isP2P) {
+                            // Do not remove ssrcs from m-line in p2p mode. If the ssrc is removed and added back to
+                            // the same m-line (on source-add), Chrome/Safari do not render the media even if it is
+                            // being received and decoded from the remote peer. The webrtc spec is not clear about
+                            // m-line re-use and the browser vendors have implemented this differently. Currently work
+                            // around this by changing the media direction, that should be enough for the browser to
+                            // fire the "removetrack" event on the associated MediaStream. Also, the current direction
+                            // of the transceiver for p2p will depend on whether a local sources is added or not. It
+                            // will be 'sendrecv' if the local source is present, 'sendonly' otherwise.
                             const mediaType = SDPUtil.parseMLine(remoteSdp.media[mid].split('\r\n')[0])?.media;
                             const desiredDirection = this.peerconnection.getDesiredMediaDirection(mediaType, false);
 
@@ -1901,10 +1867,9 @@ export default class JingleSessionPC extends JingleSession {
                                 remoteSdp.media[mid] = remoteSdp.media[mid]
                                     .replace(`a=${direction}`, `a=${desiredDirection}`);
                             });
-
-                        // Jvb connections will have direction set to 'sendonly' when the remote ssrc is present.
                         } else {
-                            // Change the direction to "inactive" always for jvb connection.
+                            // Jvb connections will have direction set to 'sendonly' for the remote sources.
+                            remoteSdp.media[mid] = remoteSdp.media[mid].replace(`${line}\r\n`, '');
                             remoteSdp.media[mid] = remoteSdp.media[mid]
                                 .replace(`a=${MediaDirection.SENDONLY}`, `a=${MediaDirection.INACTIVE}`);
                         }
@@ -1912,8 +1877,7 @@ export default class JingleSessionPC extends JingleSession {
                 });
             } else {
                 lines.forEach(line => {
-                    remoteSdp.media[idx]
-                        = remoteSdp.media[idx].replace(`${line}\r\n`, '');
+                    remoteSdp.media[idx] = remoteSdp.media[idx].replace(`${line}\r\n`, '');
                 });
             }
         });
@@ -2109,14 +2073,11 @@ export default class JingleSessionPC extends JingleSession {
                     }
 
                     return promise.then(() => {
-                        if (newTrack && newTrack.isVideoTrack()) {
+                        if (newTrack?.isVideoTrack()) {
                             logger.debug(`${this} replaceTrack worker: configuring video stream`);
 
-                            // FIXME set all sender parameters in one go?
-                            // Set the degradation preference on the new video sender.
-                            return this.peerconnection.setSenderVideoDegradationPreference()
-                                .then(() => this.peerconnection.setSenderVideoConstraint())
-                                .then(() => this.peerconnection.setMaxBitRate());
+                            // Configure the video encodings after the track is replaced.
+                            return this.peerconnection.configureSenderVideoEncodings();
                         }
                     });
                 })
@@ -2261,12 +2222,10 @@ export default class JingleSessionPC extends JingleSession {
         return this._addRemoveTrackAsMuteUnmute(
             false /* add as unmute */, track)
             .then(() => {
-                // Apply the video constraints, max bitrates and degradation preference on
-                // the video sender if needed.
-                if (track.isVideoTrack() && browser.doesVideoMuteByStreamRemove()) {
-                    return this.setSenderMaxBitrates()
-                        .then(() => this.setSenderVideoDegradationPreference())
-                        .then(() => this.setSenderVideoConstraint());
+                // Configure the video encodings after the track is unmuted. If the user joins the call muted and
+                // unmutes it the first time, all the parameters need to be configured.
+                if (track.isVideoTrack()) {
+                    return this.peerconnection.configureSenderVideoEncodings();
                 }
             });
     }
@@ -2317,11 +2276,13 @@ export default class JingleSessionPC extends JingleSession {
                     if (shouldRenegotiate && oldLocalSDP && tpc.remoteDescription.sdp) {
                         this._renegotiate()
                             .then(() => {
-                                // The results are ignored, as this check failure is not
-                                // enough to fail the whole operation. It will log
-                                // an error inside.
-                                this._verifyNoSSRCChanged(
-                                    operationName, new SDP(oldLocalSDP));
+                                // The results are ignored, as this check failure is not enough to fail the whole
+                                // operation. It will log an error inside for plan-b.
+                                !this.usesUnifiedPlan && this._verifyNoSSRCChanged(operationName, new SDP(oldLocalSDP));
+                                const newLocalSdp = tpc.localDescription.sdp;
+
+                                // Signal the ssrc if an unmute operation results in a new ssrc being generated.
+                                this.notifyMySSRCUpdate(new SDP(oldLocalSDP), new SDP(newLocalSdp));
                                 finishedCallback();
                             });
                     } else {
@@ -2674,9 +2635,6 @@ export default class JingleSessionPC extends JingleSession {
 
         logger.debug(`${this} Queued PC close task`);
         this.modificationQueue.push(finishCallback => {
-            // The signaling layer will remove it's listeners
-            this.signalingLayer.setChatRoom(null);
-
             // do not try to close if already closed.
             this.peerconnection && this.peerconnection.close();
             finishCallback();

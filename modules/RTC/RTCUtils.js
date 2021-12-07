@@ -1,13 +1,5 @@
-/* global
-          __filename,
-          MediaStreamTrack,
-          RTCIceCandidate: true,
-          RTCPeerConnection,
-          RTCSessionDescription: true
-*/
-
+import { getLogger } from '@jitsi/logger';
 import EventEmitter from 'events';
-import { getLogger } from 'jitsi-meet-logger';
 import clonedeep from 'lodash.clonedeep';
 
 import JitsiTrackError from '../../JitsiTrackError';

@@ -1,5 +1,5 @@
 
-import { getLogger } from 'jitsi-meet-logger';
+import { getLogger } from '@jitsi/logger';
 
 import * as JitsiConferenceEvents from '../../JitsiConferenceEvents';
 import CodecMimeType from '../../service/RTC/CodecMimeType';
@@ -47,9 +47,7 @@ export class CodecSelection {
         logger.debug(`Codec preferences for the conference are JVB: ${this.jvbPreferredCodec},
             P2P: ${this.p2pPreferredCodec}`);
 
-        // Do not prefer VP9 on Firefox because of the following bug.
-        // https://bugzilla.mozilla.org/show_bug.cgi?id=1633876
-        if (browser.isFirefox() && this.jvbPreferredCodec === CodecMimeType.VP9) {
+        if (this.jvbPreferredCodec === CodecMimeType.VP9 && !browser.supportsVP9()) {
             this.jvbPreferredCodec = CodecMimeType.VP8;
         }
 
@@ -133,14 +131,12 @@ export class CodecSelection {
             const remoteParticipants = this.conference.getParticipants().map(participant => participant.getId());
 
             for (const remote of remoteParticipants) {
-                const peerMediaInfo = session.signalingLayer.getPeerMediaInfo(remote, MediaType.VIDEO);
+                const peerMediaInfo = session._signalingLayer.getPeerMediaInfo(remote, MediaType.VIDEO);
                 const peerCodec = peerMediaInfo?.codecType;
 
-                // We do not want Firefox to switch to VP9 because of the following bug.
-                // https://bugzilla.mozilla.org/show_bug.cgi?id=1492500.
                 if (peerCodec
                     && peerCodec !== currentCodec
-                    && !(browser.isFirefox() && peerCodec === CodecMimeType.VP9)) {
+                    && (peerCodec !== CodecMimeType.VP9 || browser.supportsVP9())) {
                     selectedCodec = peerCodec;
                 }
             }

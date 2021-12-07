@@ -130,6 +130,9 @@ const XMPPEvents = {
     // Designates an event indicating that the XMPP MUC was destroyed.
     MUC_DESTROYED: 'xmpp.muc_destroyed',
 
+    // Designates an event indicating that we are currently in process of joining the XMPP MUC.
+    MUC_JOIN_IN_PROGRESS: 'xmpp.muc_join_in_progress',
+
     // Designates an event indicating that we have joined the XMPP MUC.
     MUC_JOINED: 'xmpp.muc_joined',
 
@@ -277,6 +280,21 @@ const XMPPEvents = {
      * Event fired when we receive message that a new jid was approved.
      */
     AV_MODERATION_PARTICIPANT_REJECTED: 'xmpp.av_moderation.participant.rejected',
+
+    /**
+     * Event fired when a participant is requested to join a given (breakout) room.
+     */
+    BREAKOUT_ROOMS_MOVE_TO_ROOM: 'xmpp.breakout-rooms.move-to-room',
+
+    /**
+     * Event fired when we receive a message for breakout rooms.
+     */
+    BREAKOUT_ROOMS_EVENT: 'xmpp.breakout-rooms.event',
+
+    /**
+     * Event fired when the breakout rooms data was updated.
+     */
+    BREAKOUT_ROOMS_UPDATED: 'xmpp.breakout-rooms.updated',
 
     // Designates an event indicating that we should join the conference with
     // audio and/or video muted.

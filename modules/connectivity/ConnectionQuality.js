@@ -1,4 +1,4 @@
-import { getLogger } from 'jitsi-meet-logger';
+import { getLogger } from '@jitsi/logger';
 
 import * as ConferenceEvents from '../../JitsiConferenceEvents';
 import CodecMimeType from '../../service/RTC/CodecMimeType';
@@ -17,6 +17,12 @@ const logger = getLogger(__filename);
  * over the data channel.
  */
 const STATS_MESSAGE_TYPE = 'stats';
+
+/**
+ * The value to use for the "type" field for messages sent
+ * over the data channel that contain facial expression.
+ */
+const FACIAL_EXPRESSION_MESSAGE_TYPE = 'facial_expression';
 
 const kSimulcastFormats = [
     { width: 1920,
@@ -221,6 +227,17 @@ export default class ConnectionQuality {
             ConferenceEvents.ENDPOINT_STATS_RECEIVED,
             (participant, payload) => {
                 this._updateRemoteStats(participant.getId(), payload);
+            });
+
+        conference.on(
+            ConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
+            (participant, payload) => {
+                if (payload.type === FACIAL_EXPRESSION_MESSAGE_TYPE) {
+                    this.eventEmitter.emit(
+                        ConferenceEvents.FACIAL_EXPRESSION_ADDED,
+                        participant.getId(),
+                        payload);
+                }
             });
 
         // Listen to local statistics events originating from the RTC module and update the _localStats field.

@@ -1,7 +1,7 @@
 /**
  * Strophe logger implementation. Logs from level WARN and above.
  */
-import { getLogger } from 'jitsi-meet-logger';
+import { getLogger } from '@jitsi/logger';
 import { Strophe } from 'strophe.js';
 
 import GlobalOnErrorHandler from '../util/GlobalOnErrorHandler';

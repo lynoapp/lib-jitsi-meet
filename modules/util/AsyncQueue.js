@@ -1,5 +1,5 @@
+import { getLogger } from '@jitsi/logger';
 import { queue } from 'async';
-import { getLogger } from 'jitsi-meet-logger';
 
 const logger = getLogger(__filename);
 
