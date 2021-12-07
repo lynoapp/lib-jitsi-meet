@@ -1,3 +1,10 @@
+/**
+ * Returns array of JS objects from the presence JSON associated with the passed
+ / nodeName
+ * @param pres the presence JSON
+ * @param nodeName the name of the node (videomuted, audiomuted, etc)
+ */
+export function filterNodeFromPresenceJSON(pres: any, nodeName: any): any[];
 export namespace parser {
     function packet2JSON(xmlElement: any, nodes: any): void;
     function packet2JSON(xmlElement: any, nodes: any): void;
@@ -33,6 +40,7 @@ export default class ChatRoom extends Listenable {
     presHandlers: {};
     _removeConnListeners: any[];
     joined: boolean;
+    inProgressEmitted: boolean;
     role: any;
     focusMucJid: any;
     noBridgeAvailable: boolean;
@@ -40,6 +48,7 @@ export default class ChatRoom extends Listenable {
     moderator: Moderator;
     lobby: Lobby;
     avModeration: AVModeration;
+    breakoutRooms: BreakoutRooms;
     lastPresences: {};
     phoneNumber: any;
     phonePin: any;
@@ -304,6 +313,12 @@ export default class ChatRoom extends Listenable {
      */
     getMediaPresenceInfo(endpointId: string, mediaType: typeof MediaType): PeerMediaInfo;
     /**
+     * Returns the last presence advertised by a MUC member.
+     * @param {string} mucNick
+     * @returns {*}
+     */
+    getLastPresence(mucNick: string): any;
+    /**
      * Returns true if the SIP calls are supported and false otherwise
      */
     isSIPCallingSupported(): boolean;
@@ -325,6 +340,10 @@ export default class ChatRoom extends Listenable {
      * @returns {AVModeration}
      */
     getAVModeration(): AVModeration;
+    /**
+     * @returns {BreakoutRooms}
+     */
+    getBreakoutRooms(): BreakoutRooms;
     /**
      * Returns the phone number for joining the conference.
      */
@@ -373,5 +392,6 @@ import XmppConnection from "./XmppConnection";
 import Moderator from "./moderator";
 import Lobby from "./Lobby";
 import AVModeration from "./AVModeration";
+import BreakoutRooms from "./BreakoutRooms";
 import { Strophe } from "strophe.js";
 import * as MediaType from "../../service/RTC/MediaType";

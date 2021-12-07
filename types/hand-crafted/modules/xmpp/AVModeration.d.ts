@@ -4,6 +4,10 @@ import ChatRoom from "./ChatRoom";
 export default class AVModeration {
   constructor(room: ChatRoom);
   /**
+   * Stops listening for events.
+   */
+  dispose(): void;
+  /**
    * Whether AV moderation is supported on backend.
    */
   isSupported(): boolean;

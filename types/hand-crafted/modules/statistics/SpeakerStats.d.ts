@@ -1,3 +1,13 @@
+export enum FacialExpressions {
+  happy = 'happy',
+  neutral = 'neutral',
+  surprised = 'surprised',
+  angry = 'angry',
+  fearful = 'fearful',
+  disgusted = 'disgusted',
+  sad = 'sad',
+}
+
 export class SpeakerStats {
   constructor( userId: string, displayName: string, isLocalStats: boolean );
   getUserId: () => string;
@@ -9,4 +19,7 @@ export class SpeakerStats {
   getTotalDominantSpeakerTime: () => number;
   hasLeft: () => boolean;
   markAsHasLeft: () => void;
+  getFacialExpressions: () => void;
+  setFacialExpressions: (facialExpressions: { [key in FacialExpressions]: number }) => void;
+  addFacialExpression: (facialExpression: FacialExpressions, duration: number) => void;
 }

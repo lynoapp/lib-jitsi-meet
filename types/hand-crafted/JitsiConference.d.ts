@@ -10,6 +10,7 @@ import JitsiVideoSIPGWSession from './modules/videosipgw/JitsiVideoSIPGWSession'
 import TraceablePeerConnection from './modules/RTC/TraceablePeerConnection';
 import JingleSessionPC from './modules/xmpp/JingleSessionPC';
 import { MediaType } from './service/RTC/MediaType';
+import BreakoutRooms from './modules/xmpp/BreakoutRooms';
 
 export default class JitsiConference {
   constructor( options: {
@@ -131,14 +132,25 @@ export default class JitsiConference {
   getP2PConnectionState: () => string | null;
   setDesktopSharingFrameRate: (maxFps: number) => boolean;
   startP2PSession: () => void;
-  stopP2PSession: () => void;
+  stopP2PSession: (options: unknown) => void;
   getSpeakerStats: () => unknown; // TODO:
+  /**
+   * Sends a facial expression with its duration to the xmpp server.
+   */
+  sendFacialExpression: ( payload: object ) => void;
   setReceiverConstraints: ( videoConstraints: unknown ) => void; // TODO:
   setReceiverVideoConstraint: ( maxFrameHeight: number ) => void;
   setSenderVideoConstraint: ( maxFrameHeight: number ) => Promise<unknown>; // TODO:
   isE2EEEnabled: () => boolean;
   createVideoSIPGWSession: ( sipAddress: string, displayName: string ) => JitsiVideoSIPGWSession | Error;
   toggleE2EE: ( enabled: boolean ) => void;
+  /**
+   * Sets the key and index for End-to-End encryption.
+   */
+  setMediaEncryptionKey(keyInfo: {
+    index: number;
+    encryptionKey: CryptoKey;
+  }): void;
   isLobbySupported: () => boolean;
   isMembersOnly: () => boolean;
   enableLobby: () => Promise<unknown>;
@@ -151,4 +163,8 @@ export default class JitsiConference {
   disableAVModeration: ( mediaType: MediaType ) => void;
   avModerationApprove: ( mediaType: MediaType, id: string ) => void;
   avModerationReject: ( mediaType: MediaType, id: string ) => void;
+  /**
+   * Returns the breakout rooms manager object.
+   */
+  getBreakoutRooms(): BreakoutRooms;
 }

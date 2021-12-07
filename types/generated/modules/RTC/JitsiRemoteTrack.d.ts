@@ -17,15 +17,17 @@ export default class JitsiRemoteTrack extends JitsiTrack {
      * @param {boolean} muted the initial muted state
      * @param {boolean} isP2P indicates whether or not this track belongs to a
      * P2P session
+     * @param {String} sourceName the source name signaled for the track
      * @throws {TypeError} if <tt>ssrc</tt> is not a number.
      * @constructor
      */
-    constructor(rtc: RTC, conference: JitsiConference, ownerEndpointId: string, stream: MediaStream, track: MediaStreamTrack, mediaType: MediaType, videoType: VideoType, ssrc: number, muted: boolean, isP2P: boolean);
+    constructor(rtc: RTC, conference: JitsiConference, ownerEndpointId: string, stream: MediaStream, track: MediaStreamTrack, mediaType: MediaType, videoType: VideoType, ssrc: number, muted: boolean, isP2P: boolean, sourceName: string);
     rtc: RTC;
     ssrc: number;
     ownerEndpointId: string;
     muted: boolean;
     isP2P: boolean;
+    _sourceName: string;
     hasBeenMuted: boolean;
     _containerHandlers: {};
     /**
@@ -75,6 +77,12 @@ export default class JitsiRemoteTrack extends JitsiTrack {
      * @returns {number} the SSRC of this remote track.
      */
     getSSRC(): number;
+    /**
+     * Returns the tracks source name
+     *
+     * @returns {string} the track's source name
+     */
+    getSourceName(): string;
     /**
      * Changes the video type of the track.
      *

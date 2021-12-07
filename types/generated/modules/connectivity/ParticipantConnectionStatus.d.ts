@@ -60,12 +60,15 @@ export default class ParticipantConnectionStatusHandler {
      * @param {RTC} rtc the RTC service instance
      * @param {JitsiConference} conference parent conference instance
      * @param {Object} options
+     * @param {number} [options.p2pRtcMuteTimeout=2500] custom value for
+     * {@link ParticipantConnectionStatus.p2pRtcMuteTimeout}.
      * @param {number} [options.rtcMuteTimeout=2000] custom value for
      * {@link ParticipantConnectionStatus.rtcMuteTimeout}.
      * @param {number} [options.outOfLastNTimeout=500] custom value for
      * {@link ParticipantConnectionStatus.outOfLastNTimeout}.
      */
     constructor(rtc: RTC, conference: JitsiConference, options: {
+        p2pRtcMuteTimeout?: number;
         rtcMuteTimeout?: number;
         outOfLastNTimeout?: number;
     });
@@ -101,6 +104,14 @@ export default class ParticipantConnectionStatusHandler {
      * @type {number}
      */
     outOfLastNTimeout: number;
+    /**
+     * How long we are going to wait for the corresponding signaling mute event after the RTC video track muted
+     * event is fired on the Media stream, before the connection interrupted is fired. The default value is
+     * {@link DEFAULT_P2P_RTC_MUTE_TIMEOUT}.
+     *
+     * @type {number} amount of time in milliseconds.
+     */
+    p2pRtcMuteTimeout: number;
     /**
      * How long we're going to wait after the RTC video track muted event
      * for the corresponding signalling mute event, before the connection

@@ -54,6 +54,15 @@ export default class SpeakerStatsCollector {
      */
     private _onDisplayNameChange;
     /**
+     * Adds a new facial expression with its duration of a remote user.
+     *
+     * @param {string} userId - The user id of the user that left.
+     * @param {Object} data - The facial expression with its duration.
+     * @returns {void}
+     * @private
+     */
+    private _onFacialExpressionAdd;
+    /**
      * Return a copy of the tracked SpeakerStats models.
      *
      * @returns {Object} The keys are the user ids and the values are the

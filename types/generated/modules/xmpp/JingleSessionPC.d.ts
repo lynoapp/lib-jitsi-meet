@@ -156,11 +156,6 @@ export default class JingleSessionPC extends JingleSession {
      */
     remoteRecvMaxFrameHeight: number | undefined;
     /**
-     * The signaling layer implementation.
-     * @type {SignalingLayerImpl}
-     */
-    signalingLayer: SignalingLayerImpl;
-    /**
      * The queue used to serialize operations done on the peerconnection.
      *
      * @type {AsyncQueue}
@@ -356,26 +351,12 @@ export default class JingleSessionPC extends JingleSession {
      */
     sendTransportReject(success: any, failure: any): void;
     /**
-     * Sets the maximum bitrates on the local video track. Bitrate values from
-     * videoQuality settings in config.js will be used for configuring the sender.
-     * @returns {Promise<void>} promise that will be resolved when the operation is
-     * successful and rejected otherwise.
-     */
-    setSenderMaxBitrates(): Promise<void>;
-    /**
      * Sets the resolution constraint on the local camera track.
      * @param {number} maxFrameHeight - The user preferred max frame height.
      * @returns {Promise} promise that will be resolved when the operation is
      * successful and rejected otherwise.
      */
     setSenderVideoConstraint(maxFrameHeight: number): Promise<any>;
-    /**
-     * Sets the degradation preference on the video sender. This setting determines if
-     * resolution or framerate will be preferred when bandwidth or cpu is constrained.
-     * @returns {Promise<void>} promise that will be resolved when the operation is
-     * successful and rejected otherwise.
-     */
-    setSenderVideoDegradationPreference(): Promise<void>;
     /**
      *
      * @param reasonCondition
@@ -413,10 +394,9 @@ export default class JingleSessionPC extends JingleSession {
      * Handles the deletion of the remote tracks and SSRCs associated with a remote endpoint.
      *
      * @param {string} id Endpoint id of the participant that has left the call.
-     * @returns {Promise<JitsiRemoteTrack>} Promise that resolves with the tracks that are removed or error if the
-     * operation fails.
+     * @returns {void}
      */
-    removeRemoteStreamsOnLeave(id: string): Promise<JitsiRemoteTrack>;
+    removeRemoteStreamsOnLeave(id: string): void;
     /**
      * Handles either Jingle 'source-add' or 'source-remove' message for this
      * Jingle session.
@@ -672,7 +652,6 @@ export type JingleSessionPCOptions = {
     webrtcIceTcpDisable: boolean;
 };
 import JingleSession from "./JingleSession";
-import SignalingLayerImpl from "./SignalingLayerImpl";
 import AsyncQueue from "../util/AsyncQueue";
 import { Strophe } from "strophe.js";
 import SDP from "../sdp/SDP";

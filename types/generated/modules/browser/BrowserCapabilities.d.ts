@@ -3,11 +3,11 @@
  */
 export default class BrowserCapabilities {
     /**
-     * Tells whether or not the <tt>MediaStream/tt> is removed from
-     * the <tt>PeerConnection</tt> and disposed on video mute (in order to turn
-     * off the camera device).
-     * @return {boolean} <tt>true</tt> if the current browser supports this
-     * strategy or <tt>false</tt> otherwise.
+     * Tells whether or not the <tt>MediaStream/tt> is removed from the <tt>PeerConnection</tt> and disposed on video
+     * mute (in order to turn off the camera device). This is needed on Firefox because of the following bug
+     * https://bugzilla.mozilla.org/show_bug.cgi?id=1735951
+     *
+     * @return {boolean} <tt>true</tt> if the current browser supports this strategy or <tt>false</tt> otherwise.
      */
     doesVideoMuteByStreamRemove(): boolean;
     /**
@@ -102,6 +102,12 @@ export default class BrowserCapabilities {
      */
     supportsRTTStatistics(): boolean;
     /**
+     * Returns true if VP9 is supported by the client on the browser. VP9 is currently disabled on Firefox and Safari
+     * because of issues with rendering. Please check https://bugzilla.mozilla.org/show_bug.cgi?id=1492500,
+     * https://bugs.webkit.org/show_bug.cgi?id=231071 and https://bugs.webkit.org/show_bug.cgi?id=231074 for details.
+     */
+    supportsVP9(): any;
+    /**
      * Checks if the browser uses SDP munging for turning on simulcast.
      *
      * @returns {boolean}
@@ -155,9 +161,21 @@ export default class BrowserCapabilities {
      */
     supportsVADDetection(): boolean;
     /**
+     * Check if the browser supports the RTP RTX feature (and it is usable).
+     *
+     * @returns {boolean}
+     */
+    supportsRTX(): boolean;
+    /**
      * Returns the version of a Chromium based browser.
      *
      * @returns {Number}
      */
     _getChromiumBasedVersion(): number;
+    /**
+     * Returns the version of a Safari browser.
+     *
+     * @returns {Number}
+     */
+    _getSafariVersion(): number;
 }

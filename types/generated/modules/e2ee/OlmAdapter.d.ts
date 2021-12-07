@@ -69,6 +69,16 @@ export class OlmAdapter extends Listenable {
     _olmAccount: any;
     _idKey: any;
     /**
+     * Publishes our own Olmn id key in presence.
+     * @private
+     */
+    private _onIdKeyReady;
+    /**
+     * Event posted when the E2EE signalling channel has been established with the given participant.
+     * @private
+     */
+    private _onParticipantE2EEChannelReady;
+    /**
      * Internal helper for encrypting the current key information for a given participant.
      *
      * @param {Olm.Session} session - Participant's session.

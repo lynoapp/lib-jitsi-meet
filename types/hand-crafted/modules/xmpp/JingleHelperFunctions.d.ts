@@ -1,0 +1,1 @@
+export function expandSourcesFromJson(iq: string, jsonMessageXml: Element): Map<string, Array<string>>;

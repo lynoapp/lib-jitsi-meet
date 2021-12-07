@@ -77,4 +77,15 @@ export default class LocalSdpMunger {
      * (a modified copy of the one given as the input).
      */
     transformStreamIdentifiers(sessionDesc: RTCSessionDescription): RTCSessionDescription;
+    /**
+     * Injects source names. Source names are need to for multiple streams per endpoint support. The final plan is to
+     * use the "mid" attribute for source names, but because the SDP to Jingle conversion still operates in the Plan-B
+     * semantics (one source name per media), a custom "name" attribute is injected into SSRC lines..
+     *
+     * @param {MLineWrap} mediaSection - The media part (audio or video) of the session description which will be
+     * modified in place.
+     * @returns {void}
+     * @private
+     */
+    private _injectSourceNames;
 }

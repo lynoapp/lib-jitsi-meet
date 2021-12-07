@@ -12,7 +12,7 @@ export enum ParticipantConnectionStatus {
 }
 
 export default class ParticipantConnectionStatusHandler {
-  constructor( rtc: RTC, conference: JitsiConference, options: { rtcMuteTimeout: number, outOfLastNTimeout: number } );
+  constructor( rtc: RTC, conference: JitsiConference, options: { p2pRtcMuteTimeout?: number; rtcMuteTimeout: number; outOfLastNTimeout: number; } );
   init: () => void;
   dispose: () => void;
   onEndpointConnStatusChanged: ( endpointId: string, isActive: boolean ) => void;

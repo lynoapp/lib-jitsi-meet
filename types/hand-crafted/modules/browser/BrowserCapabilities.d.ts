@@ -14,6 +14,7 @@ export default class BrowserCapabilities {
   supportsPerformanceObserver: () => boolean;
   supportsReceiverStats: () => boolean;
   supportsRTTStatistics: () => boolean;
+  supportsVP9: () => boolean;
   usesSdpMungingForSimulcast: () => boolean;
   usesAdapter: () => boolean;
   usesRidsForSimulcast: () => boolean;
@@ -23,4 +24,5 @@ export default class BrowserCapabilities {
   supportsAudioRed: () => boolean;
   supportsUnifiedPlan: () => boolean;
   supportsVADDetection: () => boolean;
+  supportsRTX: () => boolean;
 }

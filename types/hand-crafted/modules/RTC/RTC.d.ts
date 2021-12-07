@@ -3,7 +3,8 @@ import JitsiLocalTrack from './JitsiLocalTrack';
 import JitsiRemoteTrack from './JitsiRemoteTrack';
 import TraceablePeerConnection from './TraceablePeerConnection';
 import { MediaType } from '../../service/RTC/MediaType';
-import SignalingLayer from '../../service/RTC/SignalingLayer';
+import SignalingLayer, { SourceName } from '../../service/RTC/SignalingLayer';
+import { BridgeVideoType } from '../../service/RTC/BridgeVideoType';
 
 export default class RTC extends Listenable {
   destroy: () => void;
@@ -47,7 +48,11 @@ export default class RTC extends Listenable {
   setLastN: ( value: number ) => void;
   isInLastN: ( id: string ) => boolean;
   setNewReceiverVideoConstraints: ( constraints: unknown ) => void; // TODO:
-  setVideoType: ( videoType: string ) => void;
+  setVideoType: ( videoType: BridgeVideoType ) => void;
+  /**
+   * Sends the track's  video type to the JVB.
+   */
+  sendSourceVideoType(sourceName: SourceName, videoType: BridgeVideoType): void;
   setVideoMute: ( value: unknown ) => Promise<unknown>; // TODO:
   arePermissionsGrantedForAvailableDevices: () => boolean;
   sendEndpointStatsMessage: ( payload: unknown ) => void; // TODO:

@@ -107,8 +107,17 @@ export default class BridgeChannel {
      * Sends a 'VideoTypeMessage' message via the bridge channel.
      *
      * @param {string} videoType 'camera', 'desktop' or 'none'.
+     * @deprecated to be replaced with sendSourceVideoTypeMessage
      */
     sendVideoTypeMessage(videoType: string): void;
+    /**
+     * Sends a 'VideoTypeMessage' message via the bridge channel.
+     *
+     * @param {BridgeVideoType} videoType - the video type.
+     * @param {SourceName} sourceName - the source name of the video track.
+     * @returns {void}
+     */
+    sendSourceVideoTypeMessage(sourceName: SourceName, videoType: BridgeVideoType): void;
     /**
      * Set events on the given RTCDataChannel or WebSocket instance.
      */

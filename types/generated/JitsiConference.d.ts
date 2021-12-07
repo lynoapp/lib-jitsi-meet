@@ -83,6 +83,12 @@ declare class JitsiConference {
     options: any;
     eventManager: JitsiConferenceEventManager;
     participants: {};
+    /**
+     * The signaling layer instance.
+     * @type {SignalingLayerImpl}
+     * @private
+     */
+    private _signalingLayer;
     componentsVersions: ComponentsVersions;
     /**
      * Jingle session instance for the JVB connection.
@@ -167,6 +173,18 @@ declare class JitsiConference {
      */
     private _conferenceJoinAnalyticsEventSent;
     _e2eEncryption: E2EEncryption;
+    /**
+     * Flag set to <tt>true</tt> when Jicofo sends a presence message indicating that the max audio sender limit has
+     * been reached for the call. Once this is set, unmuting audio will be disabled from the client until it gets reset
+     * again by Jicofo.
+     */
+    _audioSenderLimitReached: any;
+    /**
+     * Flag set to <tt>true</tt> when Jicofo sends a presence message indicating that the max video sender limit has
+     * been reached for the call. Once this is set, unmuting video will be disabled from the client until it gets reset
+     * again by Jicofo.
+     */
+    _videoSenderLimitReached: any;
     constructor: typeof JitsiConference;
     /**
      * Initializes the conference object properties
@@ -236,6 +254,7 @@ declare class JitsiConference {
     leave(): Promise<any>;
     private _getActiveMediaSession;
     private _getMediaSessions;
+    private _registerRtcListeners;
     private _sendBridgeVideoTypeMessage;
     /**
      * Returns name of this conference.
@@ -432,6 +451,8 @@ declare class JitsiConference {
      * @param {JitsiLocalTrack} newTrack the new track being created
      */
     _setupNewTrack(newTrack: JitsiLocalTrack): void;
+    private _setNewVideoType;
+    private _setTrackMuteStatus;
     /**
      * Method called by the {@link JitsiLocalTrack} (a video one) in order to add
      * back the underlying WebRTC MediaStream to the PeerConnection (which has
@@ -882,7 +903,6 @@ declare class JitsiConference {
     sendMessage(message: string | object, to?: string, sendThroughVideobridge?: boolean): void;
     isConnectionInterrupted(): boolean;
     private _onConferenceRestarted;
-    restartInProgress: boolean;
     private _onIceConnectionFailed;
     _delayedIceFailed: IceFailedHandling;
     private _acceptP2PIncomingCall;
@@ -936,14 +956,19 @@ declare class JitsiConference {
      */
     startP2PSession(): void;
     /**
-     * Manually stops the current P2P session (should be used only in the tests)
+     * Manually stops the current P2P session (should be used only in the tests).
      */
-    stopP2PSession(): void;
+    stopP2PSession(options: any): void;
     /**
      * Get a summary of how long current participants have been the dominant speaker
      * @returns {object}
      */
     getSpeakerStats(): object;
+    /**
+     * Sends a facial expression with its duration to the xmpp server.
+     * @param {Object} payload
+     */
+    sendFacialExpression(payload: any): void;
     /**
      * Sets the constraints for the video that is requested from the bridge.
      *
@@ -1021,6 +1046,14 @@ declare class JitsiConference {
      */
     toggleE2EE(enabled: boolean): void;
     /**
+     * Sets the key and index for End-to-End encryption.
+     *
+     * @param {CryptoKey} [keyInfo.encryptionKey] - encryption key.
+     * @param {Number} [keyInfo.index] - the index of the encryption key.
+     * @returns {void}
+     */
+    setMediaEncryptionKey(keyInfo: any): void;
+    /**
      * Returns <tt>true</tt> if lobby support is enabled in the backend.
      *
      * @returns {boolean} whether lobby is supported in the backend.
@@ -1093,6 +1126,12 @@ declare class JitsiConference {
      * @param id the id of the participant.
      */
     avModerationReject(mediaType: typeof MediaType, id: any): void;
+    /**
+     * Returns the breakout rooms manager object.
+     *
+     * @returns {Object} the breakout rooms manager.
+     */
+    getBreakoutRooms(): any;
 }
 declare namespace JitsiConference {
     /**

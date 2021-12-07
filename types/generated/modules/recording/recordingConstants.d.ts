@@ -3,6 +3,7 @@ declare namespace _default {
         const BUSY: string;
         const ERROR: string;
         const RESOURCE_CONSTRAINT: string;
+        const UNEXPECTED_REQUEST: string;
         const SERVICE_UNAVAILABLE: string;
     }
     namespace mode {

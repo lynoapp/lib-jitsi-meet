@@ -1,3 +1,7 @@
+export const HD_BITRATE: 2500000;
+export const HD_SCALE_FACTOR: 1;
+export const LD_SCALE_FACTOR: 4;
+export const SD_SCALE_FACTOR: 2;
 export const SIM_LAYER_RIDS: string[];
 /**
  * Handles track related operations on TraceablePeerConnection when browser is
@@ -8,10 +12,8 @@ export class TPCUtils {
      * Creates a new instance for a given TraceablePeerConnection
      *
      * @param peerconnection - the tpc instance for which we have utility functions.
-     * @param videoBitrates - the bitrates to be configured on the video senders for
-     * different resolutions both in unicast and simulcast mode.
      */
-    constructor(peerconnection: any, videoBitrates: any);
+    constructor(peerconnection: any);
     pc: any;
     videoBitrates: any;
     /**
@@ -33,14 +35,6 @@ export class TPCUtils {
         rid: string;
         scaleResolutionDownBy: number;
     }[];
-    /**
-     * Returns the transceiver associated with a given RTCRtpSender/RTCRtpReceiver.
-     *
-     * @param {string} mediaType - type of track associated with the transceiver 'audio' or 'video'.
-     * @param {JitsiLocalTrack} localTrack - local track to be used for lookup.
-     * @returns {RTCRtpTransceiver}
-     */
-    _findTransceiver(mediaType: string, localTrack?: JitsiLocalTrack): RTCRtpTransceiver;
     /**
      * Obtains stream encodings that need to be configured on the given track based
      * on the track media type and the simulcast setting.
@@ -67,6 +61,14 @@ export class TPCUtils {
      */
     private ensureCorrectOrderOfSsrcs;
     /**
+     * Returns the transceiver associated with a given RTCRtpSender/RTCRtpReceiver.
+     *
+     * @param {string} mediaType - type of track associated with the transceiver 'audio' or 'video'.
+     * @param {JitsiLocalTrack} localTrack - local track to be used for lookup.
+     * @returns {RTCRtpTransceiver}
+     */
+    findTransceiver(mediaType: string, localTrack?: JitsiLocalTrack): RTCRtpTransceiver;
+    /**
      * Takes in a *unified plan* offer and inserts the appropriate
      * parameters for adding simulcast receive support.
      * @param {Object} desc - A session description object
@@ -88,26 +90,22 @@ export class TPCUtils {
     */
     addTrack(localTrack: any, isInitiator: boolean): void;
     /**
-     * Adds a track on the RTCRtpSender as part of the unmute operation.
-     * @param {JitsiLocalTrack} localTrack - track to be unmuted.
-     * @returns {Promise<void>} - resolved when done.
+     * Returns the calculated active state of the simulcast encodings based on the frame height requested for the send
+     * stream. All the encodings that have a resolution lower than the frame height requested will be enabled.
+     *
+     * @param {JitsiLocalTrack} localVideoTrack The local video track.
+     * @param {number} newHeight The resolution requested for the video track.
+     * @returns {Array<boolean>}
      */
-    addTrackUnmute(localTrack: JitsiLocalTrack): Promise<void>;
+    calculateEncodingsActiveState(localVideoTrack: JitsiLocalTrack, newHeight: number): Array<boolean>;
     /**
-     * Obtains the current local video track's height constraints based on the
-     * initial stream encodings configuration on the sender and the resolution
-     * of the current local track added to the peerconnection.
-     * @param {MediaStreamTrack} localTrack local video track
-     * @returns {Array[number]} an array containing the resolution heights of
-     * simulcast streams configured on the video sender.
+     * Returns the calculates max bitrates that need to be configured on the simulcast encodings based on the video
+     * type and other considerations associated with screenshare.
+     *
+     * @param {JitsiLocalTrack} localVideoTrack The local video track.
+     * @returns {Array<number>}
      */
-    getLocalStreamHeightConstraints(localTrack: MediaStreamTrack): any[][number];
-    /**
-     * Removes the track from the RTCRtpSender as part of the mute operation.
-     * @param {JitsiLocalTrack} localTrack - track to be removed.
-     * @returns {Promise<void>} - resolved when done.
-     */
-    removeTrackMute(localTrack: JitsiLocalTrack): Promise<void>;
+    calculateEncodingsBitrates(localVideoTrack: JitsiLocalTrack): Array<number>;
     /**
      * Replaces the existing track on a RTCRtpSender with the given track.
      * @param {JitsiLocalTrack} oldTrack - existing track on the sender that needs to be removed.

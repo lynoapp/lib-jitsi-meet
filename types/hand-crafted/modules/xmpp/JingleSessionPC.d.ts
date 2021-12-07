@@ -29,9 +29,7 @@ export default class JingleSessionPC extends JingleSession {
   setReceiverVideoConstraint: ( maxFrameHeight: number ) => void;
   sendTransportAccept: ( localSDP: unknown, success: ( params: unknown ) => unknown, failure: ( params: unknown ) => unknown ) => void; // TODO:
   sendTransportReject: ( success: ( params: unknown ) => unknown, failure: ( params: unknown ) => unknown ) => void; // TODO:
-  setSenderMaxBitrates: () => Promise<void>;
   setSenderVideoConstraint: ( maxFrameHeight: number ) => Promise<unknown>; // TODO:
-  setSenderVideoDegradationPreference: () => Promise<void>;
   terminate: ( success: ( params: unknown ) => unknown, failure: ( params: unknown ) => unknown, options: { reason: string, reasonDescription: string, requestRestart?: boolean, sendSessionTerminate?: boolean } ) => void; // TODO:
   onTerminated: ( reasonCondition: unknown, reasonText: unknown ) => void; // TODO:
   onXmppStatusChanged: ( status: Strophe.Status ) => void;

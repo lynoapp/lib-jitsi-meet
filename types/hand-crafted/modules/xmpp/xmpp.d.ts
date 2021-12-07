@@ -1,3 +1,4 @@
+import { FacialExpressions } from '../statistics/SpeakerStats';
 import Listenable from '../util/Listenable';
 
 export const DEFAULT_STUN_SERVERS: { urls: string; }[];
@@ -26,5 +27,6 @@ export default class XMPP extends Listenable {
   getSessions: () => unknown; // TODO:
   disconnect: ( ev: unknown ) => Promise<unknown>; // TODO:
   sendDominantSpeakerEvent: ( roomJid: string ) => void;
+  sendFacialExpressionEvent: ( roomJid: string, payload: { facialExpression: FacialExpressions, duration: number } ) => void; // TODO:
   tryParseJSONAndVerify: ( jsonString: string ) => boolean | unknown; // TODO:
 }

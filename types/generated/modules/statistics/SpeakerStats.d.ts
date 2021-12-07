@@ -23,6 +23,15 @@ declare class SpeakerStats {
     totalDominantSpeakerTime: number;
     _dominantSpeakerStart: number;
     _hasLeft: boolean;
+    _facialExpressions: {
+        happy: number;
+        neutral: number;
+        surprised: number;
+        angry: number;
+        fearful: number;
+        disgusted: number;
+        sad: number;
+    };
     /**
      * Get the user id being tracked.
      *
@@ -82,4 +91,24 @@ declare class SpeakerStats {
      * @returns {void}
      */
     markAsHasLeft(): void;
+    /**
+     * Gets the facial expressions of the user.
+     *
+     * @returns {Object}
+     */
+    getFacialExpressions(): any;
+    /**
+     * Sets the facial expressions of the user.
+     *
+     * @param {Object} facialExpressions - object with facial expressions.
+     * @returns {void}
+     */
+    setFacialExpressions(facialExpressions: any): void;
+    /**
+     * Adds a new facial expression to speaker stats.
+     *
+     * @param  {string} facialExpression
+     * @param {number} duration
+     */
+    addFacialExpression(facialExpression: string, duration: number): void;
 }

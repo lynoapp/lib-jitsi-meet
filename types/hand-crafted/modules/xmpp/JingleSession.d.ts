@@ -3,12 +3,13 @@ import XmppConnection from './XmppConnection';
 import { JingleSessionState } from './JingleSessionState';
 import RTC from '../RTC/RTC';
 import Listenable from '../util/Listenable';
+import { SignalingLayerImpl } from './SignalingLayerImpl';
 
 export default class JingleSession extends Listenable {
   constructor( sid: string, localJid: string, remoteJid: string, connection: XmppConnection, mediaConstraints: unknown, pcConfig: unknown, isInitiator: boolean ); // TODO:
   initiatorJid: () => string;
   responderJid: () => string;
-  initialize: ( room: ChatRoom, rtc: RTC, options: object ) => void; // TODO:
+  initialize: ( room: ChatRoom, rtc: RTC, signalingLayer: SignalingLayerImpl, options: object ) => void; // TODO:
   doInitialize: ( options: unknown ) => void; // TODO:
   addIceCandidates: ( contents: unknown ) => void; // TODO:
   getState: () => JingleSessionState;

@@ -104,12 +104,14 @@ export default class TraceablePeerConnection {
   replaceTrack: ( oldTrack: JitsiLocalTrack | null, newTrack: JitsiLocalTrack | null ) => Promise<boolean>;
   removeTrackMute: ( localTrack: JitsiLocalTrack ) => Promise<boolean>;
   createDataChannel: ( label: unknown, opts: unknown ) => unknown; // TODO:
+  /**
+   * Configures the stream encodings depending on the video type and the bitrates configured.
+   */
+  configureSenderVideoEncodings: () => Promise<void>;
   setLocalDescription: ( description: unknown ) => Promise<unknown>;
   setAudioTransferActive: ( active: boolean ) => boolean;
-  setSenderVideoDegradationPreference: () => Promise<void>;
-  setMaxBitRate: () => Promise<void>; // TODO: definite bug in the JSDocs
   setRemoteDescription: ( description: unknown ) => unknown; // TODO:
-  setSenderVideoConstraint: ( frameHeight: number ) => Promise<void>;
+  setSenderVideoConstraints: ( frameHeight: number ) => Promise<void>;
   setVideoTransferActive: ( active: boolean ) => boolean;
   sendTones: ( tones: string, duration: number, interToneGap: number ) => void;
   generateRecvonlySsrc: () => void;

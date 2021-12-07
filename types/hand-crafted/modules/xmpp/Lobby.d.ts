@@ -5,8 +5,9 @@ export default class Lobby {
   isSupported: () => boolean;
   enable: () => Promise<unknown>; // TODO:
   disable: () => void;
+  leave: () => Promise<void>;
   setLobbyRoomJid: ( jid: string ) => void;
-  join: ( displayName: string, email?: string ) => Promise<unknown>; // TODO:
+  join: ( displayName: string, email?: string ) => Promise<void>;
   denyAccess: ( id: string ) => void;
   approveAccess: ( id: string ) => void;
 }

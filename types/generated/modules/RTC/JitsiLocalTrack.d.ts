@@ -36,6 +36,13 @@ export default class JitsiLocalTrack extends JitsiTrack {
     });
     _setEffectInProgress: boolean;
     /**
+     * Track metadata.
+     */
+    metadata: {
+        displaySurface?: any;
+        timestamp: number;
+    };
+    /**
      * The ID assigned by the RTC module on instance creation.
      *
      * @type {number}
@@ -79,6 +86,12 @@ export default class JitsiLocalTrack extends JitsiTrack {
     _trackMutedTS: number;
     _onDeviceListWillChange: (devices: any) => void;
     _onAudioOutputDeviceChanged: any;
+    /**
+     * Get the duration of the track.
+     *
+     * @returns {Number} the duration of the track in seconds
+     */
+    getDuration(): number;
     /**
      * Returns if associated MediaStreamTrack is in the 'ended' state
      *

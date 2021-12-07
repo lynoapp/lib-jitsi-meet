@@ -32,9 +32,10 @@ export default class Lobby {
     disable(): void;
     /**
      * Leaves the lobby room.
-     * @private
+     *
+     * @returns {Promise}
      */
-    private _leaveLobbyRoom;
+    leave(): Promise<any>;
     lobbyRoom: any;
     /**
      * We had received a jid for the lobby room.

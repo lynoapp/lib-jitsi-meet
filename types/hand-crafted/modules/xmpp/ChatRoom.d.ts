@@ -5,6 +5,8 @@ import { MediaType } from '../../service/RTC/MediaType';
 import { PeerMediaInfo } from '../../service/RTC/SignalingLayer';
 import AVModeration from "./AVModeration";
 
+export function filterNodeFromPresenceJSON(pres: JSON, nodeName: string): object[];
+
 declare namespace parser {
   function packet2JSON( xmlElement: unknown, nodes: unknown[] ): void; // TODO:
   function json2packet( nodes: unknown[], packet: unknown ): void; // TODO:

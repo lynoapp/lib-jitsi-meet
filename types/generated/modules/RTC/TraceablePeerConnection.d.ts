@@ -207,7 +207,6 @@ export default class TraceablePeerConnection {
         usesUnifiedPlan: boolean;
     };
     peerconnection: RTCPeerConnection;
-    videoBitrates: any;
     tpcUtils: TPCUtils;
     updateLog: any[];
     stats: {};
@@ -246,9 +245,10 @@ export default class TraceablePeerConnection {
     eventEmitter: EventEmitter;
     rtxModifier: RtxModifier;
     /**
-     * The height constraint applied on the video sender.
+     * The height constraint applied on the video sender. The default value is 2160 (4K) when layer suspension is
+     * explicitly disabled.
      */
-    senderVideoMaxHeight: any;
+    _senderVideoMaxHeight: number;
     trace: (what: any, info: any) => void;
     onicecandidate: any;
     onTrack: (evt: any) => void;
@@ -372,11 +372,12 @@ export default class TraceablePeerConnection {
      * @param {VideoType} [videoType] the track's type of the video (if applicable)
      * @param {number} ssrc the track's main SSRC number
      * @param {boolean} muted the initial muted status
+     * @param {String} sourceName the track's source name
      */
     _createRemoteTrack(ownerEndpointId: string, stream: MediaStream, track: MediaStreamTrack, mediaType: typeof MediaType, videoType?: {
         CAMERA: string;
         DESKTOP: string;
-    }, ssrc: number, muted: boolean): void;
+    }, ssrc: number, muted: boolean, sourceName: string): void;
     /**
      * Handles remote stream removal.
      * @param stream the WebRTC MediaStream object which is being removed from the
@@ -461,7 +462,7 @@ export default class TraceablePeerConnection {
             ssrcs: Array<number>;
         }[];
     };
-    private _isSharingLowFpsScreen;
+    private isSharingLowFpsScreen;
     /**
      * Checks if screensharing is in progress.
      *
@@ -495,8 +496,8 @@ export default class TraceablePeerConnection {
     addTrack(track: JitsiLocalTrack, isInitiator?: boolean): Promise<void>;
     /**
      * Adds local track as part of the unmute operation.
-     * @param {JitsiLocalTrack} track the track to be added as part of the unmute
-     * operation
+     * @param {JitsiLocalTrack} track the track to be added as part of the unmute operation.
+     *
      * @return {Promise<boolean>} Promise that resolves to true if the underlying PeerConnection's
      * state has changed and renegotiation is required, false if no renegotiation is needed or
      * Promise is rejected when something goes wrong.
@@ -601,11 +602,11 @@ export default class TraceablePeerConnection {
      * <tt>oldTrack</tt> with a null <tt>newTrack</tt> effectively just removes
      * <tt>oldTrack</tt>
      *
-     * @param {JitsiLocalTrack|null} oldTrack - The current track in use to be
-     * replaced
-     * @param {JitsiLocalTrack|null} newTrack - The new track to use
-     * @returns {Promise<boolean>} - If the promise resolves with true,
-     * renegotiation will be needed. Otherwise no renegotiation is needed.
+     * @param {JitsiLocalTrack|null} oldTrack - The current track in use to be replaced on the pc.
+     * @param {JitsiLocalTrack|null} newTrack - The new track to be used.
+     *
+     * @returns {Promise<boolean>} - If the promise resolves with true, renegotiation will be needed.
+     * Otherwise no renegotiation is needed.
      */
     replaceTrack(oldTrack: JitsiLocalTrack | null, newTrack: JitsiLocalTrack | null): Promise<boolean>;
     /**
@@ -629,6 +630,12 @@ export default class TraceablePeerConnection {
      * @returns {RTCSessionDescription} the munged description.
      */
     _mungeOpus(description: RTCSessionDescription): RTCSessionDescription;
+    /**
+     * Configures the stream encodings depending on the video type and the bitrates configured.
+     *
+     * @returns {Promise} promise that will be resolved when the operation is successful and rejected otherwise.
+     */
+    configureSenderVideoEncodings(): Promise<any>;
     setLocalDescription(description: any): Promise<any>;
     /**
      * Enables/disables audio media transmission on this peer connection. When
@@ -644,37 +651,17 @@ export default class TraceablePeerConnection {
      * @public
      */
     public setAudioTransferActive(active: boolean): boolean;
-    /**
-     * Sets the degradation preference on the video sender. This setting determines if
-     * resolution or framerate will be preferred when bandwidth or cpu is constrained.
-     * Sets it to 'maintain-framerate' when a camera track is added to the pc, sets it
-     * to 'maintain-resolution' when a desktop track is being shared instead.
-     * @returns {Promise<void>}
-     */
-    setSenderVideoDegradationPreference(): Promise<void>;
-    /**
-     * Sets the max bitrate on the RTCRtpSender so that the
-     * bitrate of the enocder doesn't exceed the configured value.
-     * This is needed for the desktop share until spec-complaint
-     * simulcast is implemented.
-     * @param {JitsiLocalTrack} localTrack - the local track whose
-     * max bitrate is to be configured.
-     * @returns {Promise<void>}
-     */
-    setMaxBitRate(): Promise<void>;
     setRemoteDescription(description: any): Promise<any>;
     /**
-     * Changes the resolution of the video stream that is sent to the peer based on
-     * the user preferred value. If simulcast is enabled on the peerconection, all the
-     * simulcast encodings that have a resolution height lower or equal to the value
-     * provided will remain active. For the non-simulcast case, video constraint is
-     * applied on the track.
-     * @param {number} frameHeight - The user preferred max frame height.
-     * @returns {Promise} promise that will be resolved when the operation is
-     * successful and rejected otherwise.
+     * Changes the resolution of the video stream that is sent to the peer based on the resolution requested by the peer
+     * and user preference, sets the degradation preference on the sender based on the video type, configures the maximum
+     * bitrates on the send stream.
+     *
+     * @param {number} frameHeight - The max frame height to be imposed on the outgoing video stream.
+     * @returns {Promise} promise that will be resolved when the operation is successful and rejected otherwise.
      */
-    setSenderVideoConstraint(frameHeight?: number): Promise<any>;
-    encodingsEnabledState: any;
+    setSenderVideoConstraints(frameHeight: number): Promise<any>;
+    encodingsEnabledState: boolean[];
     /**
      * Enables/disables video media transmission on this peer connection. When
      * disabled the SDP video media direction in the local SDP will be adjusted to

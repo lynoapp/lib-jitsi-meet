@@ -91,6 +91,7 @@ export default class XMPP extends Listenable {
         password: string;
     }, status: string, msg?: string): void;
     _sysMessageHandler: any;
+    sendDeploymentInfo: boolean;
     sendDiscoInfo: boolean;
     anonymousConnectionFailed: boolean;
     connectionFailed: boolean;
@@ -107,6 +108,7 @@ export default class XMPP extends Listenable {
     speakerStatsComponentAddress: any;
     conferenceDurationComponentAddress: any;
     lobbySupported: boolean;
+    breakoutRoomsComponentAddress: any;
     /**
     * Parses a raw failure xmpp xml message received on auth failed.
     *
@@ -238,6 +240,12 @@ export default class XMPP extends Listenable {
      */
     sendDominantSpeakerEvent(roomJid: string): void;
     /**
+     * Sends facial expression to speaker stats component.
+     * @param {String} roomJid - The room jid where the speaker event occurred.
+     * @param {Object} payload - The expression to be sent to the speaker stats.
+     */
+    sendFacialExpressionEvent(roomJid: string, payload: any): void;
+    /**
      * Check if the given argument is a valid JSON ENDPOINT_MESSAGE string by
      * parsing it and checking if it has a field called 'type'.
      *
@@ -255,6 +263,15 @@ export default class XMPP extends Listenable {
      * @param {string} msg - The message.
      */
     _onPrivateMessage(msg: string): boolean;
+    /**
+     * Sends deployment info to stats if not sent already.
+     * We want to try sending it on failure to connect
+     * or when we get a sys message(from jiconop2)
+     * or after success or failure of disco-info
+     * @param force Whether to force sending without checking anything.
+     * @private
+     */
+    private _maybeSendDeploymentInfoStat;
 }
 import Listenable from "../util/Listenable";
 import XmppConnection from "./XmppConnection";

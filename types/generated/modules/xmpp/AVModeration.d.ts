@@ -17,6 +17,16 @@ export default class AVModeration {
     _whitelistAudio: any[];
     _whitelistVideo: any[];
     /**
+     * Receives av_moderation parsed messages as json.
+     * @param obj the parsed json content of the message to process.
+     * @private
+     */
+    private _onMessage;
+    /**
+     * Stops listening for events.
+     */
+    dispose(): void;
+    /**
      * Whether AV moderation is supported on backend.
      *
      * @returns {boolean} whether AV moderation is supported on backend.
@@ -34,10 +44,4 @@ export default class AVModeration {
      * Rejects that a participant can unmute by sending a msg with its jid to the component.
      */
     reject(mediaType: any, jid: any): void;
-    /**
-     * Receives av_moderation parsed messages as json.
-     * @param obj the parsed json content of the message to process.
-     * @private
-     */
-    private _onMessage;
 }

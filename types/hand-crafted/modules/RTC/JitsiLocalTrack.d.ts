@@ -5,6 +5,10 @@ import { VideoType } from '../../service/RTC/VideoType';
 
 export default class JitsiLocalTrack extends JitsiTrack {
   constructor( trackInfo: { rtcId: number, stream: unknown, track: unknown, mediaType: MediaType, videoType: VideoType, effects: unknown, resolution: unknown, deviceId: string, facingMode: CameraFacingMode, sourceId: string } ) // TODO:
+  /**
+   * Get the duration of the track in seconds
+   */
+  getDuration(): number;
   isEnded: () => boolean;
   setEffect: ( effect: unknown ) => Promise<unknown>; // TODO:
   mute: () => Promise<void>;

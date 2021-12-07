@@ -20,6 +20,20 @@ declare namespace SDPUtil {
     function buildICEPwd(pwd: any): string;
     function parseMID(line: any): any;
     function parseMID(line: any): any;
+    /**
+     * Finds the MSID attribute in the given array of SSRC attribute lines and returns the value.
+     *
+     * @param {string[]} ssrcLines - an array of lines similar to 'a:213123 msid:stream-id track-id'.
+     * @returns {undefined|string}
+     */
+    function parseMSIDAttribute(ssrcLines: string[]): string;
+    /**
+     * Finds the MSID attribute in the given array of SSRC attribute lines and returns the value.
+     *
+     * @param {string[]} ssrcLines - an array of lines similar to 'a:213123 msid:stream-id track-id'.
+     * @returns {undefined|string}
+     */
+    function parseMSIDAttribute(ssrcLines: string[]): string;
     function parseMLine(line: any): {
         media: any;
         port: any;
@@ -58,6 +72,8 @@ declare namespace SDPUtil {
      * @returns [SCTP port number, protocol, streams]
      */
     function parseSCTPMap(line: any): any[];
+    function parseSCTPPort(line: any): any;
+    function parseSCTPPort(line: any): any;
     function buildRTPMap(el: any): string;
     function buildRTPMap(el: any): string;
     function parseCrypto(line: any): {
@@ -122,6 +138,20 @@ declare namespace SDPUtil {
     function buildICECandidate(cand: any): string;
     function parseSSRC(desc: any): Map<any, any>;
     function parseSSRC(desc: any): Map<any, any>;
+    /**
+     * Gets the source name out of the name attribute "a=ssrc:254321 name:name1".
+     *
+     * @param {string[]} ssrcLines
+     * @returns {string | undefined}
+     */
+    function parseSourceNameLine(ssrcLines: string[]): string;
+    /**
+     * Gets the source name out of the name attribute "a=ssrc:254321 name:name1".
+     *
+     * @param {string[]} ssrcLines
+     * @returns {string | undefined}
+     */
+    function parseSourceNameLine(ssrcLines: string[]): string;
     function parseRTCPFB(line: any): {
         pt: any;
         type: any;

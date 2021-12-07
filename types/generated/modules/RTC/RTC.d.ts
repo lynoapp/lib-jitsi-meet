@@ -218,7 +218,13 @@ export default class RTC extends Listenable {
      * @returns {void}
      */
     private _updateAudioOutputForAudioTracks;
-    _videoType: any;
+    /**
+     * The default video type assumed by the bridge.
+     * @deprecated this will go away with multiple streams support
+     * @type {BridgeVideoType}
+     * @private
+     */
+    private _videoType;
     /**
      * Removes any listeners and stored state from this {@code RTC} instance.
      *
@@ -278,6 +284,12 @@ export default class RTC extends Listenable {
      * @returns {void}
      */
     setVideoType(videoType: string): void;
+    /**
+     * Sends the track's  video type to the JVB.
+     * @param {SourceName} sourceName - the track's source name.
+     * @param {BridgeVideoType} videoType - the track's video type.
+     */
+    sendSourceVideoType(sourceName: SourceName, videoType: BridgeVideoType): void;
     /**
      * Elects the participants with the given ids to be the selected
      * participants in order to always receive video for this participant (even
