@@ -520,6 +520,7 @@ export default class TraceablePeerConnection {
     getConfiguredVideoCodec(): {
         H264: string;
         OPUS: string;
+        ULPFEC: string;
         VP8: string;
         VP9: string;
     };
@@ -540,11 +541,13 @@ export default class TraceablePeerConnection {
     setVideoCodecs(preferredCodec?: {
         H264: string;
         OPUS: string;
+        ULPFEC: string;
         VP8: string;
         VP9: string;
     }, disabledCodec?: {
         H264: string;
         OPUS: string;
+        ULPFEC: string;
         VP8: string;
         VP9: string;
     }): void;
@@ -554,6 +557,7 @@ export default class TraceablePeerConnection {
         mimeType: {
             H264: string;
             OPUS: string;
+            ULPFEC: string;
             VP8: string;
             VP9: string;
         };

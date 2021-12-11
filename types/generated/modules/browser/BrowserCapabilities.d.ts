@@ -51,6 +51,16 @@ export default class BrowserCapabilities {
      */
     isSupported(): boolean;
     /**
+     * Returns whether the browser is supported for Android
+     * @returns {boolean} true if the browser is supported for Android devices
+     */
+    isSupportedAndroidBrowser(): boolean;
+    /**
+     * Returns whether the browser is supported for iOS
+     * @returns {boolean} true if the browser is supported for iOS devices
+     */
+    isSupportedIOSBrowser(): boolean;
+    /**
      * Returns whether or not the current environment needs a user interaction
      * with the page before any unmute can occur.
      *
@@ -178,4 +188,10 @@ export default class BrowserCapabilities {
      * @returns {Number}
      */
     _getSafariVersion(): number;
+    /**
+     * Returns the version of an ios browser.
+     *
+     * @returns {Number}
+     */
+    _getIOSVersion(): number;
 }

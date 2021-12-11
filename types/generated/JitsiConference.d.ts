@@ -202,6 +202,8 @@ declare class JitsiConference {
     _onIceConnectionEstablished: any;
     _updateProperties: any;
     _sendConferenceJoinAnalyticsEvent: any;
+    _removeLocalSourceOnReject: any;
+    _updateRoomPresence: any;
     e2eping: E2ePing;
     rtc: RTC;
     receiveVideoController: ReceiveVideoController;

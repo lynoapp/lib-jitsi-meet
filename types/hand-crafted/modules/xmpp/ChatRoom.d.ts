@@ -45,12 +45,8 @@ export default class ChatRoom extends Listenable {
   isFocus: ( mucJid: string ) => boolean | null;
   isModerator: () => boolean;
   getMemberRole: ( peerJid: string ) => string | null;
-  setVideoMute: ( mute: unknown ) => void; // TODO:
-  setAudioMute: ( mute: unknown ) => void; // TODO:
   addAudioInfoToPresence: ( mute: unknown ) => void; // TODO:
-  sendAudioInfoPresence: ( mute: unknown ) => void; // TODO:
   addVideoInfoToPresence: ( mute: unknown ) => void; // TODO:
-  sendVideoInfoPresence: ( mute: unknown ) => void; // TODO:
   getMediaPresenceInfo: ( endpointId: string, mediaType: MediaType ) => PeerMediaInfo;
   isSIPCallingSupported: () => boolean;
   dial: ( number: string ) => unknown; // TODO:

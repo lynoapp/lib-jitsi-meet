@@ -274,32 +274,12 @@ export default class ChatRoom extends Listenable {
      *
      * @param mute
      */
-    setVideoMute(mute: any): void;
-    /**
-     *
-     * @param mute
-     */
-    setAudioMute(mute: any): void;
-    /**
-     *
-     * @param mute
-     */
     addAudioInfoToPresence(mute: any): boolean;
     /**
      *
      * @param mute
      */
-    sendAudioInfoPresence(mute: any): void;
-    /**
-     *
-     * @param mute
-     */
     addVideoInfoToPresence(mute: any): boolean;
-    /**
-     *
-     * @param mute
-     */
-    sendVideoInfoPresence(mute: any): void;
     /**
      * Obtains the info about given media advertised in the MUC presence of
      * the participant identified by the given endpoint JID.

@@ -51,6 +51,7 @@ export enum JitsiConferenceEvents {
   TRACK_AUDIO_LEVEL_CHANGED = 'conference.audioLevelsChanged',
   TRACK_MUTE_CHANGED = 'conference.trackMuteChanged',
   TRACK_REMOVED = 'conference.trackRemoved',
+  TRACK_UNMUTE_REJECTED = "conference.trackUnmuteRejected",
   TRANSCRIPTION_STATUS_CHANGED = 'conference.transcriptionStatusChanged',
   USER_JOINED = 'conference.userJoined',
   USER_LEFT = 'conference.userLeft',

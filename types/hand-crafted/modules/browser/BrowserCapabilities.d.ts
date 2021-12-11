@@ -5,6 +5,14 @@ export default class BrowserCapabilities {
   isWebKitBased: () => boolean;
   isTwa: () => boolean;
   isSupported: () => boolean;
+  /**
+   * Returns whether the browser is supported for Android
+   */
+  isSupportedAndroidBrowser(): boolean;
+  /**
+   * Returns whether the browser is supported for iOS
+   */
+  isSupportedIOSBrowser(): boolean;
   isUserInteractionRequiredForUnmute: () => boolean;
   supportsVideoMuteOnConnInterrupted: () => boolean;
   supportsBandwidthStatistics: () => boolean;

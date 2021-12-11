@@ -288,11 +288,13 @@ export default class JingleSessionPC extends JingleSession {
     setVideoCodecs(preferred?: {
         H264: string;
         OPUS: string;
+        ULPFEC: string;
         VP8: string;
         VP9: string;
     }, disabled?: {
         H264: string;
         OPUS: string;
+        ULPFEC: string;
         VP8: string;
         VP9: string;
     }): void;
