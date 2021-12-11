@@ -1,4 +1,3 @@
 *
 !lib-jitsi-meet.*
 !dist/**
-!types/hand-crafted/**
