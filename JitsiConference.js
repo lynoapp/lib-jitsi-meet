@@ -399,6 +399,13 @@ JitsiConference.prototype._init = function(options = {}) {
     this._sendConferenceJoinAnalyticsEvent = this._sendConferenceJoinAnalyticsEvent.bind(this);
     this.room.addListener(XMPPEvents.MEETING_ID_SET, this._sendConferenceJoinAnalyticsEvent);
 
+    this._removeLocalSourceOnReject = this._removeLocalSourceOnReject.bind(this);
+    this._updateRoomPresence = this._updateRoomPresence.bind(this);
+    this.room.addListener(XMPPEvents.SESSION_ACCEPT, this._updateRoomPresence);
+    this.room.addListener(XMPPEvents.SOURCE_ADD, this._updateRoomPresence);
+    this.room.addListener(XMPPEvents.SOURCE_ADD_ERROR, this._removeLocalSourceOnReject);
+    this.room.addListener(XMPPEvents.SOURCE_REMOVE, this._updateRoomPresence);
+
     this.e2eping = new E2ePing(
         this,
         config,
@@ -684,6 +691,10 @@ JitsiConference.prototype.leave = async function() {
         this._updateProperties);
 
     room.removeListener(XMPPEvents.MEETING_ID_SET, this._sendConferenceJoinAnalyticsEvent);
+    room.removeListener(XMPPEvents.SESSION_ACCEPT, this._updateRoomPresence);
+    room.removeListener(XMPPEvents.SOURCE_ADD, this._updateRoomPresence);
+    room.removeListener(XMPPEvents.SOURCE_ADD_ERROR, this._removeLocalSourceOnReject);
+    room.removeListener(XMPPEvents.SOURCE_REMOVE, this._updateRoomPresence);
 
     this.eventManager.removeXMPPListeners();
 
@@ -1252,6 +1263,14 @@ JitsiConference.prototype.replaceTrack = function(oldTrack, newTrack) {
                 this._sendBridgeVideoTypeMessage(newTrack);
             }
 
+            // updates presence when we replace the video tracks desktop with screen and screen with desktop
+            if (oldTrackBelongsToConference && oldTrack?.isVideoTrack()
+
+                // we do not want to send presence update during setEffect switching, which does remove and then add
+                && !(oldTrack?._setEffectInProgress || newTrack?._setEffectInProgress)) {
+                this._updateRoomPresence(this._getActiveMediaSession());
+            }
+
             if (newTrack !== null && (this.isMutedByFocus || this.isVideoMutedByFocus)) {
                 this._fireMuteChangeEvent(newTrack);
             }
@@ -1298,6 +1317,24 @@ JitsiConference.prototype._doReplaceTrack = function(oldTrack, newTrack) {
 };
 
 /**
+ * Handler for when a source-add for a local source is rejected by Jicofo.
+ *
+ * @param {JingleSessionPC} jingleSession - The media session.
+ * @param {Error} error - The error message.
+ * @param {MediaType} mediaType - The media type of the track associated with the source that was rejected.
+ * @returns {void}
+ */
+JitsiConference.prototype._removeLocalSourceOnReject = function(jingleSession, error, mediaType) {
+    if (!jingleSession) {
+        return;
+    }
+    logger.warn(`Source-add rejected on ${jingleSession}, reason="${error?.reason}", message="${error?.msg}"`);
+    const track = this.getLocalTracks(mediaType)[0];
+
+    this.eventEmitter.emit(JitsiConferenceEvents.TRACK_UNMUTE_REJECTED, track);
+};
+
+/**
  * Operations related to creating a new track
  * @param {JitsiLocalTrack} newTrack the new track being created
  */
@@ -1318,18 +1355,7 @@ JitsiConference.prototype._setupNewTrack = function(newTrack) {
         }
     }
 
-    let videoTypeChanged = false;
-
-    if (newTrack.isVideoTrack()) {
-        videoTypeChanged = this._setNewVideoType(newTrack);
-    }
     this.rtc.addLocalTrack(newTrack);
-
-    // ensure that we're sharing proper "is muted" state
-    if (this._setTrackMuteStatus(newTrack, newTrack.isMuted()) || videoTypeChanged) {
-        // send presence if it was changed with vide type or mute status
-        this.room.sendPresence();
-    }
 
     newTrack.muteHandler = this._fireMuteChangeEvent.bind(this, newTrack);
     newTrack.audioLevelHandler = this._fireAudioLevelChangeEvent.bind(this);
@@ -1352,7 +1378,7 @@ JitsiConference.prototype._setupNewTrack = function(newTrack) {
  * @private
  */
 JitsiConference.prototype._setNewVideoType = function(track) {
-    if (FeatureFlags.isSourceNameSignalingEnabled()) {
+    if (FeatureFlags.isSourceNameSignalingEnabled() && track) {
         // FIXME once legacy signaling using 'sendCommand' is removed, signalingLayer.setTrackVideoType must be adjusted
         // to send the presence (not just modify it).
         this._signalingLayer.setTrackVideoType(
@@ -1369,11 +1395,15 @@ JitsiConference.prototype._setNewVideoType = function(track) {
 
     const videoTypeTagName = 'videoType';
 
+    // if track is missing we revert to default type Camera, the case where we screenshare and
+    // we return to be video muted
+    const trackVideoType = track ? track.videoType : VideoType.CAMERA;
+
     // if video type is camera and there is no videoType in presence, we skip adding it, as this is the default one
-    if (track.videoType !== VideoType.CAMERA || this.room.getFromPresence(videoTypeTagName)) {
+    if (trackVideoType !== VideoType.CAMERA || this.room.getFromPresence(videoTypeTagName)) {
         // we will not use this.sendCommand here to avoid sending the presence immediately, as later we may also set
         // and the mute status
-        return this.room.addOrReplaceInPresence(videoTypeTagName, { value: track.videoType });
+        return this.room.addOrReplaceInPresence(videoTypeTagName, { value: trackVideoType });
     }
 
     return false;
@@ -1381,17 +1411,18 @@ JitsiConference.prototype._setNewVideoType = function(track) {
 
 /**
  * Sets mute status.
+ * @param mediaType
  * @param localTrack
  * @param isMuted
  * @param <tt>true</tt> when presence was changed, <tt>false</tt> otherwise.
  * @private
  */
-JitsiConference.prototype._setTrackMuteStatus = function(localTrack, isMuted) {
+JitsiConference.prototype._setTrackMuteStatus = function(mediaType, localTrack, isMuted) {
     if (FeatureFlags.isSourceNameSignalingEnabled()) {
         // TODO When legacy signaling part is removed, remember to adjust signalingLayer.setTrackMuteStatus, so that
         // it triggers sending the presence (it only updates it for now, because the legacy code below sends).
         this._signalingLayer.setTrackMuteStatus(
-            getSourceNameForJitsiTrack(this.myUserId(), localTrack.getType(), 0),
+            getSourceNameForJitsiTrack(this.myUserId(), mediaType, 0),
             isMuted
         );
     }
@@ -1400,7 +1431,7 @@ JitsiConference.prototype._setTrackMuteStatus = function(localTrack, isMuted) {
         return false;
     }
 
-    if (localTrack.isAudioTrack()) {
+    if (mediaType === MediaType.AUDIO) {
         return this.room.addAudioInfoToPresence(isMuted);
     }
 
@@ -3564,13 +3595,12 @@ JitsiConference.prototype._stopP2PSession = function(options = {}) {
             // crash the responder would stay in P2P mode until ICE fails which
             // could take up to 20 seconds.
             //
-            // NOTE lack of 'reason' is considered as graceful session terminate
+            // NOTE: whilst this is an error callback,  'success' as a reason is
+            // considered as graceful session terminate
             // where both initiator and responder terminate their sessions
             // simultaneously.
-            if (reason) {
-                logger.error(
-                    'An error occurred while trying to terminate'
-                        + ' P2P Jingle session', error);
+            if (reason !== 'success') {
+                logger.error('An error occurred while trying to terminate P2P Jingle session', error);
             }
         }, {
             reason,
@@ -3593,6 +3623,51 @@ JitsiConference.prototype._stopP2PSession = function(options = {}) {
             logger.info('Not adding remote JVB tracks - no session yet');
         }
     }
+};
+
+/**
+ * Updates room presence if needed and send the packet in case of a modification.
+ * @param {JingleSessionPC} jingleSession the session firing the event, contains the peer connection which
+ * tracks we will check.
+ * @param {Object|null} ctx a context object we can distinguish multiple calls of the same pass of updating tracks.
+ */
+JitsiConference.prototype._updateRoomPresence = function(jingleSession, ctx) {
+    if (!jingleSession) {
+        return;
+    }
+
+    // skips sending presence twice for the same pass of updating ssrcs
+    if (ctx) {
+        if (ctx.skip) {
+            return;
+        }
+        ctx.skip = true;
+    }
+
+    const localAudioTracks = jingleSession.peerconnection.getLocalTracks(MediaType.AUDIO);
+    const localVideoTracks = jingleSession.peerconnection.getLocalTracks(MediaType.VIDEO);
+    let presenceChanged = false;
+
+    if (localAudioTracks && localAudioTracks.length) {
+        presenceChanged = this._setTrackMuteStatus(MediaType.AUDIO, localAudioTracks[0], localAudioTracks[0].isMuted());
+    } else if (this._setTrackMuteStatus(MediaType.AUDIO, undefined, true)) {
+        presenceChanged = true;
+    }
+
+    if (localVideoTracks && localVideoTracks.length) {
+        const muteStatusChanged = this._setTrackMuteStatus(
+            MediaType.VIDEO, localVideoTracks[0], localVideoTracks[0].isMuted());
+        const videoTypeChanged = this._setNewVideoType(localVideoTracks[0]);
+
+        presenceChanged = presenceChanged || muteStatusChanged || videoTypeChanged;
+    } else {
+        const muteStatusChanged = this._setTrackMuteStatus(MediaType.VIDEO, undefined, true);
+        const videoTypeChanged = this._setNewVideoType(); // set back to default video type
+
+        presenceChanged = presenceChanged || muteStatusChanged || videoTypeChanged;
+    }
+
+    presenceChanged && this.room.sendPresence();
 };
 
 /**

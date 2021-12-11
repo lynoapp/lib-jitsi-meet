@@ -953,7 +953,16 @@ export default class JingleSessionPC extends JingleSession {
                 // FIXME we may not care about RESULT packet for session-accept
                 // then we should either call 'success' here immediately or
                 // modify sendSessionAccept method to do that
-                this.sendSessionAccept(success, failure);
+                this.sendSessionAccept(() => {
+                    success();
+
+                    this.room.eventEmitter.emit(XMPPEvents.SESSION_ACCEPT, this);
+                },
+                error => {
+                    failure(error);
+
+                    this.room.eventEmitter.emit(XMPPEvents.SESSION_ACCEPT_ERROR, this, error);
+                });
             },
             failure,
             localTracks);
@@ -2477,7 +2486,6 @@ export default class JingleSessionPC extends JingleSession {
      * @param newSDP SDP object for new description.
      */
     notifyMySSRCUpdate(oldSDP, newSDP) {
-
         if (this.state !== JingleSessionState.ACTIVE) {
             logger.warn(`${this} Skipping SSRC update in '${this.state} ' state.`);
 
@@ -2498,6 +2506,27 @@ export default class JingleSessionPC extends JingleSession {
         this._cachedOldLocalSdp = undefined;
         this._cachedNewLocalSdp = undefined;
 
+        const getSignaledSourceInfo = sdpDiffer => {
+            const newMedia = sdpDiffer.getNewMedia();
+            let ssrcs = [];
+            let mediaType = null;
+
+            // It is assumed that sources are signaled one at a time.
+            Object.keys(newMedia).forEach(mediaIndex => {
+                const signaledSsrcs = Object.keys(newMedia[mediaIndex].ssrcs);
+
+                mediaType = newMedia[mediaIndex].mid;
+                if (signaledSsrcs?.length) {
+                    ssrcs = ssrcs.concat(signaledSsrcs);
+                }
+            });
+
+            return {
+                mediaType,
+                ssrcs
+            };
+        };
+
         // send source-remove IQ.
         let sdpDiffer = new SDPDiffer(newSDP, oldSDP);
         const remove = $iq({ to: this.remoteJid,
@@ -2511,12 +2540,24 @@ export default class JingleSessionPC extends JingleSession {
             );
         const removedAnySSRCs = sdpDiffer.toJingle(remove);
 
+        // context a common object for one run of ssrc update (source-add and source-remove) so we can match them if we
+        // need to
+        const ctx = {};
+
         if (removedAnySSRCs) {
-            logger.info(`${this} Sending source-remove`);
-            logger.debug(remove.tree());
+            const sourceInfo = getSignaledSourceInfo(sdpDiffer);
+
+            // Log only the SSRCs instead of the full IQ.
+            logger.info(`${this} Sending source-remove for ${sourceInfo.mediaType} ssrcs=${sourceInfo.ssrcs}`);
             this.connection.sendIQ(
-                remove, null,
-                this.newJingleErrorHandler(remove), IQ_TIMEOUT);
+                remove,
+                () => {
+                    this.room.eventEmitter.emit(XMPPEvents.SOURCE_REMOVE, this, ctx);
+                },
+                this.newJingleErrorHandler(remove, error => {
+                    this.room.eventEmitter.emit(XMPPEvents.SOURCE_REMOVE_ERROR, this, error, ctx);
+                }),
+                IQ_TIMEOUT);
         }
 
         // send source-add IQ.
@@ -2534,10 +2575,19 @@ export default class JingleSessionPC extends JingleSession {
         const containsNewSSRCs = sdpDiffer.toJingle(add);
 
         if (containsNewSSRCs) {
-            logger.info(`${this} Sending source-add`);
-            logger.debug(add.tree());
+            const sourceInfo = getSignaledSourceInfo(sdpDiffer);
+
+            // Log only the SSRCs instead of the full IQ.
+            logger.info(`${this} Sending source-add for ${sourceInfo.mediaType} ssrcs=${sourceInfo.ssrcs}`);
             this.connection.sendIQ(
-                add, null, this.newJingleErrorHandler(add), IQ_TIMEOUT);
+                add,
+                () => {
+                    this.room.eventEmitter.emit(XMPPEvents.SOURCE_ADD, this, ctx);
+                },
+                this.newJingleErrorHandler(add, error => {
+                    this.room.eventEmitter.emit(XMPPEvents.SOURCE_ADD_ERROR, this, error, sourceInfo.mediaType, ctx);
+                }),
+                IQ_TIMEOUT);
         }
     }
 
