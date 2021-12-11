@@ -59,10 +59,7 @@ export default class ConnectionQuality {
      * @param resolutionName {Resolution} the input resolution used by the camera.
      * @returns {*} the newly calculated connection quality.
      */
-    _calculateConnectionQuality(videoType: {
-        CAMERA: string;
-        DESKTOP: string;
-    }, isMuted: boolean, resolutionName: Resolution): any;
+    _calculateConnectionQuality(videoType: typeof VideoType, isMuted: boolean, resolutionName: Resolution): any;
     /**
      * Updates the localConnectionQuality value
      * @param values {number} the new value. Should be in [0, 100].
@@ -95,3 +92,4 @@ export default class ConnectionQuality {
         jvbRTT: any;
     };
 }
+import VideoType = require("../../service/RTC/VideoType");

@@ -20,3 +20,12 @@ export const ACTIVE = 'active';
  * @type {string}
  */
 export const ENDED = 'ended';
+
+/**
+ * JingleSessionState Enum
+ */
+export enum JingleSessionState {
+    PENDING = 'pending',
+    ACTIVE = 'active',
+    ENDED = 'ended'
+};

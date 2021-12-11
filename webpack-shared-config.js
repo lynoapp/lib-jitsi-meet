@@ -74,7 +74,7 @@ module.exports = (minimize, analyzeBundle) => {
             maxEntrypointSize: 750 * 1024
         },
         resolve: {
-            extensions: [ '.ts', '.js' ]
+            extensions: [ '.js' ]
         },
         externals: {
             jquery: 'jquery'

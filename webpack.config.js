@@ -11,7 +11,7 @@ module.exports = (_env, argv) => {
     return [
         Object.assign({}, config, {
             entry: {
-                'lib-jitsi-meet': './index.js'
+                'lib-jitsi-meet': './dist/index.js'
             },
             output: Object.assign({}, config.output, {
                 library: 'JitsiMeetJS',
@@ -21,7 +21,7 @@ module.exports = (_env, argv) => {
         }),
         {
             entry: {
-                worker: './modules/e2ee/Worker.js'
+                worker: './dist/modules/e2ee/Worker.js'
             },
             mode,
             output: {

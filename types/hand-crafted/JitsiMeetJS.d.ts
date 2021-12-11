@@ -107,9 +107,9 @@ export type JitsiMeetJSType = {
 
   isWebRtcSupported: () => boolean;
 
-  setLogLevel: ( level: Logger.levels ) => void;
+  setLogLevel: ( level: typeof JitsiLogLevels ) => void;
 
-  setLogLevelById: ( level: Logger.levels, id: unknown ) => void; // TODO:
+  setLogLevelById: ( level: typeof JitsiLogLevels, id: unknown ) => void; // TODO:
 
   addGlobalLogTransport: ( globalTransport: unknown ) => void; // TODO:
 

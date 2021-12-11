@@ -1,4 +1,4 @@
-const RTCEvents = {
+export const RTCEvents = {
     /**
      * Indicates error while create answer call.
      */
@@ -112,4 +112,4 @@ const RTCEvents = {
     REMOTE_UFRAG_CHANGED: 'rtc.remote_ufrag_changed'
 };
 
-module.exports = RTCEvents;
+export default RTCEvents;

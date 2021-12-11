@@ -289,7 +289,12 @@ export default class RTC extends Listenable {
      * @param {SourceName} sourceName - the track's source name.
      * @param {BridgeVideoType} videoType - the track's video type.
      */
-    sendSourceVideoType(sourceName: SourceName, videoType: BridgeVideoType): void;
+    sendSourceVideoType(sourceName: SourceName, videoType: {
+        CAMERA: string;
+        DESKTOP: string;
+        DESKTOP_HIGH_FPS: string;
+        NONE: string;
+    }): void;
     /**
      * Elects the participants with the given ids to be the selected
      * participants in order to always receive video for this participant (even

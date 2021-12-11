@@ -11,3 +11,11 @@ export const ON = 'on';
  * @type {String}
  */
 export const OFF = 'off';
+
+/**
+ * JitsiTranscriptionStatus Enum
+ */
+ export enum JitsiTranscriptionStatus {
+    ON = 'on',
+    OFF = 'off'
+};

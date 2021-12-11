@@ -22,9 +22,27 @@ export class CodecSelection {
     constructor(conference: JitsiConference, options: any);
     conference: JitsiConference;
     options: any;
-    disabledCodec: any;
-    jvbPreferredCodec: any;
-    p2pPreferredCodec: any;
+    disabledCodec: {
+        H264: string;
+        OPUS: string;
+        ULPFEC: string;
+        VP8: string;
+        VP9: string;
+    };
+    jvbPreferredCodec: string | {
+        H264: string;
+        OPUS: string;
+        ULPFEC: string;
+        VP8: string;
+        VP9: string;
+    };
+    p2pPreferredCodec: string | {
+        H264: string;
+        OPUS: string;
+        ULPFEC: string;
+        VP8: string;
+        VP9: string;
+    };
     /**
      * Checks if a given string is a valid video codec mime type.
      *
@@ -58,7 +76,19 @@ export class CodecSelection {
      * @param {CodecMimeType} preferredCodec preferred codec.
      * @param {CodecMimeType} disabledCodec codec that needs to be disabled.
      */
-    _selectPreferredCodec(mediaSession?: JingleSessionPC, preferredCodec?: CodecMimeType, disabledCodec?: CodecMimeType): void;
+    _selectPreferredCodec(mediaSession?: JingleSessionPC, preferredCodec?: {
+        H264: string;
+        OPUS: string;
+        ULPFEC: string;
+        VP8: string;
+        VP9: string;
+    }, disabledCodec?: {
+        H264: string;
+        OPUS: string;
+        ULPFEC: string;
+        VP8: string;
+        VP9: string;
+    }): void;
     /**
      * Returns the preferred codec for the conference. The preferred codec for the JVB media session
      * is the one that gets published in presence and a comparision is made whenever a participant joins
@@ -66,5 +96,11 @@ export class CodecSelection {
      *
      * @returns {CodecMimeType} preferred codec.
      */
-    getPreferredCodec(): CodecMimeType;
+    getPreferredCodec(): {
+        H264: string;
+        OPUS: string;
+        ULPFEC: string;
+        VP8: string;
+        VP9: string;
+    };
 }

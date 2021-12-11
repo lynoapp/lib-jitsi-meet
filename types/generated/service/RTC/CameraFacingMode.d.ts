@@ -1,4 +1,3 @@
-export = CameraFacingMode;
 /**
  * The possible camera facing modes. For now support only 'user' and
  * 'environment' because 'left' and 'right' are not used anywhere in our
@@ -6,8 +5,9 @@ export = CameraFacingMode;
  * https://w3c.github.io/mediacapture-main/getusermedia.html
  * #def-constraint-facingMode.
  */
-type CameraFacingMode = string;
-declare namespace CameraFacingMode {
+export type CameraFacingMode = string;
+export namespace CameraFacingMode {
     const ENVIRONMENT: string;
     const USER: string;
 }
+export default CameraFacingMode;

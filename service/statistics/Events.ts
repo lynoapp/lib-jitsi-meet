@@ -35,3 +35,14 @@ export const CONNECTION_STATS = 'statistics.connectionstats';
  * An event carrying performance stats.
  */
 export const LONG_TASKS_STATS = 'statistics.long_tasks_stats';
+
+/**
+ * Events Enum
+ */
+export enum Events {
+    AUDIO_LEVEL = 'statistics.audioLevel',
+    BEFORE_DISPOSED = 'statistics.before_disposed',
+    BYTE_SENT_STATS = 'statistics.byte_sent_stats',
+    CONNECTION_STATS = 'statistics.connectionstats',
+    LONG_TASKS_STATS = 'statistics.long_tasks_stats'
+};

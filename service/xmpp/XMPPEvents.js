@@ -1,4 +1,4 @@
-const XMPPEvents = {
+export const XMPPEvents = {
     /**
      * Indicates error while adding ice candidate.
      */
@@ -381,4 +381,4 @@ const XMPPEvents = {
     JSON_MESSAGE_RECEIVED: 'xmmp.json_message_received'
 };
 
-module.exports = XMPPEvents;
+export default XMPPEvents;

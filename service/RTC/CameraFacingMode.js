@@ -7,7 +7,7 @@
  *
  * @enum {string}
  */
-const CameraFacingMode = {
+export const CameraFacingMode = {
     /**
      * The mode which specifies the environment-facing camera.
      */
@@ -19,4 +19,4 @@ const CameraFacingMode = {
     USER: 'user'
 };
 
-module.exports = CameraFacingMode;
+export default CameraFacingMode;

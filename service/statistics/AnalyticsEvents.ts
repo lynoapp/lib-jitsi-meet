@@ -22,6 +22,8 @@
  *
  */
 
+import { MediaType } from "../RTC/MediaType";
+
 /**
  * The constant which identifies an event of type "operational".
  * @type {string}
@@ -241,7 +243,7 @@ export const createBridgeDownEvent = function() {
     return {
         action: bridgeDown,
         actionSubject: bridgeDown,
-        type: TYPE_OPERATIONAL
+        type: AnalyticsEvents.TYPE_OPERATIONAL
     };
 };
 
@@ -252,9 +254,9 @@ export const createBridgeDownEvent = function() {
  * @param detail connection failed details.
  */
 export const createConnectionFailedEvent
-    = function(errorType, errorMessage, details) {
+    = function(errorType: string, errorMessage: string, details: object) {
         return {
-            type: TYPE_OPERATIONAL,
+            type: AnalyticsEvents.TYPE_OPERATIONAL,
             action: 'connection.failed',
             attributes: {
                 'error_type': errorType,
@@ -271,12 +273,12 @@ export const createConnectionFailedEvent
  * @param {Object} attributes - The attributes to be added to the event.
  * @returns {{type: string, source: string, action: string, attributes: object}}
  */
-export function createConferenceEvent(action, attributes) {
+export function createConferenceEvent(action: string, attributes: object) {
     return {
         action,
         attributes,
         source: 'conference',
-        type: TYPE_OPERATIONAL
+        type: AnalyticsEvents.TYPE_OPERATIONAL
     };
 }
 
@@ -291,7 +293,7 @@ export function createConferenceEvent(action, attributes) {
  * relative to the beginning of the document's lifetime.
  *
  */
-export const createConnectionStageReachedEvent = function(stage, attributes) {
+export const createConnectionStageReachedEvent = function(stage: string, attributes: object) {
     const action = 'connection.stage.reached';
 
     return {
@@ -299,7 +301,7 @@ export const createConnectionStageReachedEvent = function(stage, attributes) {
         actionSubject: stage,
         attributes,
         source: action,
-        type: TYPE_OPERATIONAL
+        type: AnalyticsEvents.TYPE_OPERATIONAL
     };
 };
 
@@ -310,7 +312,7 @@ export const createConnectionStageReachedEvent = function(stage, attributes) {
  * @param region the region of the remote participant
  * @param rtt the rtt
  */
-export const createE2eRttEvent = function(participantId, region, rtt) {
+export const createE2eRttEvent = function(participantId: string, region: string, rtt: number) {
     const attributes = {
         'participant_id': participantId,
         region,
@@ -320,7 +322,7 @@ export const createE2eRttEvent = function(participantId, region, rtt) {
     return {
         attributes,
         name: 'e2e_rtt',
-        type: TYPE_OPERATIONAL
+        type: AnalyticsEvents.TYPE_OPERATIONAL
     };
 };
 
@@ -333,7 +335,7 @@ export const createFocusLeftEvent = function() {
     return {
         action,
         actionSubject: action,
-        type: TYPE_OPERATIONAL
+        type: AnalyticsEvents.TYPE_OPERATIONAL
     };
 };
 
@@ -345,9 +347,9 @@ export const createFocusLeftEvent = function() {
  * @param attributes the attributes to attach to the event.
  * @returns {{type: string, source: string, name: string}}
  */
-export const createGetUserMediaEvent = function(action, attributes = {}) {
+export const createGetUserMediaEvent = function(action: string, attributes = {}) {
     return {
-        type: TYPE_OPERATIONAL,
+        type: AnalyticsEvents.TYPE_OPERATIONAL,
         source: 'get.user.media',
         action,
         attributes
@@ -364,7 +366,7 @@ export const createParticipantConnectionStatusEvent = function(attributes = {}) 
     const action = 'duration';
 
     return {
-        type: TYPE_OPERATIONAL,
+        type: AnalyticsEvents.TYPE_OPERATIONAL,
         source: 'peer.conn.status',
         action,
         attributes
@@ -376,9 +378,9 @@ export const createParticipantConnectionStatusEvent = function(attributes = {}) 
  * @param action the action of the event
  * @param attributes attributes to add to the event.
  */
-export const createJingleEvent = function(action, attributes = {}) {
+export const createJingleEvent = function(action: string, attributes = {}) {
     return {
-        type: TYPE_OPERATIONAL,
+        type: AnalyticsEvents.TYPE_OPERATIONAL,
         action,
         source: 'jingle',
         attributes
@@ -392,14 +394,14 @@ export const createJingleEvent = function(action, attributes = {}) {
  * @param mediaType {String} the media type of the local track ('audio' or
  * 'video').
  */
-export const createNoDataFromSourceEvent = function(mediaType, value) {
+export const createNoDataFromSourceEvent = function(mediaType: MediaType, value: any) {
     return {
         attributes: {
             'media_type': mediaType,
             value
         },
         action: 'track.no.data.from.source',
-        type: TYPE_OPERATIONAL
+        type: AnalyticsEvents.TYPE_OPERATIONAL
     };
 };
 
@@ -408,9 +410,9 @@ export const createNoDataFromSourceEvent = function(mediaType, value) {
  * @param action the action of the event
  * @param attributes attributes to add to the event.
  */
-export const createP2PEvent = function(action, attributes = {}) {
+export const createP2PEvent = function(action: string, attributes = {}) {
     return {
-        type: TYPE_OPERATIONAL,
+        type: AnalyticsEvents.TYPE_OPERATIONAL,
         action,
         source: 'p2p',
         attributes
@@ -420,9 +422,9 @@ export const createP2PEvent = function(action, attributes = {}) {
 /**
  * Indicates that we received a remote command to mute.
  */
-export const createRemotelyMutedEvent = function(mediaType) {
+export const createRemotelyMutedEvent = function(mediaType: MediaType) {
     return {
-        type: TYPE_OPERATIONAL,
+        type: AnalyticsEvents.TYPE_OPERATIONAL,
         action: 'remotely.muted',
         mediaType
     };
@@ -471,9 +473,9 @@ export const createRemotelyMutedEvent = function(mediaType) {
  * {@link TraceablePeerConnection} and work independently from the main stats
  * pipe.
  */
-export const createRtpStatsEvent = function(attributes) {
+export const createRtpStatsEvent = function(attributes: object) {
     return {
-        type: TYPE_OPERATIONAL,
+        type: AnalyticsEvents.TYPE_OPERATIONAL,
         action: 'rtp.stats',
         attributes
     };
@@ -486,9 +488,9 @@ export const createRtpStatsEvent = function(attributes) {
  * @param attributes
  * @returns {{type: string, action: string, attributes: *}}
  */
-export const createRttByRegionEvent = function(attributes) {
+export const createRttByRegionEvent = function(attributes: object) {
     return {
-        type: TYPE_OPERATIONAL,
+        type: AnalyticsEvents.TYPE_OPERATIONAL,
         action: 'rtt.by.region',
         attributes
     };
@@ -501,9 +503,9 @@ export const createRttByRegionEvent = function(attributes) {
  * @param attributes
  * @returns {{type: string, action: string, attributes: *}}
  */
-export const createTransportStatsEvent = function(attributes) {
+export const createTransportStatsEvent = function(attributes: object) {
     return {
-        type: TYPE_OPERATIONAL,
+        type: AnalyticsEvents.TYPE_OPERATIONAL,
         action: 'transport.stats',
         attributes
     };
@@ -517,9 +519,9 @@ export const createTransportStatsEvent = function(attributes) {
  * @param {*} localAudioLevels - The local audio levels.
  * @param {*} remoteAudioLevels - The audio levels received from the participant.
  */
-export function createAudioOutputProblemEvent(userID, localAudioLevels, remoteAudioLevels) {
+export function createAudioOutputProblemEvent(userID: string, localAudioLevels: string, remoteAudioLevels: object) {
     return {
-        type: TYPE_OPERATIONAL,
+        type: AnalyticsEvents.TYPE_OPERATIONAL,
         action: 'audio.output.problem',
         attributes: {
             userID,
@@ -536,9 +538,9 @@ export function createAudioOutputProblemEvent(userID, localAudioLevels, remoteAu
  * @param {string} reason - A string which describes the reason for closing the bridge channel.
  * @returns {{type: string, action: string, attributes: { code: string, reason: string }}}
  */
-export const createBridgeChannelClosedEvent = function(code, reason) {
+export const createBridgeChannelClosedEvent = function(code: string, reason: string) {
     return {
-        type: TYPE_OPERATIONAL,
+        type: AnalyticsEvents.TYPE_OPERATIONAL,
         action: 'bridge-channel.error',
         attributes: {
             code,
@@ -562,6 +564,35 @@ export const createBridgeChannelClosedEvent = function(code, reason) {
  *      muted: whether the track has ever been muted (?)
  *      value: the TTMF in milliseconds.
  */
-export const createTtfmEvent = function(attributes) {
+export const createTtfmEvent = function(attributes: object) {
     return createConnectionStageReachedEvent('ttfm', attributes);
+};
+
+/**
+ * AnalyticsEvents Enum
+ */
+ export enum AnalyticsEvents {
+    TYPE_OPERATIONAL = 'operational',
+    TYPE_PAGE = 'page',
+    TYPE_TRACK = 'track',
+    TYPE_UI = 'ui',
+    ACTION_JINGLE_RESTART = 'restart',
+    ACTION_JINGLE_SA_TIMEOUT = 'session-accept.timeout',
+    ACTION_JINGLE_SI_RECEIVED = 'session-initiate.received',
+    ACTION_JINGLE_SI_TIMEOUT = 'session-initiate.timeout',
+    ACTION_JINGLE_TERMINATE = 'terminate',
+    ACTION_JINGLE_TR_RECEIVED = 'transport-replace.received',
+    ACTION_JINGLE_TR_SUCCESS = 'transport-replace.success',
+    ACTION_P2P_DECLINED = 'decline',
+    ACTION_P2P_ESTABLISHED = 'established',
+    ACTION_P2P_FAILED = 'failed',
+    ACTION_P2P_SWITCH_TO_JVB = 'switch.to.jvb',
+    AVAILABLE_DEVICE = 'available.device',
+    CONNECTION_DISCONNECTED = 'connection.disconnected',
+    FEEDBACK = 'feedback',
+    ICE_DURATION = 'ice.duration',
+    ICE_ESTABLISHMENT_DURATION_DIFF = 'ice.establishment.duration.diff',
+    ICE_STATE_CHANGED = 'ice.state.changed',
+    NO_BYTES_SENT = 'track.no-bytes-sent',
+    TRACK_UNMUTED = 'track.unmuted',
 };

@@ -2,7 +2,7 @@
  * Enumeration of the video types that are signaled to the bridge
  * @type {{CAMERA: string, DESKTOP: string, DESKTOP_HIGH_FPS: string, NONE: string}}
  */
-const BridgeVideoType = {
+export const BridgeVideoType = {
     /**
      * The camera video type.
      */
@@ -24,4 +24,4 @@ const BridgeVideoType = {
     NONE: 'none'
 };
 
-module.exports = BridgeVideoType;
+export default BridgeVideoType;

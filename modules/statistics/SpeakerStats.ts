@@ -6,6 +6,13 @@
  * which is also tracked.
  */
 class SpeakerStats {
+    private _userId: string;
+    private _isLocalStats: boolean;
+    private _dominantSpeakerStart: number;
+    private _hasLeft: boolean;
+    private _facialExpressions: { [key in FacialExpressions]: number };
+    totalDominantSpeakerTime: number;
+    displayName: string;
     /**
      * Initializes a new SpeakerStats instance.
      *
@@ -166,3 +173,16 @@ class SpeakerStats {
 }
 
 module.exports = SpeakerStats;
+
+/**
+ * FacialExpressions Enum
+ */
+export enum FacialExpressions {
+    happy = 'happy',
+    neutral = 'neutral',
+    surprised = 'surprised',
+    angry = 'angry',
+    fearful = 'fearful',
+    disgusted = 'disgusted',
+    sad = 'sad',
+};

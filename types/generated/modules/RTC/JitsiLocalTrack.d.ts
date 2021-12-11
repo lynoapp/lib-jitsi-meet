@@ -291,3 +291,4 @@ export default class JitsiLocalTrack extends JitsiTrack {
     isReceivingData(): boolean;
 }
 import JitsiTrack from "./JitsiTrack";
+import CameraFacingMode from "../../service/RTC/CameraFacingMode";

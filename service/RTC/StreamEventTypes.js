@@ -1,4 +1,4 @@
-const StreamEventTypes = {
+export const StreamEventTypes = {
     EVENT_TYPE_LOCAL_CREATED: 'stream.local_created',
 
     EVENT_TYPE_LOCAL_CHANGED: 'stream.local_changed',
@@ -11,4 +11,4 @@ const StreamEventTypes = {
     TRACK_MUTE_CHANGED: 'rtc.track_mute_changed'
 };
 
-module.exports = StreamEventTypes;
+export default StreamEventTypes;
