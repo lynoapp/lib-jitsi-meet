@@ -56,4 +56,3 @@ export enum JitsiConnectionEvents {
     WRONG_STATE = 'connection.wrongState',
     DISPLAY_NAME_REQUIRED = 'connection.display_name_required'
 };
-  
