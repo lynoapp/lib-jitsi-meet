@@ -124,7 +124,7 @@ export default class XMPP extends Listenable {
     _connect(jid: any, password: any): void;
     /**
      * Receives system messages during the connect/login process and checks for services or
-     * @param msg The received message.
+     * @param {Element} msg The received message as an XML DOM element.
      * @returns {void}
      * @private
      */
