@@ -27,7 +27,7 @@
 export default class JingleSessionPC extends JingleSession {
     /**
      * Parses 'senders' attribute of the video content.
-     * @param {jQuery} jingleContents
+     * @param {Element} jingleContents
      * @return {string|null} one of the values of content "senders" attribute
      * defined by Jingle. If there is no "senders" attribute or if the value is
      * invalid then <tt>null</tt> will be returned.
@@ -37,10 +37,10 @@ export default class JingleSessionPC extends JingleSession {
     /**
      * Parses the video max frame height value out of the 'content-modify' IQ.
      *
-     * @param {jQuery} jingleContents - A jQuery selector pointing to the '>jingle' element.
+     * @param {Element} jingleContents - A 'jingle' element.
      * @returns {Number|null}
      */
-    static parseMaxFrameHeight(jingleContents: JQueryStatic): number | null;
+    static parseMaxFrameHeight(jingleContents: Element): number | null;
     /**
      * Creates new <tt>JingleSessionPC</tt>
      * @param {string} sid the Jingle Session ID - random string which identifies the session
@@ -267,7 +267,7 @@ export default class JingleSessionPC extends JingleSession {
      * This is a setRemoteDescription/setLocalDescription cycle which starts at
      * converting Strophe Jingle IQ into remote offer SDP. Once converted
      * setRemoteDescription, createAnswer and setLocalDescription calls follow.
-     * @param jingleOfferAnswerIq jQuery selector pointing to the jingle element
+     * @param jingleOfferAnswerIq node containing the jingle element
      *        of the offer (or answer) IQ
      * @param success callback called when sRD/sLD cycle finishes successfully.
      * @param failure callback called with an error object as an argument if we
@@ -362,14 +362,14 @@ export default class JingleSessionPC extends JingleSession {
     /**
      * Parse the information from the xml sourceAddElem and translate it
      *  into sdp lines
-     * @param {jquery xml element} sourceAddElem the source-add
-     *  element from jingle
-     * @param {SDP object} currentRemoteSdp the current remote
+     * @param {Element[]} sourceAddElem the source-add
+     *  elements from jingle
+     * @param {Object} currentRemoteSdp the current remote
      *  sdp (as of this new source-add)
      * @returns {list} a list of SDP line strings that should
      *  be added to the remote SDP
      */
-    _parseSsrcInfoFromSourceAdd(sourceAddElem: any, currentRemoteSdp: any): list;
+    _parseSsrcInfoFromSourceAdd(sourceAddElem: Element[], currentRemoteSdp: any): list;
     /**
      * Handles a Jingle source-add message for this Jingle session.
      * @param elem An array of Jingle "content" elements.
@@ -398,10 +398,10 @@ export default class JingleSessionPC extends JingleSession {
     private _addOrRemoveRemoteStream;
     /**
      * Takes in a jingle offer iq, returns the new sdp offer
-     * @param {jquery xml element} offerIq the incoming offer
-     * @returns {SDP object} the jingle offer translated to SDP
+     * @param {Element} offerIq the incoming offer
+     * @returns {Object} the jingle offer translated to SDP
      */
-    _processNewJingleOfferIq(offerIq: any): SDP;
+    _processNewJingleOfferIq(offerIq: Element): any;
     /**
      * Remove the given ssrc lines from the current remote sdp
      * @param {list} removeSsrcInfo a list of SDP line strings that
@@ -458,14 +458,14 @@ export default class JingleSessionPC extends JingleSession {
     /**
      * Parse the information from the xml sourceRemoveElem and translate it
      *  into sdp lines
-     * @param {jquery xml element} sourceRemoveElem the source-remove
+     * @param {Element[]} sourceRemoveElem the source-remove
      *  element from jingle
-     * @param {SDP object} currentRemoteSdp the current remote
+     * @param {Object} currentRemoteSdp the current remote
      *  sdp (as of this new source-remove)
      * @returns {list} a list of SDP line strings that should
      *  be removed from the remote SDP
      */
-    _parseSsrcInfoFromSourceRemove(sourceRemoveElem: any, currentRemoteSdp: any): list;
+    _parseSsrcInfoFromSourceRemove(sourceRemoveElem: Element[], currentRemoteSdp: any): list;
     /**
      * Will print an error if there is any difference, between the SSRCs given
      * in the <tt>oldSDP</tt> and the ones currently described in
@@ -521,12 +521,11 @@ export default class JingleSessionPC extends JingleSession {
      * only checks the senders attribute of the video content in order to figure
      * out if the remote peer has video in the inactive state (stored locally
      * in {@link _remoteVideoActive} - see field description for more info).
-     * @param {jQuery} jingleContents jQuery selector pointing to the jingle
-     * element of the session modify IQ.
+     * @param {Element} jingleContents A 'jingle' element.
      * @see {@link _remoteVideoActive}
      * @see {@link _localVideoActive}
      */
-    modifyContents(jingleContents: JQueryStatic): void;
+    modifyContents(jingleContents: Element): void;
     /**
      * Processes new value of remote video "senders" Jingle attribute and tries
      * to apply it for {@link _remoteVideoActive}.

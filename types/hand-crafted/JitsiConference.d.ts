@@ -87,12 +87,12 @@ export default class JitsiConference {
   onUserRoleChanged: ( jid: string, role: string ) => void;
   onDisplayNameChanged: ( jid: string, displayName: string ) => void;
   onRemoteTrackAdded: ( track: JitsiRemoteTrack ) => void;
-  onCallAccepted: ( session: JingleSessionPC, answer: JQuery ) => void; // TODO: answer is a jQuery object, unknown = JingleSessionPC which doesn't exist
-  onTransportInfo: ( session: JingleSessionPC, transportInfo: JQuery ) => void; // TODO: transportInfo is a jQuery object, unknown = JingleSessionPC which doesn't exist
+  onCallAccepted: ( session: JingleSessionPC, answer: Element ) => void;
+  onTransportInfo: ( session: JingleSessionPC, transportInfo: Element ) => void;
   onRemoteTrackRemoved: ( removedTrack: JitsiRemoteTrack ) => void;
-  onIncomingCall: ( jingleSession: JingleSessionPC, jingleOffer: unknown, now: unknown ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
-  onCallEnded: ( jingleSession: JingleSessionPC, reasonCondition: string, reasonText: string ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
-  onSuspendDetected: ( jingleSession: JingleSessionPC ) => void; // TODO: unknown = JingleSessionPC which doesn't exist
+  onIncomingCall: ( jingleSession: JingleSessionPC, jingleOffer: unknown, now: unknown ) => void;
+  onCallEnded: ( jingleSession: JingleSessionPC, reasonCondition: string, reasonText: string ) => void;
+  onSuspendDetected: ( jingleSession: JingleSessionPC ) => void;
   updateDTMFSupport: () => void;
   isDTMFSupported: () => boolean;
   myUserId: () => string;
