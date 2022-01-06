@@ -3389,6 +3389,11 @@ JitsiConference.prototype._startP2PSession = function(remoteJid) {
         return;
     }
 
+    if (!this.room) {
+        logger.error('The conference has been left.');
+        return;
+    }
+
     this.isP2PConnectionInterrupted = false;
     this.p2pJingleSession
         = this.xmpp.connection.jingle.newP2PJingleSession(
