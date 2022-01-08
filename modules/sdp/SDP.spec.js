@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import { $iq } from 'strophe.js';
 
 import FeatureFlags from '../flags/FeatureFlags';
@@ -269,7 +268,7 @@ a=ssrc:3758540092 mslabel:mixedmslabel
             const offer = createStanzaElement(stanza);
             const sdp = new SDP('');
 
-            sdp.fromJingle($(offer).find('>jingle'));
+            sdp.fromJingle(offer.querySelector(':scope >jingle'));
             const rawSDP = sdp.raw.replace(/o=- \d+/, 'o=- 123'); // replace generated o= timestamp.
 
             expect(rawSDP).toEqual(expectedSDP);
@@ -420,7 +419,7 @@ a=ssrc:4085804879 msid:95edea8d-video-1 0c5d94d1-1902-4fb7-bf6a-76517d065d02-1
 
         it('gets converted to SDP', () => {
             const offer = createStanzaElement(stanza);
-            const jsonMessages = $(offer).find('jingle>json-message');
+            const jsonMessages = offer.querySelectorAll(':scope jingle>json-message');
 
             for (let i = 0; i < jsonMessages.length; i++) {
                 expandSourcesFromJson(offer, jsonMessages[i]);
@@ -428,7 +427,7 @@ a=ssrc:4085804879 msid:95edea8d-video-1 0c5d94d1-1902-4fb7-bf6a-76517d065d02-1
 
             const sdp = new SDP('');
 
-            sdp.fromJingle($(offer).find('>jingle'));
+            sdp.fromJingle(offer.querySelector(':scope >jingle'));
             const rawSDP = sdp.raw.replace(/o=- \d+/, 'o=- 123'); // replace generated o= timestamp.
 
             expect(rawSDP).toEqual(expectedSDP);

@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import { b64_sha1, Strophe } from 'strophe.js'; // eslint-disable-line camelcase
 
 import XMPPEvents from '../../service/xmpp/XMPPEvents';
@@ -51,17 +50,17 @@ function generateSha(identities, features) {
 
 /**
  * Parses the disco-info node and returns the sets of features and identities.
- * @param {String} node The node with results to parse.
+ * @param {Element} node The node with results to parse.
  * @returns {{features: Set<any>, identities: Set<any>}}
  */
 export function parseDiscoInfo(node) {
     const features = new Set();
     const identities = new Set();
 
-    $(node).find('>query>feature')
-        .each((_, el) => features.add(el.getAttribute('var')));
-    $(node).find('>query>identity')
-        .each((_, el) => identities.add({
+    node.querySelectorAll(':scope >query>feature')
+        .forEach(el => features.add(el.getAttribute('var')));
+    node.querySelectorAll(':scope >query>identity')
+        .forEach(el => identities.add({
             type: el.getAttribute('type'),
             name: el.getAttribute('name'),
             category: el.getAttribute('category')
