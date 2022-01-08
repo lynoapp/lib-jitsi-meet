@@ -8,6 +8,7 @@ Changes to the [original repo](https://github.com/jitsi/lib-jitsi-meet):
 - TypeScript support
 - published to [npm](https://www.npmjs.com/package/@lyno/lib-jitsi-meet)
 - updated dependencies
+- removed jQuery
 
 ## Installation
 
@@ -26,7 +27,7 @@ const connection = new JitsiMeetJS.JitsiConnection(null, token, options);
 
 ### Alternative useage
 
-We also provide a prebundled version with jQuery bundled in.
+We also provide a prebundled version.
 
 ```typescript
 import `@lyno/lib-jitsi-meet/lib-jitsi-meet.min.js`

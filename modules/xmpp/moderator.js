@@ -1,5 +1,4 @@
 import { getLogger } from '@jitsi/logger';
-import $ from 'jquery';
 import { $iq, Strophe } from 'strophe.js';
 
 import Settings from '../settings/Settings';
@@ -239,7 +238,7 @@ Moderator.prototype.createConferenceIq = function() {
 
 Moderator.prototype.parseSessionId = function(resultIq) {
     // eslint-disable-next-line newline-per-chained-call
-    const sessionId = $(resultIq).find('conference').attr('session-id');
+    const sessionId = resultIq.querySelector(':scope conference')?.getAttribute('session-id');
 
     if (sessionId) {
         logger.info(`Received sessionId:  ${sessionId}`);
@@ -249,18 +248,15 @@ Moderator.prototype.parseSessionId = function(resultIq) {
 
 Moderator.prototype.parseConfigOptions = function(resultIq) {
     // eslint-disable-next-line newline-per-chained-call
-    this.setFocusUserJid($(resultIq).find('conference').attr('focusjid'));
+    this.setFocusUserJid(resultIq.querySelector(':scope conference').getAttribute('focusjid'));
 
     const authenticationEnabled
-        = $(resultIq).find(
-            '>conference>property'
-            + '[name=\'authentication\'][value=\'true\']').length > 0;
+        = Boolean(resultIq.querySelector(':scope >conference>property[name=\'authentication\'][value=\'true\']'));
 
     logger.info(`Authentication enabled: ${authenticationEnabled}`);
 
-    this.externalAuthEnabled = $(resultIq).find(
-        '>conference>property'
-            + '[name=\'externalAuth\'][value=\'true\']').length > 0;
+    this.externalAuthEnabled
+        = Boolean(resultIq.querySelector(':scope >conference>property[name=\'externalAuth\'][value=\'true\']'));
 
     logger.info(
         `External authentication enabled: ${this.externalAuthEnabled}`);
@@ -271,15 +267,13 @@ Moderator.prototype.parseConfigOptions = function(resultIq) {
     }
 
     // eslint-disable-next-line newline-per-chained-call
-    const authIdentity = $(resultIq).find('>conference').attr('identity');
+    const authIdentity = resultIq.querySelector(':scope >conference').getAttribute('identity');
 
     this.eventEmitter.emit(AuthenticationEvents.IDENTITY_UPDATED,
         authenticationEnabled, authIdentity);
 
     // Check if jicofo has jigasi support enabled.
-    if ($(resultIq).find(
-        '>conference>property'
-        + '[name=\'sipGatewayEnabled\'][value=\'true\']').length) {
+    if (resultIq.querySelector(':scope >conference>property[name=\'sipGatewayEnabled\'][value=\'true\']')) {
         this.sipGatewayEnabled = true;
     }
 
@@ -328,30 +322,30 @@ Moderator.prototype._allocateConferenceFocusError = function(error, callback) {
     // If the session is invalid, remove and try again without session ID to get
     // a new one
     const invalidSession
-        = $(error).find('>error>session-invalid').length
-            || $(error).find('>error>not-acceptable').length;
+        = error.querySelector(':scope >error>session-invalid')
+            || error.querySelector(':scope >error>not-acceptable');
 
     if (invalidSession) {
         logger.info('Session expired! - removing');
         Settings.sessionId = undefined;
     }
-    if ($(error).find('>error>graceful-shutdown').length) {
+    if (error.querySelector(':scope >error>graceful-shutdown')) {
         this.eventEmitter.emit(XMPPEvents.GRACEFUL_SHUTDOWN);
 
         return;
     }
 
     // Check for error returned by the reservation system
-    const reservationErr = $(error).find('>error>reservation-error');
+    const reservationErr = error.querySelector(':scope >error>reservation-error');
 
     if (reservationErr.length) {
         // Trigger error event
-        const errorCode = reservationErr.attr('error-code');
-        const errorTextNode = $(error).find('>error>text');
+        const errorCode = reservationErr.getAttribute('error-code');
+        const errorTextNode = error.querySelector(':scope >error>text');
         let errorMsg;
 
         if (errorTextNode) {
-            errorMsg = errorTextNode.text();
+            errorMsg = errorTextNode.textContent;
         }
         this.eventEmitter.emit(
             XMPPEvents.RESERVATION_ERROR,
@@ -362,7 +356,7 @@ Moderator.prototype._allocateConferenceFocusError = function(error, callback) {
     }
 
     // Not authorized to create new room
-    if ($(error).find('>error>not-authorized').length) {
+    if (error.querySelector(':scope >error>not-authorized')) {
         logger.warn('Unauthorized to start the conference', error);
         const toDomain = Strophe.getDomainFromJid(error.getAttribute('to'));
 
@@ -421,7 +415,7 @@ Moderator.prototype._allocateConferenceFocusSuccess = function(
     this.getNextErrorTimeout(true);
 
     // eslint-disable-next-line newline-per-chained-call
-    if ($(result).find('conference').attr('ready') === 'true') {
+    if (result.querySelector(':scope conference').getAttribute('ready') === 'true') {
         // Reset the non-error timeout (because we've succeeded here).
         this.getNextTimeout(true);
 
@@ -446,10 +440,8 @@ Moderator.prototype.authenticate = function() {
                 resolve();
             },
             errorIq => reject({
-                error: $(errorIq).find('iq>error :first')
-                    .prop('tagName'),
-                message: $(errorIq).find('iq>error>text')
-                    .text()
+                error: errorIq.querySelector(':scope iq>error :first').tagName,
+                message: errorIq.querySelector(':scope iq>error>text').textContent
             })
         );
     });
@@ -497,8 +489,7 @@ Moderator.prototype._getLoginUrl = function(popup, urlCb, failureCb) {
     this.connection.sendIQ(
         iq,
         result => {
-            // eslint-disable-next-line newline-per-chained-call
-            let url = $(result).find('login-url').attr('url');
+            let url = result.querySelector(':scope login-url').getAttribute('url');
 
             url = decodeURIComponent(url);
             if (url) {
@@ -534,7 +525,7 @@ Moderator.prototype.logout = function(callback) {
         iq,
         result => {
             // eslint-disable-next-line newline-per-chained-call
-            let logoutUrl = $(result).find('logout').attr('logout-url');
+            let logoutUrl = result.querySelector(':scope logout').getAttribute('logout-url');
 
             if (logoutUrl) {
                 logoutUrl = decodeURIComponent(logoutUrl);

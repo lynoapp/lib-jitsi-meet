@@ -1,6 +1,5 @@
 import { getLogger } from '@jitsi/logger';
 import EventEmitter from 'events';
-import $ from 'jquery';
 import isEqual from 'lodash.isequal';
 import { Strophe } from 'strophe.js';
 
@@ -2087,7 +2086,7 @@ JitsiConference.prototype.onRemoteTrackAdded = function(track) {
  * Callback called by the Jingle plugin when 'session-answer' is received.
  * @param {JingleSessionPC} session the Jingle session for which an answer was
  * received.
- * @param {jQuery} answer a jQuery selector pointing to 'jingle' IQ element
+ * @param {Element} answer a 'jingle' IQ element
  */
 // eslint-disable-next-line no-unused-vars
 JitsiConference.prototype.onCallAccepted = function(session, answer) {
@@ -2103,7 +2102,7 @@ JitsiConference.prototype.onCallAccepted = function(session, answer) {
  * Callback called by the Jingle plugin when 'transport-info' is received.
  * @param {JingleSessionPC} session the Jingle session for which the IQ was
  * received
- * @param {jQuery} transportInfo a jQuery selector pointing to 'jingle' IQ
+ * @param {Element} transportInfo a 'jingle' IQ element
  * element
  */
 // eslint-disable-next-line no-unused-vars
@@ -2227,9 +2226,9 @@ JitsiConference.prototype._acceptJvbIncomingCall = function(
     }
 
     const serverRegion
-        = $(jingleOffer)
-            .find('>bridge-session[xmlns="http://jitsi.org/protocol/focus"]')
-            .attr('region');
+        = jingleOffer
+            .querySelector(':scope >bridge-session[*|xmlns="http://jitsi.org/protocol/focus"]')
+            .getAttribute('region');
 
     this.eventEmitter.emit(
         JitsiConferenceEvents.SERVER_REGION_CHANGED,
@@ -2314,7 +2313,7 @@ JitsiConference.prototype._acceptJvbIncomingCall = function(
 /**
  * Sets the BridgeChannel.
  *
- * @param {jQuery} offerIq a jQuery selector pointing to the jingle element of
+ * @param {Element} offerIq a jingle element of
  * the offer IQ which may carry the WebSocket URL for the 'websocket'
  * BridgeChannel mode.
  * @param {TraceablePeerConnection} pc the peer connection which will be used
@@ -2323,12 +2322,11 @@ JitsiConference.prototype._acceptJvbIncomingCall = function(
 JitsiConference.prototype._setBridgeChannel = function(offerIq, pc) {
     let wsUrl = null;
     const webSocket
-        = $(offerIq)
-            .find('>content>transport>web-socket')
-            .first();
+        = offerIq
+            .querySelector(':scope >content>transport>web-socket');
 
-    if (webSocket.length === 1) {
-        wsUrl = webSocket[0].getAttribute('url');
+    if (webSocket) {
+        wsUrl = webSocket.getAttribute('url');
     }
 
     if (wsUrl) {
@@ -3008,7 +3006,7 @@ JitsiConference.prototype._onIceConnectionRestored = function(session) {
 /**
  * Accept incoming P2P Jingle call.
  * @param {JingleSessionPC} jingleSession the session instance
- * @param {jQuery} jingleOffer a jQuery selector pointing to 'jingle' IQ element
+ * @param {Element} jingleOffer a 'jingle' IQ element
  * @private
  */
 JitsiConference.prototype._acceptP2PIncomingCall = function(
