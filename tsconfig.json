@@ -23,6 +23,7 @@
     "*.conf*.js",
     "webpack*.js",
     "lib-jitsi-meet.*.js",
-    "types"
+    "types",
+    "scripts"
   ]
 }
