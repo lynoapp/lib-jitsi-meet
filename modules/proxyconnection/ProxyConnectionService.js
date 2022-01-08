@@ -1,5 +1,4 @@
 import { getLogger } from '@jitsi/logger';
-import $ from 'jquery';
 import { $iq } from 'strophe.js';
 
 import * as MediaType from '../../service/RTC/MediaType';
@@ -96,8 +95,8 @@ export default class ProxyConnectionService {
         }
 
         const iq = this._convertStringToXML(message.data.iq);
-        const $jingle = iq && iq.find('jingle');
-        const action = $jingle && $jingle.attr('action');
+        const jingle = iq && iq.querySelector(':scope jingle');
+        const action = jingle && jingle.getAttribute('action');
 
         if (action === ACTIONS.INITIATE) {
             this._peerConnection = this._createPeerConnection(peerJid, {
@@ -109,7 +108,7 @@ export default class ProxyConnectionService {
         // Truthy check for peer connection added to protect against possibly
         // receiving actions before an ACTIONS.INITIATE.
         if (this._peerConnection) {
-            this._peerConnection.processMessage($jingle);
+            this._peerConnection.processMessage(jingle);
         }
 
         // Take additional steps to ensure the peer connection is cleaned up
@@ -155,18 +154,18 @@ export default class ProxyConnectionService {
     }
 
     /**
-     * Transforms a stringified xML into a XML wrapped in jQuery.
+     * Transforms a stringified xML into an XML document.
      *
      * @param {string} xml - The XML in string form.
      * @private
-     * @returns {Object|null} A jQuery version of the xml. Null will be returned
+     * @returns {XMLDocument|null} An xml node representing the xml document. Null will be returned
      * if an error is encountered during transformation.
      */
     _convertStringToXML(xml) {
         try {
             const xmlDom = new DOMParser().parseFromString(xml, 'text/xml');
 
-            return $(xmlDom);
+            return xmlDom;
         } catch (e) {
             logger.error('Attempted to convert incorrectly formatted xml');
 

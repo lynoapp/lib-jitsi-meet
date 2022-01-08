@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import MediaDirection from '../../service/RTC/MediaDirection';
 import browser from '../browser';
 import FeatureFlags from '../flags/FeatureFlags';
@@ -479,22 +477,21 @@ SDP.prototype.rtcpFbToJingle = function(mediaindex, elem, payloadtype) {
 SDP.prototype.rtcpFbFromJingle = function(elem, payloadtype) { // XEP-0293
     let sdp = '';
     const feedbackElementTrrInt
-        = elem.find(
-            '>rtcp-fb-trr-int[xmlns="urn:xmpp:jingle:apps:rtp:rtcp-fb:0"]');
+        = elem.querySelector(':scope >rtcp-fb-trr-int[*|xmlns="urn:xmpp:jingle:apps:rtp:rtcp-fb:0"]');
 
-    if (feedbackElementTrrInt.length) {
+    if (feedbackElementTrrInt) {
         sdp += 'a=rtcp-fb:* trr-int ';
-        if (feedbackElementTrrInt.attr('value')) {
-            sdp += feedbackElementTrrInt.attr('value');
+        if (feedbackElementTrrInt.getAttribute('value')) {
+            sdp += feedbackElementTrrInt.getAttribute('value');
         } else {
             sdp += '0';
         }
         sdp += '\r\n';
     }
 
-    const feedbackElements = elem.find('>rtcp-fb[xmlns="urn:xmpp:jingle:apps:rtp:rtcp-fb:0"]');
+    const feedbackElements = elem.querySelectorAll(':scope >rtcp-fb[*|xmlns="urn:xmpp:jingle:apps:rtp:rtcp-fb:0"]');
 
-    feedbackElements.each((_, fb) => {
+    feedbackElements.forEach(fb => {
         sdp += `a=rtcp-fb:${payloadtype} ${fb.getAttribute('type')}`;
         if (fb.hasAttribute('subtype')) {
             sdp += ` ${fb.getAttribute('subtype')}`;
@@ -518,15 +515,14 @@ SDP.prototype.fromJingle = function(jingle) {
     // http://tools.ietf.org/html/draft-ietf-mmusic-sdp-bundle-negotiation-04
     // #section-8
     const groups
-        = $(jingle).find('>group[xmlns="urn:xmpp:jingle:apps:grouping:0"]');
+        = jingle.querySelectorAll(':scope >group[*|xmlns="urn:xmpp:jingle:apps:grouping:0"]');
 
     if (groups.length) {
-        groups.each((idx, group) => {
+        groups.forEach(group => {
             const contents
-                = $(group)
-                    .find('>content')
-                    .map((_, content) => content.getAttribute('name'))
-                    .get();
+                = group
+                    .querySelectorAll(':scope >content')
+                    .map(content => content.getAttribute('name'));
 
             if (contents.length > 0) {
                 this.raw
@@ -539,8 +535,8 @@ SDP.prototype.fromJingle = function(jingle) {
     }
 
     this.session = this.raw;
-    jingle.find('>content').each((_, content) => {
-        const m = this.jingle2media($(content));
+    jingle.querySelectorAll(':scope >content').forEach(content => {
+        const m = this.jingle2media(content);
 
         this.media.push(m);
     });
@@ -558,53 +554,52 @@ SDP.prototype.fromJingle = function(jingle) {
 
 // translate a jingle content element into an an SDP media part
 SDP.prototype.jingle2media = function(content) {
-    const desc = content.find('>description');
-    const transport = content.find('>transport[xmlns="urn:xmpp:jingle:transports:ice-udp:1"]');
+    const desc = content.querySelector(':scope >description');
+    const transport = content.querySelector(':scope >transport[*|xmlns="urn:xmpp:jingle:transports:ice-udp:1"]');
     let sdp = '';
-    const sctp = transport.find(
-        '>sctpmap[xmlns="urn:xmpp:jingle:transports:dtls-sctp:1"]');
+    const sctp = transport.querySelector(':scope >sctpmap[*|xmlns="urn:xmpp:jingle:transports:dtls-sctp:1"]');
 
-    const media = { media: desc.attr('media') };
+    const media = { media: desc.getAttribute('media') };
 
     media.port = '9';
-    if (content.attr('senders') === 'rejected') {
+    if (content.getAttribute('senders') === 'rejected') {
         // estos hack to reject an m-line.
         media.port = '0';
     }
-    if (transport.find('>fingerprint[xmlns="urn:xmpp:jingle:apps:dtls:0"]').length) {
-        media.proto = sctp.length ? 'UDP/DTLS/SCTP' : 'UDP/TLS/RTP/SAVPF';
+    if (transport.querySelector(':scope >fingerprint[*|xmlns="urn:xmpp:jingle:apps:dtls:0"]')) {
+        media.proto = sctp ? 'UDP/DTLS/SCTP' : 'UDP/TLS/RTP/SAVPF';
     } else {
         media.proto = 'UDP/TLS/RTP/SAVPF';
     }
-    if (sctp.length) {
+    if (sctp) {
         sdp += `m=application ${media.port} UDP/DTLS/SCTP webrtc-datachannel\r\n`;
-        sdp += `a=sctp-port:${sctp.attr('number')}\r\n`;
+        sdp += `a=sctp-port:${sctp.getAttribute('number')}\r\n`;
         sdp += 'a=max-message-size:262144\r\n';
     } else {
         media.fmt
             = desc
-                .find('>payload-type')
-                .map((_, payloadType) => payloadType.getAttribute('id'))
-                .get();
+                .querySelectorAll(':scope >payload-type')
+                .map(payloadType => payloadType.getAttribute('id'));
         sdp += `${SDPUtil.buildMLine(media)}\r\n`;
     }
 
     sdp += 'c=IN IP4 0.0.0.0\r\n';
-    if (!sctp.length) {
+    if (!sctp) {
         sdp += 'a=rtcp:1 IN IP4 0.0.0.0\r\n';
     }
 
     // XEP-0176 ICE parameters
-    if (transport.length) {
-        if (transport.attr('ufrag')) {
-            sdp += `${SDPUtil.buildICEUfrag(transport.attr('ufrag'))}\r\n`;
+    if (transport) {
+        if (transport.getAttribute('ufrag')) {
+            sdp += `${SDPUtil.buildICEUfrag(transport.getAttribute('ufrag'))}\r\n`;
         }
-        if (transport.attr('pwd')) {
-            sdp += `${SDPUtil.buildICEPwd(transport.attr('pwd'))}\r\n`;
+        if (transport.getAttribute('pwd')) {
+            sdp += `${SDPUtil.buildICEPwd(transport.getAttribute('pwd'))}\r\n`;
         }
-        transport.find('>fingerprint[xmlns="urn:xmpp:jingle:apps:dtls:0"]').each((_, fingerprint) => {
+        transport.querySelectorAll(':scope >fingerprint[*|xmlns="urn:xmpp:jingle:apps:dtls:0"]')
+        .forEach(fingerprint => {
             sdp += `a=fingerprint:${fingerprint.getAttribute('hash')}`;
-            sdp += ` ${$(fingerprint).text()}`;
+            sdp += ` ${fingerprint.textContent}`;
             sdp += '\r\n';
             if (fingerprint.hasAttribute('setup')) {
                 sdp += `a=setup:${fingerprint.getAttribute('setup')}\r\n`;
@@ -613,8 +608,8 @@ SDP.prototype.jingle2media = function(content) {
     }
 
     // XEP-0176 ICE candidates
-    transport.find('>candidate')
-        .each((_, candidate) => {
+    transport.querySelectorAll(':scope >candidate')
+        .forEach(candidate => {
             let protocol = candidate.getAttribute('protocol');
 
             protocol
@@ -631,7 +626,7 @@ SDP.prototype.jingle2media = function(content) {
             sdp += SDPUtil.candidateFromJingle(candidate);
         });
 
-    switch (content.attr('senders')) {
+    switch (content.getAttribute('senders')) {
     case 'initiator':
         sdp += `a=${MediaDirection.SENDONLY}\r\n`;
         break;
@@ -645,37 +640,36 @@ SDP.prototype.jingle2media = function(content) {
         sdp += `a=${MediaDirection.SENDRECV}\r\n`;
         break;
     }
-    sdp += `a=mid:${content.attr('name')}\r\n`;
+    sdp += `a=mid:${content.getAttribute('name')}\r\n`;
 
     // <description><rtcp-mux/></description>
     // see http://code.google.com/p/libjingle/issues/detail?id=309 -- no spec
     // though
     // and http://mail.jabber.org/pipermail/jingle/2011-December/001761.html
-    if (desc.find('>rtcp-mux').length) {
+    if (desc.querySelector(':scope >rtcp-mux')) {
         sdp += 'a=rtcp-mux\r\n';
     }
 
-    desc.find('>payload-type').each((_, payloadType) => {
+    desc.querySelectorAll(':scope >payload-type').forEach(payloadType => {
         sdp += `${SDPUtil.buildRTPMap(payloadType)}\r\n`;
-        if ($(payloadType).find('>parameter').length) {
+        if (payloadType.querySelector(':scope >parameter')) {
             sdp += `a=fmtp:${payloadType.getAttribute('id')} `;
             sdp
-                += $(payloadType)
-                    .find('>parameter')
-                    .map((__, parameter) => {
+                += payloadType
+                    .querySelectorAll(':scope >parameter')
+                    .map(parameter => {
                         const name = parameter.getAttribute('name');
 
                         return (
                             (name ? `${name}=` : '')
                                 + parameter.getAttribute('value'));
                     })
-                    .get()
                     .join('; ');
             sdp += '\r\n';
         }
 
         // xep-0293
-        sdp += this.rtcpFbFromJingle($(payloadType), payloadType.getAttribute('id'));
+        sdp += this.rtcpFbFromJingle(payloadType, payloadType.getAttribute('id'));
     });
 
     // xep-0293
@@ -683,8 +677,8 @@ SDP.prototype.jingle2media = function(content) {
 
     // xep-0294
     desc
-        .find('>rtp-hdrext[xmlns="urn:xmpp:jingle:apps:rtp:rtp-hdrext:0"]')
-        .each((_, hdrExt) => {
+        .querySelectorAll(':scope >rtp-hdrext[*|xmlns="urn:xmpp:jingle:apps:rtp:rtp-hdrext:0"]')
+        .forEach(hdrExt => {
             sdp
                 += `a=extmap:${hdrExt.getAttribute('id')} ${
                     hdrExt.getAttribute('uri')}\r\n`;
@@ -692,14 +686,13 @@ SDP.prototype.jingle2media = function(content) {
 
     // XEP-0339 handle ssrc-group attributes
     desc
-        .find('>ssrc-group[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
-        .each((_, ssrcGroup) => {
+        .querySelectorAll(':scope >ssrc-group[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
+        .forEach(ssrcGroup => {
             const semantics = ssrcGroup.getAttribute('semantics');
             const ssrcs
-                = $(ssrcGroup)
-                    .find('>source')
-                    .map((__, source) => source.getAttribute('ssrc'))
-                    .get();
+                = ssrcGroup
+                    .querySelectorAll(':scope >source')
+                    .map(source => source.getAttribute('ssrc'));
 
             if (ssrcs.length) {
                 sdp += `a=ssrc-group:${semantics} ${ssrcs.join(' ')}\r\n`;
@@ -711,15 +704,15 @@ SDP.prototype.jingle2media = function(content) {
     let nonUserSources = '';
 
     desc
-        .find('>source[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
-        .each((_, source) => {
+        .querySelectorAll(':scope >source[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
+        .forEach(source => {
             const ssrc = source.getAttribute('ssrc');
             let isUserSource = true;
             let sourceStr = '';
 
-            $(source)
-                .find('>parameter')
-                .each((__, parameter) => {
+            source
+                .querySelectorAll(':scope >parameter')
+                .findEach(parameter => {
                     const name = parameter.getAttribute('name');
                     let value = parameter.getAttribute('value');
 
