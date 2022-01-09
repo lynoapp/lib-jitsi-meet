@@ -1,9 +1,9 @@
 /**
  * Parses the disco-info node and returns the sets of features and identities.
- * @param {Element} node The node with results to parse.
+ * @param {String} node The node with results to parse.
  * @returns {{features: Set<any>, identities: Set<any>}}
  */
-export function parseDiscoInfo(node: Element): {
+export function parseDiscoInfo(node: string): {
     features: Set<any>;
     identities: Set<any>;
 };

@@ -110,11 +110,11 @@ export default class ProxyConnectionService {
      */
     stop(): void;
     /**
-     * Transforms a stringified xML into an XML document.
+     * Transforms a stringified xML into a XML wrapped in jQuery.
      *
      * @param {string} xml - The XML in string form.
      * @private
-     * @returns {XMLDocument|null} An xml node representing the xml document. Null will be returned
+     * @returns {Object|null} A jQuery version of the xml. Null will be returned
      * if an error is encountered during transformation.
      */
     private _convertStringToXML;
