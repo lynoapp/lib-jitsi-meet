@@ -90,11 +90,11 @@ export default class ProxyConnectionPC {
     /**
      * Updates the peer connection based on the passed in jingle.
      *
-     * @param {Element} jingle - An XML jingle element,
+     * @param {Object} $jingle - An XML jingle element, wrapped in query,
      * describing how the peer connection should be updated.
      * @returns {void}
      */
-    processMessage(jingle: Element): void;
+    processMessage($jingle: any): void;
     /**
      * Instantiates a peer connection and starts the offer/answer cycle to
      * establish a connection with a remote peer.
@@ -131,7 +131,7 @@ export default class ProxyConnectionPC {
      * The passed in jingle element should contain an SDP answer to a previously
      * sent SDP offer.
      *
-     * @param {Element} jingle - The jingle element.
+     * @param {Object} $jingle - The jingle element wrapped in jQuery.
      * @private
      * @returns {void}
      */
@@ -140,7 +140,7 @@ export default class ProxyConnectionPC {
      * Callback invoked in response to a request to start a proxy connection.
      * The passed in jingle element should contain an SDP offer.
      *
-     * @param {Element} jingle - The jingle element.
+     * @param {Object} $jingle - The jingle element wrapped in jQuery.
      * @private
      * @returns {void}
      */
@@ -157,7 +157,7 @@ export default class ProxyConnectionPC {
      * Callback invoked in response to ICE candidates from the remote peer.
      * The passed in jingle element should contain an ICE candidate.
      *
-     * @param {Element} jingle - The jingle element
+     * @param {Object} $jingle - The jingle element wrapped in jQuery.
      * @private
      * @returns {void}
      */

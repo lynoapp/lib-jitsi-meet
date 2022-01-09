@@ -10,7 +10,7 @@ export default class ProxyConnectionPC {
     onSendMessage: ( params: unknown ) => unknown; // TODO:
   } );
   getPeerJid: () => string;
-  processMessage: ( jingle: Element ) => void;
+  processMessage: ( $jingle: JQuery ) => void; // TODO: surely there shouldn't be a dependency on jQuery
   start: ( localTracks?: JitsiLocalTrack[] ) => void;
   stop: () => void;
 }

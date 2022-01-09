@@ -1,4 +1,5 @@
 import { getLogger } from '@jitsi/logger';
+import $ from 'jquery';
 import { $build } from 'strophe.js';
 
 import * as MediaType from '../../service/RTC/MediaType';
@@ -62,10 +63,13 @@ function _createSsrcGroupExtension(ssrcGroupCompactJson) {
  * @returns the RTP description element with the given media type.
  */
 function _getOrCreateRtpDescription(iq, mediaType) {
-    const jingle = iq.qurySelector(':scopejingle');
-    let content = jingle.qurySelector(`:scope content[name="${mediaType}"]`);
+    const jingle = $(iq).find('jingle')[0];
+    let content = $(jingle).find(`content[name="${mediaType}"]`);
+    let description;
 
-    if (!content) {
+    if (content.length) {
+        content = content[0];
+    } else {
         // I'm not suree if "creator" and "senders" are required.
         content = $build('content', {
             name: mediaType
@@ -73,18 +77,17 @@ function _getOrCreateRtpDescription(iq, mediaType) {
         jingle.appendChild(content);
     }
 
-    let description = content.qurySelector(':scope description');
+    description = $(content).find('description');
 
-    if (description) {
-        return description;
+    if (description.length) {
+        description = description[0];
+    } else {
+        description = $build('description', {
+            xmlns: 'urn:xmpp:jingle:apps:rtp:1',
+            media: mediaType
+        }).node;
+        content.appendChild(description);
     }
-
-    description = $build('description', {
-        xmlns: 'urn:xmpp:jingle:apps:rtp:1',
-        media: mediaType
-    }).node;
-
-    content.appendChild(description);
 
     return description;
 }

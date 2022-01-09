@@ -1,4 +1,5 @@
 import { getLogger } from '@jitsi/logger';
+import $ from 'jquery';
 import { $iq, Strophe } from 'strophe.js';
 
 import * as CodecMimeType from '../../service/RTC/CodecMimeType';
@@ -84,17 +85,17 @@ function getEndpointId(jidOrEndpointId) {
 export default class JingleSessionPC extends JingleSession {
     /**
      * Parses 'senders' attribute of the video content.
-     * @param {Element} jingleContents
+     * @param {jQuery} jingleContents
      * @return {string|null} one of the values of content "senders" attribute
      * defined by Jingle. If there is no "senders" attribute or if the value is
      * invalid then <tt>null</tt> will be returned.
      * @private
      */
     static parseVideoSenders(jingleContents) {
-        const videoContents = jingleContents.querySelector(':scope >content[name="video"]');
+        const videoContents = jingleContents.find('>content[name="video"]');
 
-        if (videoContents) {
-            const senders = videoContents.getAttribute('senders');
+        if (videoContents.length) {
+            const senders = videoContents[0].getAttribute('senders');
 
             if (senders === 'both'
                 || senders === 'initiator'
@@ -110,13 +111,13 @@ export default class JingleSessionPC extends JingleSession {
     /**
      * Parses the video max frame height value out of the 'content-modify' IQ.
      *
-     * @param {Element} jingleContents - A 'jingle' element.
+     * @param {jQuery} jingleContents - A jQuery selector pointing to the '>jingle' element.
      * @returns {Number|null}
      */
     static parseMaxFrameHeight(jingleContents) {
-        const maxFrameHeightSel = jingleContents.querySelector(':scope >content[name="video"]>max-frame-height');
+        const maxFrameHeightSel = jingleContents.find('>content[name="video"]>max-frame-height');
 
-        return maxFrameHeightSel ? Number(maxFrameHeightSel.textContent) : null;
+        return maxFrameHeightSel.length ? Number(maxFrameHeightSel.text()) : null;
     }
 
     /* eslint-disable max-params */
@@ -811,8 +812,8 @@ export default class JingleSessionPC extends JingleSession {
 
         const iceCandidates = [];
 
-        elem.querySelectorAll(':scope >content>transport>candidate')
-            .forEach(candidate => {
+        elem.find('>content>transport>candidate')
+            .each((idx, candidate) => {
                 let line = SDPUtil.candidateFromJingle(candidate);
 
                 line = line.replace('\r\n', '').replace('a=', '');
@@ -865,43 +866,43 @@ export default class JingleSessionPC extends JingleSession {
      * @param contents
      */
     readSsrcInfo(contents) {
-        contents.forEach(content => {
-            const ssrcs = content.querySelectorAll(
-                ':scope >description>source[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
+        const ssrcs
+            = $(contents).find(
+                '>description>'
+                    + 'source[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
 
-            ssrcs.forEach(ssrcElement => {
-                const ssrc = Number(ssrcElement.getAttribute('ssrc'));
+        ssrcs.each((i, ssrcElement) => {
+            const ssrc = Number(ssrcElement.getAttribute('ssrc'));
 
-                if (this.isP2P) {
-                    // In P2P all SSRCs are owner by the remote peer
-                    this._signalingLayer.setSSRCOwner(
-                        ssrc, Strophe.getResourceFromJid(this.remoteJid));
-                } else {
-                    if (FeatureFlags.isSourceNameSignalingEnabled()) {
-                        // Only set sourceName for non-P2P case
-                        if (ssrcElement.hasAttribute('name')) {
-                            const sourceName = ssrcElement.getAttribute('name');
+            if (this.isP2P) {
+                // In P2P all SSRCs are owner by the remote peer
+                this._signalingLayer.setSSRCOwner(
+                    ssrc, Strophe.getResourceFromJid(this.remoteJid));
+            } else {
+                if (FeatureFlags.isSourceNameSignalingEnabled()) {
+                    // Only set sourceName for non-P2P case
+                    if (ssrcElement.hasAttribute('name')) {
+                        const sourceName = ssrcElement.getAttribute('name');
 
-                            this._signalingLayer.setTrackSourceName(ssrc, sourceName);
-                        }
+                        this._signalingLayer.setTrackSourceName(ssrc, sourceName);
                     }
-                    ssrcElement
-                        .querySelectorAll(':scope >ssrc-info[*|xmlns="http://jitsi.org/jitmeet"]')
-                        .forEach((i3, ssrcInfoElement) => {
-                            const owner = ssrcInfoElement.getAttribute('owner');
-
-                            if (owner && owner.length) {
-                                if (isNaN(ssrc) || ssrc < 0) {
-                                    logger.warn(`${this} Invalid SSRC ${ssrc} value received for ${owner}`);
-                                } else {
-                                    this._signalingLayer.setSSRCOwner(
-                                        ssrc,
-                                        getEndpointId(owner));
-                                }
-                            }
-                        });
                 }
-            });
+                $(ssrcElement)
+                    .find('>ssrc-info[xmlns="http://jitsi.org/jitmeet"]')
+                    .each((i3, ssrcInfoElement) => {
+                        const owner = ssrcInfoElement.getAttribute('owner');
+
+                        if (owner && owner.length) {
+                            if (isNaN(ssrc) || ssrc < 0) {
+                                logger.warn(`${this} Invalid SSRC ${ssrc} value received for ${owner}`);
+                            } else {
+                                this._signalingLayer.setSSRCOwner(
+                                    ssrc,
+                                    getEndpointId(owner));
+                            }
+                        }
+                    });
+            }
         });
     }
 
@@ -929,7 +930,8 @@ export default class JingleSessionPC extends JingleSession {
     /**
      * Accepts incoming Jingle 'session-initiate' and should send
      * 'session-accept' in result.
-     * @param jingleOffer jingle element of the offer IQ
+     * @param jingleOffer jQuery selector pointing to the jingle element of
+     * the offer IQ
      * @param success callback called when we accept incoming session
      * successfully and receive RESULT packet to 'session-accept' sent.
      * @param failure function(error) called if for any reason we fail to accept
@@ -1078,7 +1080,7 @@ export default class JingleSessionPC extends JingleSession {
      * This is a setRemoteDescription/setLocalDescription cycle which starts at
      * converting Strophe Jingle IQ into remote offer SDP. Once converted
      * setRemoteDescription, createAnswer and setLocalDescription calls follow.
-     * @param jingleOfferAnswerIq node containing the jingle element
+     * @param jingleOfferAnswerIq jQuery selector pointing to the jingle element
      *        of the offer (or answer) IQ
      * @param success callback called when sRD/sLD cycle finishes successfully.
      * @param failure callback called with an error object as an argument if we
@@ -1102,9 +1104,10 @@ export default class JingleSessionPC extends JingleSession {
                 = this.peerconnection.localDescription.sdp;
 
             const bridgeSession
-                = jingleOfferAnswerIq
-                    .querySelector(':scope >bridge-session[*|xmlns="http://jitsi.org/protocol/focus"]');
-            const bridgeSessionId = bridgeSession?.getAttribute('id') || null;
+                = $(jingleOfferAnswerIq)
+                    .find('>bridge-session['
+                        + 'xmlns="http://jitsi.org/protocol/focus"]');
+            const bridgeSessionId = bridgeSession.attr('id');
 
             if (bridgeSessionId !== this._bridgeSessionId) {
                 this._bridgeSessionId = bridgeSessionId;
@@ -1224,11 +1227,11 @@ export default class JingleSessionPC extends JingleSession {
         // cleaned up to signal the known data channel is now invalid. After
         // that the original offer is set to have the SCTP connection
         // established with the new bridge.
-        const originalOffer = jingleOfferElem.cloneNode(true);
+        const originalOffer = jingleOfferElem.clone();
 
         jingleOfferElem
-            .querySelector(':scope >content[name=\'data\']')
-            .getAttribute('senders', 'rejected');
+            .find('>content[name=\'data\']')
+            .attr('senders', 'rejected');
 
         // Remove all remote sources in order to reset the client's state
         // for the remote MediaStreams. When a conference is moved to
@@ -1237,20 +1240,20 @@ export default class JingleSessionPC extends JingleSession {
         // The symptoms include frozen or black video and lots of "failed to
         // unprotect SRTP packets" in Chrome logs.
         jingleOfferElem
-            .querySelector(':scope >content>description>source')
+            .find('>content>description>source')
             .remove();
         jingleOfferElem
-            .querySelector(':scope >content>description>ssrc-group')
+            .find('>content>description>ssrc-group')
             .remove();
 
         // On the JVB it's not a real ICE restart and all layers are re-initialized from scratch as Jicofo does
         // the restart by re-allocating new channels. Chrome (or WebRTC stack) needs to have the DTLS transport layer
         // reset to start a new handshake with fresh DTLS transport on the bridge. Make it think that the DTLS
         // fingerprint has changed by setting an all zeros key.
-        const newFingerprint = jingleOfferElem.querySelector(':scope >content>transport>fingerprint');
+        const newFingerprint = jingleOfferElem.find('>content>transport>fingerprint');
 
-        newFingerprint.setAttribute('hash', 'sha-1');
-        newFingerprint.textContent = '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00';
+        newFingerprint.attr('hash', 'sha-1');
+        newFingerprint.text('00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00');
 
         // First set an offer with a rejected 'data' section
         this.setOfferAnswerCycle(
@@ -1608,9 +1611,9 @@ export default class JingleSessionPC extends JingleSession {
     /**
      * Parse the information from the xml sourceAddElem and translate it
      *  into sdp lines
-     * @param {Element[]} sourceAddElem the source-add
-     *  elements from jingle
-     * @param {Object} currentRemoteSdp the current remote
+     * @param {jquery xml element} sourceAddElem the source-add
+     *  element from jingle
+     * @param {SDP object} currentRemoteSdp the current remote
      *  sdp (as of this new source-add)
      * @returns {list} a list of SDP line strings that should
      *  be added to the remote SDP
@@ -1619,16 +1622,23 @@ export default class JingleSessionPC extends JingleSession {
         const addSsrcInfo = [];
         const self = this;
 
-        sourceAddElem.forEach(content => {
-            const name = content.getAttribute('name');
+        $(sourceAddElem).each((i1, content) => {
+            const name = $(content).attr('name');
             let lines = '';
 
-            content
-                .querySelectorAll(':scope ssrc-group[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
-                .forEach(element => {
+            $(content)
+                .find('ssrc-group[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
+                .each(function() {
                     // eslint-disable-next-line no-invalid-this
-                    const semantics = element.getAttribute('semantics');
-                    const ssrcs = element.querySelectorAll(':scope >source').map(() => element.getAttribute('ssrc'));
+                    const semantics = this.getAttribute('semantics');
+                    const ssrcs
+                        = $(this) // eslint-disable-line no-invalid-this
+                            .find('>source')
+                            .map(function() {
+                                // eslint-disable-next-line no-invalid-this
+                                return this.getAttribute('ssrc');
+                            })
+                            .get();
 
                     if (ssrcs.length) {
                         lines += `a=ssrc-group:${semantics} ${ssrcs.join(' ')}\r\n`;
@@ -1636,11 +1646,13 @@ export default class JingleSessionPC extends JingleSession {
                 });
 
             // handles both >source and >description>source
-            const tmp = content.querySelectorAll(':scope source[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
+            const tmp
+                = $(content).find(
+                    'source[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
 
             /* eslint-disable no-invalid-this */
-            tmp.forEach(element => {
-                const ssrc = element.getAttribute('ssrc');
+            tmp.each(function() {
+                const ssrc = $(this).attr('ssrc');
 
                 if (currentRemoteSdp.containsSSRC(ssrc)) {
 
@@ -1652,10 +1664,10 @@ export default class JingleSessionPC extends JingleSession {
                 }
 
                 // eslint-disable-next-line newline-per-chained-call
-                element.querySelectorAll(':scope >parameter').forEach(param => {
-                    lines += `a=ssrc:${ssrc} ${param.getAttribute('name')}`;
-                    if (param.getAttribute('value') && param.getAttribute('value').length) {
-                        lines += `:${param.getAttribute('value')}`;
+                $(this).find('>parameter').each(function() {
+                    lines += `a=ssrc:${ssrc} ${$(this).attr('name')}`;
+                    if ($(this).attr('value') && $(this).attr('value').length) {
+                        lines += `:${$(this).attr('value')}`;
                     }
                     lines += '\r\n';
                 });
@@ -1805,8 +1817,8 @@ export default class JingleSessionPC extends JingleSession {
 
     /**
      * Takes in a jingle offer iq, returns the new sdp offer
-     * @param {Element} offerIq the incoming offer
-     * @returns {Object} the jingle offer translated to SDP
+     * @param {jquery xml element} offerIq the incoming offer
+     * @returns {SDP object} the jingle offer translated to SDP
      */
     _processNewJingleOfferIq(offerIq) {
         const remoteSdp = new SDP('');
@@ -1822,7 +1834,7 @@ export default class JingleSessionPC extends JingleSession {
         }
 
         remoteSdp.fromJingle(offerIq);
-        this.readSsrcInfo(offerIq.querySelectorAll(':scope >content'));
+        this.readSsrcInfo($(offerIq).find('>content'));
 
         return remoteSdp;
     }
@@ -2101,9 +2113,9 @@ export default class JingleSessionPC extends JingleSession {
     /**
      * Parse the information from the xml sourceRemoveElem and translate it
      *  into sdp lines
-     * @param {Element[]} sourceRemoveElem the source-remove
+     * @param {jquery xml element} sourceRemoveElem the source-remove
      *  element from jingle
-     * @param {Object} currentRemoteSdp the current remote
+     * @param {SDP object} currentRemoteSdp the current remote
      *  sdp (as of this new source-remove)
      * @returns {list} a list of SDP line strings that should
      *  be removed from the remote SDP
@@ -2111,16 +2123,22 @@ export default class JingleSessionPC extends JingleSession {
     _parseSsrcInfoFromSourceRemove(sourceRemoveElem, currentRemoteSdp) {
         const removeSsrcInfo = [];
 
-        sourceRemoveElem.forEach(content => {
-            const name = content.getAttribute('name');
+        $(sourceRemoveElem).each((i1, content) => {
+            const name = $(content).attr('name');
             let lines = '';
 
-            content
-                .querySelectorAll(':scope ssrc-group[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
-                .forEach(element => {
+            $(content)
+                .find('ssrc-group[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
+                .each(function() {
                     /* eslint-disable no-invalid-this */
-                    const semantics = element.getAttribute('semantics');
-                    const ssrcs = element.querySelectorAll(':scope >source').map(() => element.getAttribute('ssrc'));
+                    const semantics = this.getAttribute('semantics');
+                    const ssrcs
+                        = $(this)
+                            .find('>source')
+                            .map(function() {
+                                return this.getAttribute('ssrc');
+                            })
+                            .get();
 
                     if (ssrcs.length) {
                         lines
@@ -2134,10 +2152,12 @@ export default class JingleSessionPC extends JingleSession {
 
             // handles both >source and >description>source versions
             const tmp
-                = content.querySelectorAll(':scope source[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
+                = $(content).find(
+                    'source[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
 
-            tmp.forEach(element => {
-                const ssrc = element.getAttribute('ssrc');
+            tmp.each(function() {
+                // eslint-disable-next-line no-invalid-this
+                const ssrc = $(this).attr('ssrc');
 
                 ssrcs.push(ssrc);
             });
@@ -2383,7 +2403,8 @@ export default class JingleSessionPC extends JingleSession {
      * only checks the senders attribute of the video content in order to figure
      * out if the remote peer has video in the inactive state (stored locally
      * in {@link _remoteVideoActive} - see field description for more info).
-     * @param {Element} jingleContents A 'jingle' element.
+     * @param {jQuery} jingleContents jQuery selector pointing to the jingle
+     * element of the session modify IQ.
      * @see {@link _remoteVideoActive}
      * @see {@link _localVideoActive}
      */
@@ -2594,20 +2615,20 @@ export default class JingleSessionPC extends JingleSession {
             const error = {};
 
             // Get XMPP error code and condition(reason)
-            const errorElSel = errResponse.querySelector(':scope error');
+            const errorElSel = $(errResponse).find('error');
 
-            if (errorElSel) {
-                error.code = errorElSel.getAttribute('code');
-                const errorReasonSel = errResponse.querySelector(':scope error :first');
+            if (errorElSel.length) {
+                error.code = errorElSel.attr('code');
+                const errorReasonSel = $(errResponse).find('error :first');
 
-                if (errorReasonSel) {
-                    error.reason = errorReasonSel.tagName;
+                if (errorReasonSel.length) {
+                    error.reason = errorReasonSel[0].tagName;
                 }
 
-                const errorMsgSel = errorElSel.querySelector(':scope >text');
+                const errorMsgSel = errorElSel.find('>text');
 
-                if (errorMsgSel) {
-                    error.msg = errorMsgSel.textContent;
+                if (errorMsgSel.length) {
+                    error.msg = errorMsgSel.text();
                 }
             }
 

@@ -76,6 +76,9 @@ module.exports = (minimize, analyzeBundle) => {
         resolve: {
             extensions: [ '.js' ]
         },
+        externals: {
+            jquery: 'jquery'
+        },
         plugins: [
             analyzeBundle
                 && new BundleAnalyzerPlugin({
