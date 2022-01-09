@@ -374,7 +374,10 @@ export default class TraceablePeerConnection {
      * @param {boolean} muted the initial muted status
      * @param {String} sourceName the track's source name
      */
-    _createRemoteTrack(ownerEndpointId: string, stream: MediaStream, track: MediaStreamTrack, mediaType: typeof MediaType, videoType?: typeof VideoType, ssrc: number, muted: boolean, sourceName: string): void;
+    _createRemoteTrack(ownerEndpointId: string, stream: MediaStream, track: MediaStreamTrack, mediaType: typeof MediaType, videoType?: {
+        CAMERA: string;
+        DESKTOP: string;
+    }, ssrc: number, muted: boolean, sourceName: string): void;
     /**
      * Handles remote stream removal.
      * @param stream the WebRTC MediaStream object which is being removed from the
@@ -753,5 +756,4 @@ import { TPCUtils } from "./TPCUtils";
 import SdpConsistency from "../sdp/SdpConsistency";
 import LocalSdpMunger from "../sdp/LocalSdpMunger";
 import RtxModifier from "../sdp/RtxModifier";
-import * as VideoType from "../../service/RTC/VideoType";
 import * as CodecMimeType from "../../service/RTC/CodecMimeType";

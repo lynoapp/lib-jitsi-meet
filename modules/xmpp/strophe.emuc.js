@@ -1,5 +1,4 @@
 import { getLogger } from '@jitsi/logger';
-import $ from 'jquery';
 import { Strophe } from 'strophe.js';
 
 import XMPPEvents from '../../service/xmpp/XMPPEvents';
@@ -107,8 +106,7 @@ export default class MucConnectionPlugin extends ConnectionPluginListenable {
         }
 
         // Parse status.
-        if ($(pres).find('>x[xmlns="http://jabber.org/protocol/muc#user"]'
-            + '>status[code="201"]').length) {
+        if (pres.querySelector(':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]>status[code="201"]')) {
             room.createNonAnonymousRoom();
         }
 
