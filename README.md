@@ -6,19 +6,19 @@ Changes to the [original repo](https://github.com/jitsi/lib-jitsi-meet):
 
 - export unbundled code
 - TypeScript support
-- published to [npm](https://www.npmjs.com/package/@lyno/lib-jitsi-meet)
+- published to [npm](https://www.npmjs.com/package/@solyd/lib-jitsi-meet)
 - updated dependencies
 
 ## Installation
 
 ```bash
-yarn add @lyno/lib-jitsi-meet
+yarn add @solyd/lib-jitsi-meet
 ```
 
 ### Usage
 
 ```typescript
-import JitsiMeetJS from '@lyno/lib-jitsi-meet';
+import JitsiMeetJS from '@solyd/lib-jitsi-meet';
 
 JitsiMeetJS.init(initOptions);
 const connection = new JitsiMeetJS.JitsiConnection(null, token, options);
