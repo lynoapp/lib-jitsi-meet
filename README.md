@@ -8,6 +8,7 @@ Changes to the [original repo](https://github.com/jitsi/lib-jitsi-meet):
 - TypeScript support
 - published to [npm](https://www.npmjs.com/package/@solyd/lib-jitsi-meet)
 - updated dependencies
+- a few bug fixes (see pull requests)
 
 ## Installation
 
