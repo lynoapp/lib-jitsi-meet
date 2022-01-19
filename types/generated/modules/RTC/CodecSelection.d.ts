@@ -67,7 +67,7 @@ export class CodecSelection {
      * @returns {void}
      * @private
      */
-    private _onMediaSessionStared;
+    private _onMediaSessionStarted;
     /**
      * Sets the codec on the media session based on the preferred codec setting and the supported codecs
      * published by the remote participants in their presence.
