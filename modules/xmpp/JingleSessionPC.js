@@ -1059,15 +1059,29 @@ export default class JingleSessionPC extends JingleSession {
             () => {
                 logger.info(`${this} setAnswer - succeeded`);
                 if (this.usesUnifiedPlan && browser.isChromiumBased()) {
-                    // This hack is needed for Chrome to create a decoder for the ssrcs in the remote SDP when
-                    // the local endpoint is the offerer and starts muted.
-                    const remoteSdp = this.peerconnection.remoteDescription.sdp;
-                    const remoteDescription = new RTCSessionDescription({
-                        type: 'offer',
-                        sdp: remoteSdp
-                    });
+                    const workFunction = finishedCallback => {
+                        // This hack is needed for Chrome to create a decoder for the ssrcs in the remote SDP when
+                        // the local endpoint is the offerer and starts muted.
+                        const remoteSdp = this.peerconnection.remoteDescription.sdp;
+                        const remoteDescription = new RTCSessionDescription({
+                            type: 'offer',
+                            sdp: remoteSdp
+                        });
 
-                    this._responderRenegotiate(remoteDescription);
+                        return this._responderRenegotiate(remoteDescription)
+                        .then(() => finishedCallback(), error => finishedCallback(error));
+                    };
+
+                    logger.debug(`${this} Queued responderRenegotiate task`);
+                    this.modificationQueue.push(
+                        workFunction,
+                        error => {
+                            if (error) {
+                                logger.error(`${this} failed to renegotiate a decoder for muted endpoint ${error}`);
+                            } else {
+                                logger.debug(`${this} renegotiate a decoder for muted endpoint`);
+                            }
+                        });
                 }
             },
             error => {
@@ -1860,6 +1874,8 @@ export default class JingleSessionPC extends JingleSession {
                     const mid = remoteSdp.media.findIndex(mLine => mLine.includes(line));
 
                     if (mid > -1) {
+                        const mediaType = SDPUtil.parseMLine(remoteSdp.media[mid].split('\r\n')[0])?.media;
+
                         if (this.isP2P) {
                             // Do not remove ssrcs from m-line in p2p mode. If the ssrc is removed and added back to
                             // the same m-line (on source-add), Chrome/Safari do not render the media even if it is
@@ -1869,7 +1885,6 @@ export default class JingleSessionPC extends JingleSession {
                             // fire the "removetrack" event on the associated MediaStream. Also, the current direction
                             // of the transceiver for p2p will depend on whether a local sources is added or not. It
                             // will be 'sendrecv' if the local source is present, 'sendonly' otherwise.
-                            const mediaType = SDPUtil.parseMLine(remoteSdp.media[mid].split('\r\n')[0])?.media;
                             const desiredDirection = this.peerconnection.getDesiredMediaDirection(mediaType, false);
 
                             [ MediaDirection.SENDRECV, MediaDirection.SENDONLY ].forEach(direction => {
@@ -1877,10 +1892,14 @@ export default class JingleSessionPC extends JingleSession {
                                     .replace(`a=${direction}`, `a=${desiredDirection}`);
                             });
                         } else {
-                            // Jvb connections will have direction set to 'sendonly' for the remote sources.
+                            // Change the port to 0 to reject the m-line associated with the source. The rejected
+                            // m-lines are recycled when new ssrcs need to be added to the remote description.
+                            const port = SDPUtil.parseMLine(remoteSdp.media[mid].split('\r\n')[0])?.port;
+
                             remoteSdp.media[mid] = remoteSdp.media[mid].replace(`${line}\r\n`, '');
-                            remoteSdp.media[mid] = remoteSdp.media[mid]
-                                .replace(`a=${MediaDirection.SENDONLY}`, `a=${MediaDirection.INACTIVE}`);
+                            remoteSdp.media[mid] = remoteSdp.media[mid].replace(
+                                `m=${mediaType} ${port}`,
+                                `m=${mediaType} 0`);
                         }
                     }
                 });
