@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js ../generated generated.json",
+    "test": "node index.js ../auto auto.json",
     "start": "node index.js ../hand-crafted hand-crafted.json"
   },
   "author": "",

@@ -13,6 +13,6 @@ npm-*.log
 .DS_Store
 stats.json
 .vscode
-types/types-comparer/hand-crafted.json
-types/types-comparer/generated.json
 dist
+types/types-comparer/auto.json
+types/types-comparer/hand-crafted.json

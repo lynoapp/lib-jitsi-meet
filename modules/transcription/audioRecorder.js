@@ -1,34 +1,11 @@
-const RecordingResult = require('./recordingResult');
+import RecordingResult from './recordingResult';
+import TrackRecorder from './trackRecorder';
 
 /**
  * Possible audio formats MIME types
  */
 const AUDIO_WEBM = 'audio/webm'; // Supported in chrome
 const AUDIO_OGG = 'audio/ogg'; // Supported in firefox
-
-/**
- * A TrackRecorder object holds all the information needed for recording a
- * single JitsiTrack (either remote or local)
- * @param track The JitsiTrack the object is going to hold
- */
-const TrackRecorder = function(track) {
-    // The JitsiTrack holding the stream
-    this.track = track;
-
-    // The MediaRecorder recording the stream
-    this.recorder = null;
-
-    // The array of data chunks recorded from the stream
-    // acts as a buffer until the data is stored on disk
-    this.data = null;
-
-    // the name of the person of the JitsiTrack. This can be undefined and/or
-    // not unique
-    this.name = null;
-
-    // the time of the start of the recording
-    this.startTime = null;
-};
 
 /**
  * Starts the recording of a JitsiTrack in a TrackRecorder object.
@@ -255,7 +232,7 @@ AudioRecorder.prototype.download = function() {
         const a = document.createElement('a');
 
         document.body.appendChild(a);
-        a.style.display = 'none';
+        a.style = 'display: none';
         a.href = url;
         a.download = `test.${this.fileType.split('/')[1]}`;
         a.click();

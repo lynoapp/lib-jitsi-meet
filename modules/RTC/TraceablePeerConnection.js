@@ -192,6 +192,13 @@ export default function TraceablePeerConnection(
     this.remoteUfrag = null;
 
     /**
+     * The DTLS transport object for the PeerConnection.
+     * Note: this assume only one shared transport exists because we bundled
+     *       all streams on the same underlying transport.
+     */
+    this._dtlsTransport = null;
+
+    /**
      * The signaling layer which operates this peer connection.
      * @type {SignalingLayer}
      */
@@ -1684,23 +1691,6 @@ TraceablePeerConnection.prototype._mungeCodecOrder = function(description) {
 };
 
 /**
- * Checks if given track belongs to this peerconnection instance.
- *
- * @param {JitsiLocalTrack|JitsiRemoteTrack} track - The track to be checked.
- * @returns {boolean}
- */
-TraceablePeerConnection.prototype.containsTrack = function(track) {
-    if (track.isLocal()) {
-        return this.localTracks.has(track.rtcId);
-    }
-
-    const participantId = track.getParticipantId();
-    const remoteTracksMap = this.remoteTracks.get(participantId);
-
-    return Boolean(remoteTracksMap && remoteTracksMap.get(track.getType()) === track);
-};
-
-/**
  * Add {@link JitsiLocalTrack} to this TPC.
  * @param {JitsiLocalTrack} track
  * @param {boolean} isInitiator indicates if the endpoint is the offerer.
@@ -1964,7 +1954,9 @@ TraceablePeerConnection.prototype.removeTrack = function(localTrack) {
  * was found.
  */
 TraceablePeerConnection.prototype.findSenderByKind = function(mediaType) {
-    return this.peerconnection.getSenders().find(s => s.track && s.track.kind === mediaType);
+    if (this.peerconnection.getSenders) {
+        return this.peerconnection.getSenders().find(s => s.track && s.track.kind === mediaType);
+    }
 };
 
 /**
@@ -1986,7 +1978,9 @@ TraceablePeerConnection.prototype.findReceiverForTrack = function(track) {
  * was found.
  */
 TraceablePeerConnection.prototype.findSenderForTrack = function(track) {
-    return this.peerconnection.getSenders().find(s => s.track === track);
+    if (this.peerconnection.getSenders) {
+        return this.peerconnection.getSenders().find(s => s.track === track);
+    }
 };
 
 /**
@@ -2030,9 +2024,14 @@ TraceablePeerConnection.prototype.replaceTrack = function(oldTrack, newTrack) {
             .then(() => {
                 oldTrack && this.localTracks.delete(oldTrack.rtcId);
                 newTrack && this.localTracks.set(newTrack.rtcId, newTrack);
+                const mediaActive = mediaType === MediaType.AUDIO
+                    ? this.audioTransferActive
+                    : this.videoTransferActive;
 
-                if (transceiver) {
-                    // Set the transceiver direction.
+                // Set the transceiver direction only if media is not suspended on the connection. This happens when
+                // the client is using the p2p connection. Transceiver direction is updated when media is resumed on
+                // this connection again.
+                if (transceiver && mediaActive) {
                     transceiver.direction = newTrack ? MediaDirection.SENDRECV : MediaDirection.RECVONLY;
                 }
 
@@ -2290,6 +2289,31 @@ TraceablePeerConnection.prototype._mungeOpus = function(description) {
 };
 
 /**
+ * Sets up the _dtlsTransport object and initializes callbacks for it.
+ */
+TraceablePeerConnection.prototype._initializeDtlsTransport = function() {
+    // We are assuming here that we only have one bundled transport here
+    if (!this.peerconnection.getSenders || this._dtlsTransport) {
+        return;
+    }
+
+    const senders = this.peerconnection.getSenders();
+
+    if (senders.length !== 0 && senders[0].transport) {
+        this._dtlsTransport = senders[0].transport;
+
+        this._dtlsTransport.onerror = error => {
+            logger.error(`${this} DtlsTransport error: ${error}`);
+        };
+
+        this._dtlsTransport.onstatechange = () => {
+            this.trace('dtlsTransport.onstatechange', this._dtlsTransport.state);
+        };
+    }
+};
+
+
+/**
  * Configures the stream encodings depending on the video type and the bitrates configured.
  *
  * @returns {Promise} promise that will be resolved when the operation is successful and rejected otherwise.
@@ -2328,6 +2352,9 @@ TraceablePeerConnection.prototype.setLocalDescription = function(description) {
                     this.localUfrag = localUfrag;
                     this.eventEmitter.emit(RTCEvents.LOCAL_UFRAG_CHANGED, this, localUfrag);
                 }
+
+                this._initializeDtlsTransport();
+
                 resolve();
             }, err => {
                 this.trace('setLocalDescriptionOnFailure', err);
@@ -2417,6 +2444,9 @@ TraceablePeerConnection.prototype.setRemoteDescription = function(description) {
                     this.remoteUfrag = remoteUfrag;
                     this.eventEmitter.emit(RTCEvents.REMOTE_UFRAG_CHANGED, this, remoteUfrag);
                 }
+
+                this._initializeDtlsTransport();
+
                 resolve();
             }, err => {
                 this.trace('setRemoteDescriptionOnFailure', err);

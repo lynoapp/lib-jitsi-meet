@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
-    "declaration": false,
+    "module": "es6",
+    "declaration": true,
+    "declarationDir": "types/auto/",
     "sourceMap": true,
     "allowJs": true,
-    // "checkJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -13,10 +13,9 @@
       "esnext",
       "dom"
     ],
-    "outDir": "dist",
+    "outDir": "dist/esm/",
   },
   "exclude": [
-    "flow-typed",
     "doc",
     "dist",
     "**/*.spec.js",
