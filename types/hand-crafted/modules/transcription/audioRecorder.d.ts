@@ -2,7 +2,7 @@ import JitsiConference from '../../JitsiConference';
 import TrackRecorder from './trackRecorder';
 import JitsiTrack from '../RTC/JitsiTrack';
 
-type AudioFileTypes = "audio/webm" | "audio/ogg";
+type AudioFileTypes = 'audio/webm' | 'audio/ogg';
 
 export default class AudioRecorder {
   constructor( jitsiConference: JitsiConference );

@@ -1,4 +1,4 @@
-import AbstractTranscriptionService from "./AbstractTranscriptionService";
+import AbstractTranscriptionService from './AbstractTranscriptionService';
 
 /**
  * Implements a TranscriptionService for a Sphinx4 http server

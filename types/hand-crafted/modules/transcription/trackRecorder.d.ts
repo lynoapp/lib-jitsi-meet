@@ -1,4 +1,4 @@
-import JitsiTrack from "../RTC/JitsiTrack";
+import JitsiTrack from '../RTC/JitsiTrack';
 
 /**
  * A TrackRecorder object holds all the information needed for recording a
