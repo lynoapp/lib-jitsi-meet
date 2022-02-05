@@ -77,7 +77,7 @@ export default class TraceablePeerConnection {
   isSimulcastOn: () => boolean;
   getAudioLevels: ( speakerList?: Array<unknown> ) => Map<string, number>; // TODO:
   getLocalTracks: ( mediaType: MediaType ) => JitsiLocalTrack[];
-  getLocalVideoTrack: () => JitsiLocalTrack | undefined;
+  getLocalVideoTracks: () => JitsiLocalTrack[] | undefined;
   hasAnyTracksOfType: ( mediaType: MediaType ) => boolean;
   getRemoteTracks: ( endpointId: string, mediaType: MediaType ) => JitsiRemoteTrack[];
   getRemoteSourceInfoByParticipant: ( id: string ) => string[]; // TODO:

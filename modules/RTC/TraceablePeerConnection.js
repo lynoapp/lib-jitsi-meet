@@ -613,7 +613,7 @@ TraceablePeerConnection.prototype.getLocalTracks = function(mediaType) {
 /**
  * Retrieves the local video tracks.
  *
- * @returns {JitsiLocalTrack|undefined} - local video tracks.
+ * @returns {JitsiLocalTrack[]|undefined} - local video tracks.
  */
 TraceablePeerConnection.prototype.getLocalVideoTracks = function() {
     return this.getLocalTracks(MediaType.VIDEO);

@@ -304,9 +304,9 @@ export default class TraceablePeerConnection {
     /**
      * Retrieves the local video tracks.
      *
-     * @returns {JitsiLocalTrack|undefined} - local video tracks.
+     * @returns {JitsiLocalTrack[]|undefined} - local video tracks.
      */
-    getLocalVideoTrack(): JitsiLocalTrack | undefined;
+    getLocalVideoTracks(): JitsiLocalTrack[] | undefined;
     /**
      * Checks whether or not this {@link TraceablePeerConnection} instance contains any local tracks for given
      * <tt>mediaType</tt>.
