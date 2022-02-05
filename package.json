@@ -95,6 +95,6 @@
   },
   "module": "dist/esm/JitsiMeetJS.js",
   "types": "dist/esm/JitsiMeetJS.d.ts",
-  "files": [ "dist", "types", "connection_optimization/external_connect.js", "modules/browser/capabilities.json" ],
+  "files": [ "dist", "connection_optimization/external_connect.js", "modules/browser/capabilities.json" ],
   "license": "Apache-2.0"
 }
