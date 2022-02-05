@@ -2,7 +2,7 @@ import { getLogger } from '@jitsi/logger';
 import $ from 'jquery';
 import { $iq, Strophe } from 'strophe.js';
 
-import * as CodecMimeType from '../../service/RTC/CodecMimeType';
+import CodecMimeType from '../../service/RTC/CodecMimeType';
 import MediaDirection from '../../service/RTC/MediaDirection';
 import {
     ICE_DURATION,

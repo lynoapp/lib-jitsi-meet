@@ -172,7 +172,7 @@ class SpeakerStats {
     }
 }
 
-module.exports = SpeakerStats;
+export default SpeakerStats;
 
 /**
  * FacialExpressions Enum
