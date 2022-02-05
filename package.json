@@ -75,14 +75,13 @@
     "webpack-cli": "4.9.2"
   },
   "scripts": {
-    "build": "export LIB_JITSI_MEET_COMMIT_HASH=$(git rev-parse --short HEAD 2>/dev/null) && webpack && tsc",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "update": "yarn upgrade-interactive --latest",
     "build": "yarn types:copy && yarn build:module && yarn build:browser",
-    "build:browser": "LIB_JITSI_MEET_COMMIT_HASH=$(git rev-parse HEAD) webpack",
+    "build:browser": "LIB_JITSI_MEET_COMMIT_HASH=$(git rev-parse --short HEAD) webpack",
     "build:module": "tsc && yarn replace:commit-hash && yarn replace:filename",
-    "replace:commit-hash": "replace {#COMMIT_HASH#} $(git rev-parse HEAD) ./dist/esm/JitsiMeetJS.js",
+    "replace:commit-hash": "replace {#COMMIT_HASH#} $(git rev-parse --short HEAD) ./dist/esm/JitsiMeetJS.js",
     "replace:filename": "yarn ts-node ./scripts/replace.ts",
     "test": "karma start karma.conf.js",
     "test-watch": "karma start karma.conf.js --no-single-run",
