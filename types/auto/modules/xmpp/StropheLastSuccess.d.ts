@@ -10,7 +10,7 @@ export default class LastRequestTracker {
      * @param {XmppConnection} xmppConnection - The XMPP connection which manages the given {@code stropheConnection}.
      * @param {Object} stropheConnection - Strophe connection instance.
      */
-    startTracking(xmppConnection: any, stropheConnection: any): void;
+    startTracking(xmppConnection: XmppConnection, stropheConnection: any): void;
     /**
      * Returns the last raw failed incoming message on the xmpp connection.
      *

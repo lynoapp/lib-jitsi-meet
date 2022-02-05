@@ -46,14 +46,14 @@ declare class Transcriber {
      * @param {Word} word the Word object holding the word to append
      * @param {String|null} name the name of a new speaker. Null if not applicable
      */
-    updateTranscription(word: any, name: string | null): void;
+    updateTranscription(word: Word, name: string | null): void;
     /**
      * Gives the transcriber a JitsiTrack holding an audioStream to transcribe.
      * The JitsiTrack is given to the audioRecorder. If it doesn't hold an
      * audiostream, it will not be added by the audioRecorder
      * @param {JitsiTrack} track the track to give to the audioRecorder
      */
-    addTrack(track: any): void;
+    addTrack(track: JitsiTrack): void;
     /**
      * Remove the given track from the auioRecorder
      * @param track

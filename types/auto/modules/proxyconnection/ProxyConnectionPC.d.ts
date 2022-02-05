@@ -44,7 +44,7 @@ export default class ProxyConnectionPC {
      *
      * @type {Array<JitsiTrack>}
      */
-    _tracks: Array<any>;
+    _tracks: Array<JitsiTrack>;
     /**
      * The active instance of {@code JingleSessionPC}.
      *
@@ -103,7 +103,7 @@ export default class ProxyConnectionPC {
      * to add to the peer connection.
      * @returns {void}
      */
-    start(localTracks?: Array<any>): void;
+    start(localTracks?: Array<JitsiLocalTrack>): void;
     /**
      * Begins the process of disconnecting from a remote peer and cleaning up
      * the peer connection.

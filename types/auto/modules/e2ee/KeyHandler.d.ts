@@ -7,8 +7,8 @@ export class KeyHandler extends Listenable {
      * @param {JitsiConference} conference - the current conference.
      * @param {object} options - the options passed to {E2EEContext}, see implemention.
      */
-    constructor(conference: any, options?: object);
-    conference: any;
+    constructor(conference: JitsiConference, options?: object);
+    conference: JitsiConference;
     e2eeCtx: E2EEContext;
     enabled: boolean;
     _enabling: Deferred;

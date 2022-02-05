@@ -33,7 +33,7 @@ export class SdpTransformWrap {
      * @param {string} rawSDP the SDP in raw text format.
      */
     constructor(rawSDP: string);
-    parsedSDP: any;
+    parsedSDP: transform.SessionDescription;
     /**
      * Selects the first media SDP of given name.
      * @param {string} mediaType the name of the media e.g. 'audio', 'video',
@@ -51,6 +51,7 @@ export class SdpTransformWrap {
      */
     toRawSDP(): string;
 }
+import * as transform from "sdp-transform";
 /**
  * A wrapper around 'sdp-transform' media description object which provides
  * utility methods for common SDP/SSRC related operations.

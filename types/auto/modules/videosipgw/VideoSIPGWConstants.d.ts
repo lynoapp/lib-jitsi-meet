@@ -2,53 +2,68 @@
  * Status that video SIP GW service is available.
  * @type {string}
  */
-export const STATUS_AVAILABLE: string;
+export declare const STATUS_AVAILABLE = "available";
 /**
  * Status that video SIP GW service is not available.
  * @type {string}
  */
-export const STATUS_UNDEFINED: string;
+export declare const STATUS_UNDEFINED = "undefined";
 /**
  * Status that video SIP GW service is available but there are no free nodes
  * at the moment to serve new requests.
  * @type {string}
  */
-export const STATUS_BUSY: string;
+export declare const STATUS_BUSY = "busy";
 /**
  * Video SIP GW session state, currently running.
  * @type {string}
  */
-export const STATE_ON: string;
+export declare const STATE_ON = "on";
 /**
  * Video SIP GW session state, currently stopped and not running.
  * @type {string}
  */
-export const STATE_OFF: string;
+export declare const STATE_OFF = "off";
 /**
  * Video SIP GW session state, currently is starting.
  * @type {string}
  */
-export const STATE_PENDING: string;
+export declare const STATE_PENDING = "pending";
 /**
  * Video SIP GW session state, has observed some issues and is retrying at the
  * moment.
  * @type {string}
  */
-export const STATE_RETRYING: string;
+export declare const STATE_RETRYING = "retrying";
 /**
  * Video SIP GW session state, tried to start but it failed.
  * @type {string}
  */
-export const STATE_FAILED: string;
+export declare const STATE_FAILED = "failed";
 /**
  * Error on trying to create video SIP GW session in conference where
  * there is no room connection (hasn't joined or has left the room).
  * @type {string}
  */
-export const ERROR_NO_CONNECTION: string;
+export declare const ERROR_NO_CONNECTION = "error_no_connection";
 /**
  * Error on trying to create video SIP GW session with address for which
  * there is an already created session.
  * @type {string}
  */
-export const ERROR_SESSION_EXISTS: string;
+export declare const ERROR_SESSION_EXISTS = "error_session_already_exists";
+/**
+ * VideoSIPGWConstants Enum
+ */
+export declare enum VideoSIPGWConstants {
+    STATUS_AVAILABLE = "available",
+    STATUS_UNDEFINED = "undefined",
+    STATUS_BUSY = "busy",
+    STATE_ON = "on",
+    STATE_OFF = "off",
+    STATE_PENDING = "pending",
+    STATE_RETRYING = "retrying",
+    STATE_FAILED = "failed",
+    ERROR_NO_CONNECTION = "error_no_connection",
+    ERROR_SESSION_EXISTS = "error_session_already_exists"
+}

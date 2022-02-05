@@ -1,1 +1,4 @@
-export const IDENTITY_UPDATED: string;
+export namespace AuthenticationEvents {
+    const IDENTITY_UPDATED: string;
+}
+export default AuthenticationEvents;

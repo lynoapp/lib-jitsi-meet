@@ -13,7 +13,7 @@ export default class VADAudioAnalyser extends EventEmitter {
      * - <tt>calculateAudioFrameVAD(pcmSample)</tt> - Process a 32 float pcm sample of getSampleLength size.
      * @constructor
      */
-    constructor(conference: any, createVADProcessor: any);
+    constructor(conference: JitsiConference, createVADProcessor: any);
     /**
      * Member function that instantiates a VAD processor.
      */
@@ -82,7 +82,7 @@ export default class VADAudioAnalyser extends EventEmitter {
      * @returns {void}
      * @listens TRACK_ADDED
      */
-    _trackAdded(track: any): void;
+    _trackAdded(track: JitsiTrack): void;
     /**
      * Notifies the detector that the mute state of a {@link JitsiConference} track has changed. Only takes into account
      * local audio tracks.
@@ -90,7 +90,7 @@ export default class VADAudioAnalyser extends EventEmitter {
      * @returns {void}
      * @listens TRACK_MUTE_CHANGED
      */
-    _trackMuteChanged(track: any): void;
+    _trackMuteChanged(track: JitsiTrack): void;
     /**
      * Notifies the detector that a track associated with the {@link JitsiConference} was removed. Only takes into
      * account local audio tracks. Cleans up resources associated with the track and resets the processing context.
@@ -99,7 +99,7 @@ export default class VADAudioAnalyser extends EventEmitter {
      * @returns {void}
      * @listens TRACK_REMOVED
      */
-    _trackRemoved(track: any): void;
+    _trackRemoved(track: JitsiTrack): void;
 }
 import { EventEmitter } from "events";
 import TrackVADEmitter from "./TrackVADEmitter";

@@ -13,7 +13,7 @@ export class E2EEncryption {
      * A constructor.
      * @param {JitsiConference} conference - The conference instance for which E2E encryption is to be enabled.
      */
-    constructor(conference: any);
+    constructor(conference: JitsiConference);
     _externallyManaged: any;
     _keyHandler: ExternallyManagedKeyHandler | ManagedKeyHandler;
     /**

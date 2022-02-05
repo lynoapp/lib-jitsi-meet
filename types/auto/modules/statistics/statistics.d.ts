@@ -68,7 +68,7 @@ declare class Statistics {
      * Starts collecting RTP stats for given peerconnection.
      * @param {TraceablePeerConnection} peerconnection
      */
-    startRemoteStats(peerconnection: any): void;
+    startRemoteStats(peerconnection: TraceablePeerConnection): void;
     addAudioLevelListener(listener: any): void;
     removeAudioLevelListener(listener: any): void;
     addBeforeDisposedListener(listener: any): void;
@@ -119,14 +119,14 @@ declare class Statistics {
      * Stops collecting RTP stats for given peerconnection
      * @param {TraceablePeerConnection} tpc
      */
-    stopRemoteStats(tpc: any): void;
+    stopRemoteStats(tpc: TraceablePeerConnection): void;
     /**
      * Initializes the callstats.io API.
      * @param {TraceablePeerConnection} tpc the {@link TraceablePeerConnection}
      * instance for which CalStats will be started.
      * @param {string} remoteUserID
      */
-    startCallStats(tpc: any, remoteUserID: string): void;
+    startCallStats(tpc: TraceablePeerConnection, remoteUserID: string): void;
     /**
      * Removes the callstats.io instances.
      */
@@ -145,19 +145,19 @@ declare class Statistics {
      * reported
      * @param {boolean} isResume true for resume or false for hold
      */
-    sendConnectionResumeOrHoldEvent(tpc: any, isResume: boolean): void;
+    sendConnectionResumeOrHoldEvent(tpc: TraceablePeerConnection, isResume: boolean): void;
     /**
      * Notifies CallStats and analytics (if present) for ice connection failed
      * @param {TraceablePeerConnection} tpc connection on which failure occurred.
      */
-    sendIceConnectionFailedEvent(tpc: any): void;
+    sendIceConnectionFailedEvent(tpc: TraceablePeerConnection): void;
     /**
      * Notifies CallStats for mute events
      * @param {TraceablePeerConnection} tpc connection on which failure occurred.
      * @param {boolean} muted true for muted and false for not muted
      * @param {String} type "audio"/"video"
      */
-    sendMuteEvent(tpc: any, muted: boolean, type: string): void;
+    sendMuteEvent(tpc: TraceablePeerConnection, muted: boolean, type: string): void;
     /**
      * Notifies CallStats for screen sharing events
      * @param start {boolean} true for starting screen sharing and
@@ -185,42 +185,42 @@ declare class Statistics {
      * @param {string} containerId the id of media 'audio' or 'video' tag which
      *        renders the stream.
      */
-    associateStreamWithVideoTag(tpc: any, ssrc: number, isLocal: boolean, userId: string, usageLabel: string, containerId: string): void;
+    associateStreamWithVideoTag(tpc: TraceablePeerConnection, ssrc: number, isLocal: boolean, userId: string, usageLabel: string, containerId: string): void;
     /**
      * Notifies CallStats that peer connection failed to create offer.
      *
      * @param {Error} e error to send
      * @param {TraceablePeerConnection} tpc connection on which failure occurred.
      */
-    sendCreateOfferFailed(e: Error, tpc: any): void;
+    sendCreateOfferFailed(e: Error, tpc: TraceablePeerConnection): void;
     /**
      * Notifies CallStats that peer connection failed to create answer.
      *
      * @param {Error} e error to send
      * @param {TraceablePeerConnection} tpc connection on which failure occured.
      */
-    sendCreateAnswerFailed(e: Error, tpc: any): void;
+    sendCreateAnswerFailed(e: Error, tpc: TraceablePeerConnection): void;
     /**
      * Notifies CallStats that peer connection failed to set local description.
      *
      * @param {Error} e error to send
      * @param {TraceablePeerConnection} tpc connection on which failure occurred.
      */
-    sendSetLocalDescFailed(e: Error, tpc: any): void;
+    sendSetLocalDescFailed(e: Error, tpc: TraceablePeerConnection): void;
     /**
      * Notifies CallStats that peer connection failed to set remote description.
      *
      * @param {Error} e error to send
      * @param {TraceablePeerConnection} tpc connection on which failure occurred.
      */
-    sendSetRemoteDescFailed(e: Error, tpc: any): void;
+    sendSetRemoteDescFailed(e: Error, tpc: TraceablePeerConnection): void;
     /**
      * Notifies CallStats that peer connection failed to add ICE candidate.
      *
      * @param {Error} e error to send
      * @param {TraceablePeerConnection} tpc connection on which failure occurred.
      */
-    sendAddIceCandidateFailed(e: Error, tpc: any): void;
+    sendAddIceCandidateFailed(e: Error, tpc: TraceablePeerConnection): void;
     /**
      * Sends the given feedback through CallStats.
      *
@@ -275,7 +275,7 @@ declare namespace Statistics {
      * @param {String} m a log message to send or an {Error} object to be reported
      */
     export function sendLog(m: string): void;
-    export const LOCAL_JID: string;
+    export const LOCAL_JID: any;
     /**
      * Reports global error to CallStats.
      *

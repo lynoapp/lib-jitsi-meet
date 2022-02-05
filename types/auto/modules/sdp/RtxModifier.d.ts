@@ -39,7 +39,7 @@ export default class RtxModifier {
      * @return {boolean} <tt>true</tt> if the SDP wrapped by
      *  {@link SdpTransformWrap} has been modified or <tt>false</tt> otherwise.
      */
-    modifyRtxSsrcs2(videoMLine: any): boolean;
+    modifyRtxSsrcs2(videoMLine: MLineWrap): boolean;
     /**
      * Strip all rtx streams from the given sdp
      * @param {string} sdpStr sdp in raw string format

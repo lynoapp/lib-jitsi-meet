@@ -62,18 +62,18 @@ export default class ParticipantConnectionStatusHandler {
      * @param {Object} options
      * @param {number} [options.p2pRtcMuteTimeout=2500] custom value for
      * {@link ParticipantConnectionStatus.p2pRtcMuteTimeout}.
-     * @param {number} [options.rtcMuteTimeout=2000] custom value for
+     * @param {number} [options.rtcMuteTimeout=10000] custom value for
      * {@link ParticipantConnectionStatus.rtcMuteTimeout}.
      * @param {number} [options.outOfLastNTimeout=500] custom value for
      * {@link ParticipantConnectionStatus.outOfLastNTimeout}.
      */
-    constructor(rtc: any, conference: any, options: {
+    constructor(rtc: RTC, conference: JitsiConference, options: {
         p2pRtcMuteTimeout?: number;
         rtcMuteTimeout?: number;
         outOfLastNTimeout?: number;
     });
-    rtc: any;
-    conference: any;
+    rtc: RTC;
+    conference: JitsiConference;
     /**
      * A map of the "endpoint ID"(which corresponds to the resource part
      * of MUC JID(nickname)) to the timeout callback IDs scheduled using
@@ -221,7 +221,7 @@ export default class ParticipantConnectionStatusHandler {
      * @param {JitsiParticipant} participant
      * @param newStatus
      */
-    _changeConnectionStatus(participant: any, newStatus: any): void;
+    _changeConnectionStatus(participant: JitsiParticipant, newStatus: any): void;
     /**
      * Reset the postponed "connection interrupted" event which was previously
      * scheduled as a timeout on RTC 'onmute' event.
@@ -244,7 +244,7 @@ export default class ParticipantConnectionStatusHandler {
      * @param {JitsiTrack} remoteTrack - The {JitsiTrack} which is being added to
      * the conference.
      */
-    onRemoteTrackAdded(remoteTrack: any): void;
+    onRemoteTrackAdded(remoteTrack: JitsiTrack): void;
     /**
      * Removes all event listeners bound to the remote video track and clears
      * any related timeouts.
@@ -252,7 +252,7 @@ export default class ParticipantConnectionStatusHandler {
      * @param {JitsiRemoteTrack} remoteTrack - The remote track which is being
      * removed from the conference.
      */
-    onRemoteTrackRemoved(remoteTrack: any): void;
+    onRemoteTrackRemoved(remoteTrack: JitsiRemoteTrack): void;
     /**
      * Checks if given participant's video is considered frozen.
      * @param {JitsiParticipant} participant - The participant.
@@ -266,7 +266,7 @@ export default class ParticipantConnectionStatusHandler {
      *       local and remote tracks.
      *
      */
-    isVideoTrackFrozen(participant: any): boolean;
+    isVideoTrackFrozen(participant: JitsiParticipant): boolean;
     /**
      * Goes over every participant and updates connectivity status.
      * Should be called when a parameter which affects all of the participants
@@ -324,21 +324,21 @@ export default class ParticipantConnectionStatusHandler {
      * @param {JitsiRemoteTrack} track - The video track for which 'onmute' event
      * will be processed.
      */
-    onTrackRtcMuted(track: any): void;
+    onTrackRtcMuted(track: JitsiRemoteTrack): void;
     /**
      * Handles RTC 'onunmute' event for the video track.
      *
      * @param {JitsiRemoteTrack} track - The video track for which 'onunmute'
      * event will be processed.
      */
-    onTrackRtcUnmuted(track: any): void;
+    onTrackRtcUnmuted(track: JitsiRemoteTrack): void;
     /**
      * Here the signalling "mute"/"unmute" events are processed.
      *
      * @param {JitsiRemoteTrack} track - The remote video track for which
      * the signalling mute/unmute event will be processed.
      */
-    onSignallingMuteChanged(track: any): void;
+    onSignallingMuteChanged(track: JitsiRemoteTrack): void;
     /**
      * Sends a participant connection status event as a result of the video type
      * changing.
@@ -346,5 +346,5 @@ export default class ParticipantConnectionStatusHandler {
      * @param {VideoType} type - The video type.
      * @returns {void}
      */
-    onTrackVideoTypeChanged(track: any, type: any): void;
+    onTrackVideoTypeChanged(track: JitsiRemoteTrack, type: VideoType): void;
 }

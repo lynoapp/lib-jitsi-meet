@@ -23,7 +23,7 @@
  *
  * @constructor
  */
-export default function TraceablePeerConnection(rtc: RTC, id: number, signalingLayer: any, pcConfig: object, constraints: object, isP2P: boolean, options: {
+export default function TraceablePeerConnection(rtc: RTC, id: number, signalingLayer: SignalingLayer, pcConfig: object, constraints: object, isP2P: boolean, options: {
     disableSimulcast: boolean;
     disableRtx: boolean;
     disabledCodec: string;
@@ -57,7 +57,7 @@ export default class TraceablePeerConnection {
      *
      * @constructor
      */
-    constructor(rtc: RTC, id: number, signalingLayer: any, pcConfig: object, constraints: object, isP2P: boolean, options: {
+    constructor(rtc: RTC, id: number, signalingLayer: SignalingLayer, pcConfig: object, constraints: object, isP2P: boolean, options: {
         disableSimulcast: boolean;
         disableRtx: boolean;
         disabledCodec: string;
@@ -135,7 +135,7 @@ export default class TraceablePeerConnection {
      * A map which stores local tracks mapped by {@link JitsiLocalTrack.rtcId}
      * @type {Map<number, JitsiLocalTrack>}
      */
-    localTracks: Map<number, any>;
+    localTracks: Map<number, JitsiLocalTrack>;
     /**
      * Keeps tracks of the WebRTC <tt>MediaStream</tt>s that have been added to
      * the underlying WebRTC PeerConnection.
@@ -201,7 +201,7 @@ export default class TraceablePeerConnection {
      * The signaling layer which operates this peer connection.
      * @type {SignalingLayer}
      */
-    signalingLayer: any;
+    signalingLayer: SignalingLayer;
     _peerVideoTypeChanged: any;
     _peerMutedChanged: any;
     options: {
@@ -248,7 +248,7 @@ export default class TraceablePeerConnection {
      * TracablePeerConnection uses RTC's eventEmitter
      * @type {EventEmitter}
      */
-    eventEmitter: any;
+    eventEmitter: EventEmitter;
     rtxModifier: RtxModifier;
     /**
      * The height constraint applied on the video sender. The default value is 2160 (4K) when layer suspension is
@@ -301,13 +301,13 @@ export default class TraceablePeerConnection {
      * @param {MediaType} [mediaType]
      * @return {Array<JitsiLocalTrack>}
      */
-    getLocalTracks(mediaType?: typeof MediaType): Array<any>;
+    getLocalTracks(mediaType?: typeof MediaType): Array<JitsiLocalTrack>;
     /**
      * Retrieves the local video track.
      *
      * @returns {JitsiLocalTrack|undefined} - local video track.
      */
-    getLocalVideoTrack(): any | undefined;
+    getLocalVideoTrack(): JitsiLocalTrack | undefined;
     /**
      * Checks whether or not this {@link TraceablePeerConnection} instance contains
      * any local tracks for given <tt>mediaType</tt>.
@@ -342,7 +342,7 @@ export default class TraceablePeerConnection {
      * @param {number} ssrc
      * @return {JitsiTrack|null}
      */
-    getTrackBySSRC(ssrc: number): any | null;
+    getTrackBySSRC(ssrc: number): JitsiTrack | null;
     /**
      * Tries to find SSRC number for given {@link JitsiTrack} id. It will search
      * both local and remote tracks bound to this instance.
@@ -429,12 +429,12 @@ export default class TraceablePeerConnection {
      * @param {RTCSessionDescription} desc the local description.
      * @return {Map<string,TrackSSRCInfo>}
      */
-    _extractSSRCMap(desc: RTCSessionDescription): Map<string, any>;
+    _extractSSRCMap(desc: RTCSessionDescription): Map<string, TrackSSRCInfo>;
     /**
      *
      * @param {JitsiLocalTrack} localTrack
      */
-    getLocalSSRC(localTrack: any): number;
+    getLocalSSRC(localTrack: JitsiLocalTrack): number;
     /**
      * When doing unified plan simulcast, we'll have a set of ssrcs with the
      * same msid but no ssrc-group, since unified plan signals the simulcast
@@ -492,7 +492,7 @@ export default class TraceablePeerConnection {
      * @param {boolean} isInitiator indicates if the endpoint is the offerer.
      * @returns {Promise<void>} - resolved when done.
      */
-    addTrack(track: any, isInitiator?: boolean): Promise<void>;
+    addTrack(track: JitsiLocalTrack, isInitiator?: boolean): Promise<void>;
     /**
      * Adds local track as part of the unmute operation.
      * @param {JitsiLocalTrack} track the track to be added as part of the unmute operation.
@@ -501,7 +501,7 @@ export default class TraceablePeerConnection {
      * state has changed and renegotiation is required, false if no renegotiation is needed or
      * Promise is rejected when something goes wrong.
      */
-    addTrackUnmute(track: any): Promise<boolean>;
+    addTrackUnmute(track: JitsiLocalTrack): Promise<boolean>;
     private _addStream;
     /**
      * Removes WebRTC media stream from the underlying PeerConection
@@ -516,13 +516,7 @@ export default class TraceablePeerConnection {
      * @returns {CodecMimeType} The codec that is set as the preferred codec to receive
      * video in the local SDP.
      */
-    getConfiguredVideoCodec(): {
-        H264: string;
-        OPUS: string;
-        ULPFEC: string;
-        VP8: string;
-        VP9: string;
-    };
+    getConfiguredVideoCodec(): typeof CodecMimeType;
     /**
      * Enables or disables simulcast for screenshare based on the frame rate requested for desktop track capture.
      *
@@ -537,29 +531,11 @@ export default class TraceablePeerConnection {
      * @param {CodecMimeType} disabledCodec the codec that needs to be disabled.
      * @returns {void}
      */
-    setVideoCodecs(preferredCodec?: {
-        H264: string;
-        OPUS: string;
-        ULPFEC: string;
-        VP8: string;
-        VP9: string;
-    }, disabledCodec?: {
-        H264: string;
-        OPUS: string;
-        ULPFEC: string;
-        VP8: string;
-        VP9: string;
-    }): void;
+    setVideoCodecs(preferredCodec?: typeof CodecMimeType, disabledCodec?: typeof CodecMimeType): void;
     codecPreference: {
         enable: boolean;
         mediaType: string;
-        mimeType: {
-            H264: string;
-            OPUS: string;
-            ULPFEC: string;
-            VP8: string;
-            VP9: string;
-        };
+        mimeType: typeof CodecMimeType;
     };
     /**
      * Tells if the given WebRTC <tt>MediaStream</tt> has been added to
@@ -575,14 +551,14 @@ export default class TraceablePeerConnection {
      * FIXME It should probably remove a boolean just like {@link removeTrackMute}
      *       The same applies to addTrack.
      */
-    removeTrack(localTrack: any): void;
+    removeTrack(localTrack: JitsiLocalTrack): void;
     /**
      * Returns the sender corresponding to the given media type.
      * @param {MEDIA_TYPE} mediaType - The media type 'audio' or 'video' to be used for the search.
      * @returns {RTPSender|undefined} - The found sender or undefined if no sender
      * was found.
      */
-    findSenderByKind(mediaType: any): any | undefined;
+    findSenderByKind(mediaType: MEDIA_TYPE): RTPSender | undefined;
     /**
      * Returns the receiver corresponding to the given MediaStreamTrack.
      *
@@ -590,7 +566,7 @@ export default class TraceablePeerConnection {
      * @returns {RTCRtpReceiver|undefined} - The found receiver or undefined if no receiver
      * was found.
      */
-    findReceiverForTrack(track: any): RTCRtpReceiver | undefined;
+    findReceiverForTrack(track: MediaSreamTrack): RTCRtpReceiver | undefined;
     /**
      * Returns the sender corresponding to the given MediaStreamTrack.
      *
@@ -598,7 +574,7 @@ export default class TraceablePeerConnection {
      * @returns {RTCRtpSender|undefined} - The found sender or undefined if no sender
      * was found.
      */
-    findSenderForTrack(track: any): RTCRtpSender | undefined;
+    findSenderForTrack(track: MediaSreamTrack): RTCRtpSender | undefined;
     /**
      * Replaces <tt>oldTrack</tt> with <tt>newTrack</tt> from the peer connection.
      * Either <tt>oldTrack</tt> or <tt>newTrack</tt> can be null; replacing a valid
@@ -611,7 +587,7 @@ export default class TraceablePeerConnection {
      * @returns {Promise<boolean>} - If the promise resolves with true, renegotiation will be needed.
      * Otherwise no renegotiation is needed.
      */
-    replaceTrack(oldTrack: any | null, newTrack: any | null): Promise<boolean>;
+    replaceTrack(oldTrack: JitsiLocalTrack | null, newTrack: JitsiLocalTrack | null): Promise<boolean>;
     /**
      * Removes local track as part of the mute operation.
      * @param {JitsiLocalTrack} localTrack the local track to be remove as part of
@@ -620,7 +596,7 @@ export default class TraceablePeerConnection {
      * state has changed and renegotiation is required, false if no renegotiation is needed or
      * Promise is rejected when something goes wrong.
      */
-    removeTrackMute(localTrack: any): Promise<boolean>;
+    removeTrackMute(localTrack: JitsiLocalTrack): Promise<boolean>;
     createDataChannel(label: any, opts: any): RTCDataChannel;
     private _ensureSimulcastGroupIsLast;
     private _adjustLocalMediaDirection;
@@ -718,7 +694,7 @@ export default class TraceablePeerConnection {
      * @param {TrackSSRCInfo} ssrcObj
      * @return {number|null} the primary SSRC or <tt>null</tt>
      */
-    _extractPrimarySSRC(ssrcObj: any): number | null;
+    _extractPrimarySSRC(ssrcObj: TrackSSRCInfo): number | null;
     private _processLocalSSRCsMap;
     addIceCandidate(candidate: any): Promise<void>;
     /**
@@ -741,7 +717,7 @@ export default class TraceablePeerConnection {
      * @param {JitsiLocalTrack} track
      * @return {TPCSSRCInfo}
      */
-    generateNewStreamSSRCInfo(track: any): {
+    generateNewStreamSSRCInfo(track: JitsiLocalTrack): {
         /**
          * an array which holds all track's SSRCs
          */
@@ -783,3 +759,4 @@ import { TPCUtils } from "./TPCUtils";
 import SdpConsistency from "../sdp/SdpConsistency";
 import LocalSdpMunger from "../sdp/LocalSdpMunger";
 import RtxModifier from "../sdp/RtxModifier";
+import * as CodecMimeType from "../../service/RTC/CodecMimeType";

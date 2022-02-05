@@ -49,14 +49,14 @@ export class Context {
      * 8) Append a single byte for the key identifier.
      * 9) Enqueue the encrypted frame for sending.
      */
-    encodeFunction(encodedFrame: any | any, controller: TransformStreamDefaultController): Promise<void>;
+    encodeFunction(encodedFrame: RTCEncodedVideoFrame | RTCEncodedAudioFrame, controller: TransformStreamDefaultController): Promise<void>;
     /**
      * Function that will be injected in a stream and will decrypt the given encoded frames.
      *
      * @param {RTCEncodedVideoFrame|RTCEncodedAudioFrame} encodedFrame - Encoded video frame.
      * @param {TransformStreamDefaultController} controller - TransportStreamController.
      */
-    decodeFunction(encodedFrame: any | any, controller: TransformStreamDefaultController): Promise<void>;
+    decodeFunction(encodedFrame: RTCEncodedVideoFrame | RTCEncodedAudioFrame, controller: TransformStreamDefaultController): Promise<void>;
     /**
      * Function that will decrypt the given encoded frame. If the decryption fails, it will
      * ratchet the key for up to RATCHET_WINDOW_SIZE times.

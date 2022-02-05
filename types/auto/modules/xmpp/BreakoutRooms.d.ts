@@ -7,8 +7,8 @@ export default class BreakoutRooms {
      *
      * @param {ChatRoom} room the room we are in.
      */
-    constructor(room: any);
-    room: any;
+    constructor(room: ChatRoom);
+    room: ChatRoom;
     /**
      * Handles a message for managing breakout rooms.
      *

@@ -10,12 +10,12 @@ export default class SpeakerStatsCollector {
      * @param {JitsiConference} conference - The conference to track.
      * @returns {void}
      */
-    constructor(conference: any);
+    constructor(conference: JitsiConference);
     stats: {
         users: {};
         dominantSpeakerId: any;
     };
-    conference: any;
+    conference: JitsiConference;
     /**
      * Reacts to dominant speaker change events by changing its speaker stats
      * models to reflect the current dominant speaker.

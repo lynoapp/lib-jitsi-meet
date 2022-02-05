@@ -15,9 +15,9 @@ export default class JingleConnectionPlugin extends JingleConnectionPlugin_base 
      * @param {Object} iceConfig an object that holds the iceConfig to be passed
      * to the p2p and the jvb <tt>PeerConnection</tt>.
      */
-    constructor(xmpp: any, eventEmitter: any, iceConfig: any);
-    xmpp: any;
-    eventEmitter: any;
+    constructor(xmpp: XMPP, eventEmitter: EventEmitter, iceConfig: any);
+    xmpp: XMPP;
+    eventEmitter: EventEmitter;
     sessions: {};
     jvbIceConfig: any;
     p2pIceConfig: any;

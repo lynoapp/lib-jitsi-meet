@@ -9,8 +9,8 @@ export class ManagedKeyHandler extends KeyHandler {
     _key: any;
     _conferenceJoined: boolean;
     _olmAdapter: OlmAdapter;
-    _rotateKey: any;
-    _ratchetKey: any;
+    _rotateKey: import("lodash").DebouncedFunc<() => Promise<void>>;
+    _ratchetKey: import("lodash").DebouncedFunc<() => Promise<void>>;
     /**
      * When E2EE is enabled it initializes sessions and sets the key.
      * Cleans up the sessions when disabled.

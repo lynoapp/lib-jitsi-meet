@@ -31,7 +31,7 @@ export default class ChatRoom extends Listenable {
     constructor(connection: XmppConnection, jid: any, password: any, XMPP: any, options: any);
     xmpp: any;
     connection: XmppConnection;
-    roomjid: any;
+    roomjid: string;
     myroomjid: any;
     password: any;
     replaceParticipant: boolean;
@@ -101,7 +101,7 @@ export default class ChatRoom extends Listenable {
      *
      * @param {Strophe.Status} status - The Strophe connection status.
      */
-    onConnStatusChanged(status: any): void;
+    onConnStatusChanged(status: Strophe.Status): void;
     /**
      *
      * @param pres
@@ -291,7 +291,7 @@ export default class ChatRoom extends Listenable {
      * info or <tt>null</tt> either if there is no presence available or if
      * the media type given is invalid.
      */
-    getMediaPresenceInfo(endpointId: string, mediaType: typeof MediaType): any;
+    getMediaPresenceInfo(endpointId: string, mediaType: typeof MediaType): PeerMediaInfo;
     /**
      * Returns the last presence advertised by a MUC member.
      * @param {string} mucNick
@@ -373,4 +373,5 @@ import Moderator from "./moderator";
 import Lobby from "./Lobby";
 import AVModeration from "./AVModeration";
 import BreakoutRooms from "./BreakoutRooms";
+import { Strophe } from "strophe.js";
 import * as MediaType from "../../service/RTC/MediaType";

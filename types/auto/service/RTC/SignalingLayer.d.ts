@@ -104,7 +104,7 @@ export type PeerMediaInfo = {
     /**
      * the type of the video if applicable
      */
-    videoType: any | undefined;
+    videoType: VideoType | undefined;
 };
 import * as MediaType from "../../service/RTC/MediaType";
 import Listenable from "../../modules/util/Listenable";

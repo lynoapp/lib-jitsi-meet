@@ -17,7 +17,7 @@ export default class Caps extends Listenable {
      * @param {String} node the value of the node attribute of the "c" xml node
      * that will be sent to the other participants
      */
-    constructor(connection?: any, node?: string);
+    constructor(connection?: Strophe.Connection, node?: string);
     node: string;
     disco: any;
     version: string;
@@ -59,7 +59,7 @@ export default class Caps extends Listenable {
      * @param {int} timeout the timeout in ms for reply from the host.
      * @returns {Promise<Set<String>, Error>}
      */
-    getFeaturesAndIdentities(jid: string, node: any, timeout?: any): Promise<Set<string>, Error>;
+    getFeaturesAndIdentities(jid: string, node: any, timeout?: int): Promise<Set<string>, Error>;
     /**
      * Returns a set with the features and identities for a host.
      * @param {String} jid the jid of the host
@@ -74,18 +74,18 @@ export default class Caps extends Listenable {
      * and adds "c" element to the presences of the room.
      * @param {ChatRoom} room the room.
      */
-    _addChatRoom(room: any): void;
+    _addChatRoom(room: ChatRoom): void;
     /**
      * Removes ChatRoom instance from the list of rooms. Removes listeners
      * added from the Caps class.
      * @param {ChatRoom} room the room.
      */
-    _removeChatRoom(room: any): void;
+    _removeChatRoom(room: ChatRoom): void;
     /**
      * Creates/updates the "c" xml node into the presence of the passed room.
      * @param {ChatRoom} room the room.
      */
-    _fixChatRoomPresenceMap(room: any): void;
+    _fixChatRoomPresenceMap(room: ChatRoom): void;
     /**
      * Handles this.version changes.
      */
@@ -96,3 +96,4 @@ export default class Caps extends Listenable {
     _generateVersion(): void;
 }
 import Listenable from "../util/Listenable";
+import { Strophe } from "strophe.js";

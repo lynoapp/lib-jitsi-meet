@@ -14,8 +14,8 @@ export default class IceFailedHandling {
      * Creates new {@code DelayedIceFailed} task.
      * @param {JitsiConference} conference
      */
-    constructor(conference: any);
-    _conference: any;
+    constructor(conference: JitsiConference);
+    _conference: JitsiConference;
     /**
      * After making sure there's no way for the ICE connection to recover this method either sends ICE failed
      * notification to Jicofo or emits the ice failed conference event.

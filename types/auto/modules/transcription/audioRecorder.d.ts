@@ -40,7 +40,7 @@ declare class AudioRecorder {
      *
      * @param {JitsiTrack} track the JitsiTrack to remove from the recording session
      */
-    removeTrack(track: any): void;
+    removeTrack(track: JitsiTrack): void;
     /**
      * Tries to update the name value of all TrackRecorder in the array.
      * If it hasn't changed,it will keep the exiting name. If it changes to a

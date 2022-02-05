@@ -14,11 +14,11 @@ export default class JingleSession extends Listenable {
      * @param {Object} pcConfig The {@code RTCConfiguration} object passed to the PeerConnection's constructor.
      * @param {boolean} isInitiator indicates if it will be the side which initiates the session.
      */
-    constructor(sid: string, localJid: string, remoteJid: string, connection: any, mediaConstraints: any, pcConfig: any, isInitiator: boolean);
+    constructor(sid: string, localJid: string, remoteJid: string, connection: XmppConnection, mediaConstraints: any, pcConfig: any, isInitiator: boolean);
     sid: string;
     localJid: string;
     remoteJid: string;
-    connection: any;
+    connection: XmppConnection;
     mediaConstraints: any;
     pcConfig: any;
     /**
@@ -40,7 +40,7 @@ export default class JingleSession extends Listenable {
      * The chat room instance associated with the session.
      * @type {ChatRoom}
      */
-    room: any;
+    room: ChatRoom;
     /**
      * The signaling layer.
      * @type {SignalingLayerImpl | null}
@@ -56,7 +56,7 @@ export default class JingleSession extends Listenable {
      * The RTC service instance
      * @type {RTC}
      */
-    rtc: any;
+    rtc: RTC;
     /**
      * Returns XMPP address of this session's initiator.
      * @return {string}
@@ -76,7 +76,7 @@ export default class JingleSession extends Listenable {
      * @param {object} options - the options, see implementing class's
      * {@link #doInitialize} description for more details.
      */
-    initialize(room: any, rtc: any, signalingLayer: any, options: object): void;
+    initialize(room: ChatRoom, rtc: RTC, signalingLayer: SignalingLayerImpl, options: object): void;
     /**
      * The implementing class finishes initialization here. Called at the end of
      * {@link initialize}.

@@ -1,7 +1,7 @@
 /**
  * The media track was removed to the conference.
  */
-export const LOCAL_TRACK_STOPPED: "track.stopped";
+export declare const LOCAL_TRACK_STOPPED = "track.stopped";
 /**
  * Audio levels of a this track was changed.
  * The first argument is a number with audio level value in range [0, 1].
@@ -14,26 +14,38 @@ export const LOCAL_TRACK_STOPPED: "track.stopped";
  * NOTE The second argument should be treated as library internal and can be
  * removed at any time.
  */
-export const TRACK_AUDIO_LEVEL_CHANGED: "track.audioLevelsChanged";
+export declare const TRACK_AUDIO_LEVEL_CHANGED = "track.audioLevelsChanged";
 /**
  * The audio output of the track was changed.
  */
-export const TRACK_AUDIO_OUTPUT_CHANGED: "track.audioOutputChanged";
+export declare const TRACK_AUDIO_OUTPUT_CHANGED = "track.audioOutputChanged";
 /**
  * A media track mute status was changed.
  */
-export const TRACK_MUTE_CHANGED: "track.trackMuteChanged";
+export declare const TRACK_MUTE_CHANGED = "track.trackMuteChanged";
 /**
  * The video type("camera" or "desktop") of the track was changed.
  */
-export const TRACK_VIDEOTYPE_CHANGED: "track.videoTypeChanged";
+export declare const TRACK_VIDEOTYPE_CHANGED = "track.videoTypeChanged";
 /**
  * Indicates that the track is not receiving any data even though we expect it
  * to receive data (i.e. the stream is not stopped).
  */
-export const NO_DATA_FROM_SOURCE: "track.no_data_from_source";
+export declare const NO_DATA_FROM_SOURCE = "track.no_data_from_source";
 /**
  * Indicates that the local audio track is not receiving any audio input from
  * the microphone that is currently selected.
  */
-export const NO_AUDIO_INPUT: "track.no_audio_input";
+export declare const NO_AUDIO_INPUT = "track.no_audio_input";
+/**
+ * JitsiTrackEvents Enum
+ */
+export declare enum JitsiTrackEvents {
+    LOCAL_TRACK_STOPPED = "track.stopped",
+    TRACK_AUDIO_LEVEL_CHANGED = "track.audioLevelsChanged",
+    TRACK_AUDIO_OUTPUT_CHANGED = "track.audioOutputChanged",
+    TRACK_MUTE_CHANGED = "track.trackMuteChanged",
+    TRACK_VIDEOTYPE_CHANGED = "track.videoTypeChanged",
+    NO_DATA_FROM_SOURCE = "track.no_data_from_source",
+    NO_AUDIO_INPUT = "track.no_audio_input"
+}

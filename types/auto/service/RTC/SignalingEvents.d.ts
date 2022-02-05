@@ -4,10 +4,17 @@
  * @param {MediaType} mediaType "audio" or "video"
  * @param {boolean} isMuted the new muted state
  */
-export const PEER_MUTED_CHANGED: "signaling.peerMuted";
+export declare const PEER_MUTED_CHANGED = "signaling.peerMuted";
 /**
  * Event triggered when participant's video type changes.
  * @param {string} endpointId the video owner's ID (MUC nickname)
  * @param {VideoType} videoType the new value
  */
-export const PEER_VIDEO_TYPE_CHANGED: "signaling.peerVideoType";
+export declare const PEER_VIDEO_TYPE_CHANGED = "signaling.peerVideoType";
+/**
+ * SignalingEvents enum
+ */
+export declare enum SignalingEvents {
+    PEER_MUTED_CHANGED = "signaling.peerMuted",
+    PEER_VIDEO_TYPE_CHANGED = "signaling.peerVideoType"
+}

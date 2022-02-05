@@ -13,7 +13,7 @@ export default class AvgRTPStatsReporter {
      * @param {number} n the number of samples, before arithmetic mean is to be
      * calculated and values submitted to the analytics module.
      */
-    constructor(conference: any, n: number);
+    constructor(conference: JitsiConference, n: number);
     /**
      * How many {@link ConnectionQualityEvents.LOCAL_STATS_UPDATED} samples
      * are to be included in arithmetic mean calculation.

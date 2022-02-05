@@ -56,7 +56,7 @@ export default class VADReportingService extends EventEmitter {
      * @param {Array<VADDeviceContext>} vadContextArray - List of mics.
      * @returns {void}
      */
-    _setVADContextArray(vadContextArray: Array<any>): void;
+    _setVADContextArray(vadContextArray: Array<VADDeviceContext>): void;
     /**
      * Start the setInterval reporting process.
      *

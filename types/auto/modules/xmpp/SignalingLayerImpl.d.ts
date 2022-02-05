@@ -21,7 +21,7 @@ export default class SignalingLayerImpl extends SignalingLayer {
      *
      * @type {ChatRoom|null}
      */
-    chatRoom: any | null;
+    chatRoom: ChatRoom | null;
     /**
      * @type {Map<SourceName, SourceInfo>}
      * @private
@@ -55,12 +55,12 @@ export default class SignalingLayerImpl extends SignalingLayer {
      * @param {EndpointId} endpointId
      * @returns {boolean}
      */
-    _doesEndpointSendNewSourceInfo(endpointId: any): boolean;
+    _doesEndpointSendNewSourceInfo(endpointId: EndpointId): boolean;
     /**
      * Sets the <tt>ChatRoom</tt> instance used and binds presence listeners.
      * @param {ChatRoom} room
      */
-    setChatRoom(room: any): void;
+    setChatRoom(room: ChatRoom): void;
     _audioMuteHandler: (node: any, from: any) => void;
     _videoMuteHandler: (node: any, from: any) => void;
     _videoTypeHandler: (node: any, from: any) => void;
@@ -95,13 +95,13 @@ export default class SignalingLayerImpl extends SignalingLayer {
      * @param {boolean} muted - the new muted status.
      * @returns {boolean}
      */
-    setTrackMuteStatus(sourceName: any, muted: boolean): boolean;
+    setTrackMuteStatus(sourceName: SourceName, muted: boolean): boolean;
     /**
      * Sets track's video type.
      * @param {SourceName} sourceName - the track's source name.
      * @param {VideoType} videoType - the new video type.
      */
-    setTrackVideoType(sourceName: any, videoType: {
+    setTrackVideoType(sourceName: SourceName, videoType: {
         CAMERA: string;
         DESKTOP: string;
     }): void;
@@ -111,6 +111,6 @@ export default class SignalingLayerImpl extends SignalingLayer {
      * @param {SourceName} sourceName the track's source name to save.
      * @throws TypeError if <tt>ssrc</tt> is not a number
      */
-    setTrackSourceName(ssrc: number, sourceName: any): void;
+    setTrackSourceName(ssrc: number, sourceName: SourceName): void;
 }
 import SignalingLayer from "../../service/RTC/SignalingLayer";

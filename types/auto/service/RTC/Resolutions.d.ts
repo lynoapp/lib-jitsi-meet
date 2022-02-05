@@ -1,5 +1,4 @@
-export = Resolutions;
-declare const Resolutions: {
+export const Resolutions: {
     '2160': {
         width: number;
         height: number;
@@ -53,3 +52,4 @@ declare const Resolutions: {
         height: number;
     };
 };
+export default Resolutions;

@@ -12,17 +12,26 @@
  * that is not know to the server. But this should not happen in lib-jitsi-meet
  * case as long as the service is configured correctly (there is no bug).
  */
-export const CONNECTION_DROPPED_ERROR: "connection.droppedError";
+export declare const CONNECTION_DROPPED_ERROR = "connection.droppedError";
 /**
  * Not specified errors.
  */
-export const OTHER_ERROR: "connection.otherError";
+export declare const OTHER_ERROR = "connection.otherError";
 /**
  * Indicates that a password is required in order to join the conference.
  */
-export const PASSWORD_REQUIRED: "connection.passwordRequired";
+export declare const PASSWORD_REQUIRED = "connection.passwordRequired";
 /**
  * Indicates that the connection was dropped, because of too many 5xx HTTP
  * errors on BOSH requests.
  */
-export const SERVER_ERROR: "connection.serverError";
+export declare const SERVER_ERROR = "connection.serverError";
+/**
+ * JitsiConnectionErrors Enum
+ */
+export declare enum JitsiConnectionErrors {
+    CONNECTION_DROPPED_ERROR = "connection.droppedError",
+    OTHER_ERROR = "connection.otherError",
+    PASSWORD_REQUIRED = "connection.passwordRequired",
+    SERVER_ERROR = "connection.serverError"
+}

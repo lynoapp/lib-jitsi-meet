@@ -8,8 +8,8 @@ export default class Jvb121EventGenerator {
      * Creates new <tt>Jvb121EventGenerator</tt> for the given conference.
      * @param {JitsiConference} conference
      */
-    constructor(conference: any);
-    _conference: any;
+    constructor(conference: JitsiConference);
+    _conference: JitsiConference;
     /**
      * Indicates whether it's a one to one JVB conference (<tt>true</tt>)
      * or a multiparty (<tt>false</tt>). Will be also <tt>false</tt> if

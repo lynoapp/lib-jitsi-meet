@@ -27,7 +27,7 @@ export default class JibriSession {
      *
      * @returns {JitsiParticipant|string} The participant that started the session.
      */
-    getInitiator(): any | string;
+    getInitiator(): JitsiParticipant | string;
     /**
      * Returns the streaming URL of the session.
      *
@@ -45,7 +45,7 @@ export default class JibriSession {
      *
      * @returns {JitsiParticipant|string} The participant that stopped the session.
      */
-    getTerminator(): any | string;
+    getTerminator(): JitsiParticipant | string;
     /**
      * Returns the current recording mode of the session, such as "file".
      *
@@ -83,14 +83,14 @@ export default class JibriSession {
      * @param {JitsiParticipant | string} participant - The participant or resource id
      * if local participant.
      */
-    setInitiator(participant: any | string): void;
+    setInitiator(participant: JitsiParticipant | string): void;
     _initiator: any;
     /**
      * Sets the participant that stopped the session.
      * @param {JitsiParticipant | string} participant - The participant or the resource id
      * if local participant.
      */
-    setTerminator(participant: any | string): void;
+    setTerminator(participant: JitsiParticipant | string): void;
     _terminator: any;
     /**
      * Sends a message to start the actual recording.
@@ -144,7 +144,7 @@ export default class JibriSession {
      * streaming service provider.
      * @returns Object - The XMPP IQ message.
      */
-    _createIQ({ action, appData, broadcastId, focusMucJid, streamId }: string): any;
+    _createIQ({ action, appData, broadcastId, focusMucJid, streamId }: string): import("strophe.js").Strophe.Builder;
     /**
      * Handles the error from an iq and stores the error.
      *

@@ -40,10 +40,11 @@ export class MockStropheConnection extends Listenable {
      * @param {Strophe.Status} newState - The new connection status to set.
      * @returns {void}
      */
-    simulateConnectionState(newState: any): void;
+    simulateConnectionState(newState: Strophe.Status): void;
     /**
      * {@see Strophe.Connection.sendIQ}.
      */
     sendIQ(iq: any, resultCb: any): void;
 }
 import Listenable from "../util/Listenable";
+import { Strophe } from "strophe.js";

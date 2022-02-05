@@ -30,7 +30,7 @@ export default class TrackVADEmitter extends EventEmitter {
      * @param {Object} vadProcessor - VAD processor that allows us to calculate VAD score for PCM samples.
      * @param {JitsiLocalTrack} jitsiLocalTrack - JitsiLocalTrack corresponding to micDeviceId.
      */
-    constructor(procNodeSampleRate: number, vadProcessor: any, jitsiLocalTrack: any);
+    constructor(procNodeSampleRate: number, vadProcessor: any, jitsiLocalTrack: JitsiLocalTrack);
     /**
      * Sample rate of the ScriptProcessorNode.
      */
@@ -42,7 +42,7 @@ export default class TrackVADEmitter extends EventEmitter {
     /**
      * The JitsiLocalTrack instance.
      */
-    _localTrack: any;
+    _localTrack: JitsiLocalTrack;
     /**
      * Buffer to hold residue PCM resulting after a ScriptProcessorNode callback
      */
