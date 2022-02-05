@@ -75,6 +75,7 @@
     "webpack-cli": "4.9.2"
   },
   "scripts": {
+    "build": "export LIB_JITSI_MEET_COMMIT_HASH=$(git rev-parse --short HEAD 2>/dev/null) && webpack && tsc",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "update": "yarn upgrade-interactive --latest",
@@ -95,5 +96,6 @@
   },
   "module": "dist/esm/JitsiMeetJS.js",
   "types": "dist/esm/JitsiMeetJS.d.ts",
+  "files": [ "dist", "types", "connection_optimization/external_connect.js", "modules/browser/capabilities.json" ],
   "license": "Apache-2.0"
 }
