@@ -30,7 +30,7 @@ const connection = new JitsiMeetJS.JitsiConnection(null, token, options);
 We also provide a prebundled version with jQuery bundled in.
 
 ```typescript
-import `@solyd/lib-jitsi-meet/lib-jitsi-meet.min.js`
+import `@solyd/lib-jitsi-meet/dist/umd/lib-jitsi-meet.min.js`
 ```
 
 
