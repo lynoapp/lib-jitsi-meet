@@ -1,10 +1,4 @@
-declare const AudioRecorder: any;
-declare const SphinxService: any;
-declare const BEFORE_STATE = "before";
-declare const RECORDING_STATE = "recording";
-declare const TRANSCRIBING_STATE = "transcribing";
-declare const FINISHED_STATE = "finished";
-declare const MAXIMUM_SENTENCE_LENGTH = 80;
+export default Transcriber;
 /**
  * This is the main object for handing the Transcription. It interacts with
  * the audioRecorder to record every person in a conference and sends the
@@ -13,32 +7,73 @@ declare const MAXIMUM_SENTENCE_LENGTH = 80;
  * @param {AudioRecorder} audioRecorder An audioRecorder recording a conference
  */
 declare function Transcriber(): void;
-/**
- * This method gets the answer from the transcription service, calculates the
- * offset and adds is to every Word object. It will also start the merging
- * when every send request has been received
- *
- * note: Make sure to bind this as a Transcription object
- * @param {Transcriber} transcriber the transcriber instance
- * @param {RecordingResult} answer a RecordingResult object with a defined
- * WordArray
- */
-declare function blobCallBack(transcriber: any, answer: any): void;
-/**
- * Check if the given 2 dimensional array has any non-zero Word-arrays in them.
- * All zero-element arrays inside will be removed
- * If any non-zero-element arrays are found, the method will return true.
- * otherwise it will return false
- * @param {Array<Array>} twoDimensionalArray the array to check
- * @returns {boolean} true if any non-zero arrays inside, otherwise false
- */
-declare function hasPopulatedArrays(twoDimensionalArray: any): boolean;
-/**
- * Push a word to the right location in a sorted array. The array is sorted
- * from lowest to highest start time. Every word is stored in an object which
- * includes the name of the person saying the word.
- *
- * @param {Array<Word>} array the sorted array to push to
- * @param {Word} word the word to push into the array
- */
-declare function pushWordToSortedArray(array: any, word: any): void;
+declare class Transcriber {
+    audioRecorder: AudioRecorder;
+    transcriptionService: SphinxService;
+    counter: any;
+    startTime: Date;
+    transcription: string;
+    callback: any;
+    results: any[];
+    state: string;
+    lineLength: number;
+    /**
+     * Method to start the transcription process. It will tell the audioRecorder
+     * to start storing all audio streams and record the start time for merging
+     * purposes
+     */
+    start(): void;
+    /**
+     * Method to stop the transcription process. It will tell the audioRecorder to
+     * stop, and get all the recorded audio to send it to the transcription service
+    
+     * @param callback a callback which will receive the transcription
+     */
+    stop(callback: any): void;
+    /**
+     * this method will check if the counter is zero. If it is, it will call
+     * the merging method
+     */
+    maybeMerge(): void;
+    /**
+     * This method will merge all speech-to-text arrays together in one
+     * readable transcription string
+     */
+    merge(): void;
+    /**
+     * Appends a word object to the transcription. It will make a new line with a
+     * name if a name is specified
+     * @param {Word} word the Word object holding the word to append
+     * @param {String|null} name the name of a new speaker. Null if not applicable
+     */
+    updateTranscription(word: Word, name: string | null): void;
+    /**
+     * Gives the transcriber a JitsiTrack holding an audioStream to transcribe.
+     * The JitsiTrack is given to the audioRecorder. If it doesn't hold an
+     * audiostream, it will not be added by the audioRecorder
+     * @param {JitsiTrack} track the track to give to the audioRecorder
+     */
+    addTrack(track: JitsiTrack): void;
+    /**
+     * Remove the given track from the auioRecorder
+     * @param track
+     */
+    removeTrack(track: any): void;
+    /**
+     * Will return the created transcription if it's avialable or throw an error
+     * when it's not done yet
+     * @returns {String} the transcription as a String
+     */
+    getTranscription(): string;
+    /**
+     * Returns the current state of the transcription process
+     */
+    getState(): string;
+    /**
+     * Resets the state to the "before" state, such that it's again possible to
+     * call the start method
+     */
+    reset(): void;
+}
+import AudioRecorder from "./audioRecorder";
+import SphinxService from "./transcriptionServices/SphinxTranscriptionService";

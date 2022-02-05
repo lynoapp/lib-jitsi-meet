@@ -10,6 +10,10 @@ export declare const AUTHENTICATION_REQUIRED = "conference.authenticationRequire
  */
 export declare const CHAT_ERROR = "conference.chatError";
 /**
+ * Indicates that a settings error occurred.
+ */
+export declare const SETTINGS_ERROR = "conference.settingsError";
+/**
  * Indicates that conference has been destroyed.
  */
 export declare const CONFERENCE_DESTROYED = "conference.destroyed";

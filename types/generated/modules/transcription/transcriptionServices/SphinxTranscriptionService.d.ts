@@ -1,6 +1,7 @@
-export = SphinxService;
-declare class SphinxService {
-    sendRequest(audioFileBlob: any, callback: any): void;
-    formatResponse(response: any): any[];
-    verify(response: any): boolean;
+/**
+ * Implements a TranscriptionService for a Sphinx4 http server
+ */
+export default class SphinxService extends AbstractTranscriptionService {
+    url: string;
 }
+import AbstractTranscriptionService from "./AbstractTranscriptionService";

@@ -192,6 +192,12 @@ export default class TraceablePeerConnection {
      */
     remoteUfrag: any;
     /**
+     * The DTLS transport object for the PeerConnection.
+     * Note: this assume only one shared transport exists because we bundled
+     *       all streams on the same underlying transport.
+     */
+    _dtlsTransport: RTCDtlsTransport;
+    /**
      * The signaling layer which operates this peer connection.
      * @type {SignalingLayer}
      */
@@ -481,13 +487,6 @@ export default class TraceablePeerConnection {
      */
     _mungeCodecOrder(description: RTCSessionDescription): RTCSessionDescription;
     /**
-     * Checks if given track belongs to this peerconnection instance.
-     *
-     * @param {JitsiLocalTrack|JitsiRemoteTrack} track - The track to be checked.
-     * @returns {boolean}
-     */
-    containsTrack(track: JitsiLocalTrack | JitsiRemoteTrack): boolean;
-    /**
      * Add {@link JitsiLocalTrack} to this TPC.
      * @param {JitsiLocalTrack} track
      * @param {boolean} isInitiator indicates if the endpoint is the offerer.
@@ -610,6 +609,10 @@ export default class TraceablePeerConnection {
      * @returns {RTCSessionDescription} the munged description.
      */
     _mungeOpus(description: RTCSessionDescription): RTCSessionDescription;
+    /**
+     * Sets up the _dtlsTransport object and initializes callbacks for it.
+     */
+    _initializeDtlsTransport(): void;
     /**
      * Configures the stream encodings depending on the video type and the bitrates configured.
      *

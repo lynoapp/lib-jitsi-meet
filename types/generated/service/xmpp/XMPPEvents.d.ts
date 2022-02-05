@@ -8,6 +8,7 @@ export namespace XMPPEvents {
     const CALL_INCOMING: string;
     const CALL_ENDED: string;
     const CHAT_ERROR_RECEIVED: string;
+    const SETTINGS_ERROR_RECEIVED: string;
     const CONFERENCE_PROPERTIES_CHANGED: string;
     const CONNECTION_ESTABLISHED: string;
     const CONNECTION_FAILED: string;

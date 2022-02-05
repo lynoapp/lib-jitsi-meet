@@ -1,11 +1,17 @@
 import JitsiConference from '../../JitsiConference';
+import TrackRecorder from './trackRecorder';
 import JitsiTrack from '../RTC/JitsiTrack';
 
-export class AudioRecorder {
+type AudioFileTypes = "audio/webm" | "audio/ogg";
+
+export default class AudioRecorder {
   constructor( jitsiConference: JitsiConference );
-  determineCorrectFileType: unknown; // TODO:
+  recorders: unknown[]; // TODO:
+  fileType: AudioFileTypes;
+  isRecording: boolean;
+  jitsiConference: JitsiConference;
   addTrack: ( track: JitsiTrack ) => void;
-  instantiateTrackRecorder: ( track: JitsiTrack ) => void;
+  instantiateTrackRecorder: ( track: JitsiTrack ) => TrackRecorder;
   removeTrack: ( track: JitsiTrack ) => void;
   updateNames: () => void;
   start: () => void;
@@ -13,4 +19,5 @@ export class AudioRecorder {
   download: () => void;
   getRecordingResults: () => Array<unknown>; // TODO:
   getFileType: () => string;
+  determineCorrectFileType: () => AudioFileTypes;
 }

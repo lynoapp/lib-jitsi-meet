@@ -391,7 +391,7 @@ declare class JitsiConference {
      * @return {Transcriber} the transcriber object
      */
     getTranscriber(): Transcriber;
-    transcriber: any;
+    transcriber: Transcriber;
     /**
      * Returns the transcription status.
      *
@@ -1172,5 +1172,6 @@ import NoAudioSignalDetection from "./modules/detection/NoAudioSignalDetection";
 import Jvb121EventGenerator from "./modules/event/Jvb121EventGenerator";
 import P2PDominantSpeakerDetection from "./modules/detection/P2PDominantSpeakerDetection";
 import * as MediaType from "./service/RTC/MediaType";
+import Transcriber from "./modules/transcription/transcriber";
 import JitsiParticipant from "./JitsiParticipant";
 import IceFailedHandling from "./modules/connectivity/IceFailedHandling";

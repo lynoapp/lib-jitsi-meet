@@ -1,6 +1,18 @@
+
+import AudioRecorder from './audioRecorder';
+import SphinxService from './transcriptionServices/SphinxTranscriptionService';
 import JitsiTrack from '../RTC/JitsiTrack';
 
 export default class Transcriber {
+  audioRecorder: AudioRecorder;
+  transcriptionService: SphinxService;
+  counter: number;
+  startTime: Date;
+  transcription: string;
+  callback: Function;
+  results: unknown[]; // TODO:
+  state: string;
+  lineLength: number;
   start: () => void;
   stop: () => void;
   maybeMerge: () => void;
@@ -9,6 +21,6 @@ export default class Transcriber {
   addTrack: ( track: JitsiTrack ) => void;
   removeTrack: ( track: JitsiTrack ) => void;
   getTranscription: () => string;
-  getState: () => unknown; // TODO:
+  getState: () =>  string;
   reset: () => void;
 }

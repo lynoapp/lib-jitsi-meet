@@ -1,7 +1,7 @@
 export default class RecordingResult {
-  constructor( blob: unknown, name: unknown, startTime: unknown, wordArray: unknown ); // TODO:
-  readonly blob: unknown; // TODO:
-  readonly name: unknown; // TODO:
-  readonly startTime: unknown; // TODO:
-  readonly wordArray: unknown; // TODO:
+  constructor( blob: Blob, name: string, startTime: Date, wordArray: string[] );
+  readonly blob: Blob;
+  readonly name: string;
+  readonly startTime: Date;
+  readonly wordArray: string[];
 }

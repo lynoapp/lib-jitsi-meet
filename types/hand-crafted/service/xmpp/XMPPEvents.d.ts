@@ -8,6 +8,7 @@
   CALL_INCOMING = 'xmpp.callincoming.jingle',
   CALL_ENDED = 'xmpp.callended.jingle',
   CHAT_ERROR_RECEIVED = 'xmpp.chat_error_received',
+  SETTINGS_ERROR_RECEIVED = 'xmpp.settings_error_received',
   CONFERENCE_PROPERTIES_CHANGED = 'xmpp.conference_properties_changed',
   CONNECTION_ESTABLISHED = 'xmpp.connection.connected',
   CONNECTION_FAILED = 'xmpp.connection.failed',

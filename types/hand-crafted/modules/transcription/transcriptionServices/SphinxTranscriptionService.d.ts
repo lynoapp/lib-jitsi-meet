@@ -1,7 +1,8 @@
-import Word from '../word';
+import AbstractTranscriptionService from "./AbstractTranscriptionService";
 
-export type SphinxService = {
-  sendRequest: ( audioFileBlob: unknown, callback: ( params: unknown ) => unknown ) => void; // TODO:
-  formatResponse: ( response: unknown ) => Word[]; // TODO:
-  verify: ( response: unknown ) => boolean; // TODO:
+/**
+ * Implements a TranscriptionService for a Sphinx4 http server
+ */
+export default class SphinxService extends AbstractTranscriptionService {
+  url: string;
 }
