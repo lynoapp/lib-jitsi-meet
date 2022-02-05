@@ -74,14 +74,8 @@ module.exports = (minimize, analyzeBundle) => {
         },
         performance: {
             hints: minimize ? 'error' : false,
-            maxAssetSize: 850 * 1024,
-            maxEntrypointSize: 850 * 1024
-        },
-        resolve: {
-            extensions: [ '.js' ]
-        },
-        externals: {
-            jquery: 'jquery'
+            maxAssetSize: 750 * 1024,
+            maxEntrypointSize: 750 * 1024
         },
         plugins: [
             analyzeBundle
