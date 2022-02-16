@@ -297,6 +297,12 @@ export default function TraceablePeerConnection(
      */
     this._senderVideoMaxHeight = 2160;
 
+    /**
+     * The height constraints to be applied on the sender per local video source (source name as the key).
+     * @type {Map<string, number>}
+     */
+    this._senderMaxHeights = new Map();
+
     // override as desired
     this.trace = (what, info) => {
         logger.debug(what, info);
@@ -1952,10 +1958,9 @@ TraceablePeerConnection.prototype.replaceTrack = function(oldTrack, newTrack) {
             // The track will be replaced again on the peerconnection when the user unmutes.
             ? Promise.resolve()
             : this.tpcUtils.replaceTrack(oldTrack, newTrack);
-        const transceiver = this.tpcUtils.findTransceiver(mediaType, oldTrack);
 
         return promise
-            .then(() => {
+            .then(transceiver => {
                 oldTrack && this.localTracks.delete(oldTrack.rtcId);
                 newTrack && this.localTracks.set(newTrack.rtcId, newTrack);
                 const mediaActive = mediaType === MediaType.AUDIO
@@ -2250,10 +2255,32 @@ TraceablePeerConnection.prototype._initializeDtlsTransport = function() {
 /**
  * Configures the stream encodings depending on the video type and the bitrates configured.
  *
+ * @param {JitsiLocalTrack} - The local track for which the sender encodings have to configured.
  * @returns {Promise} promise that will be resolved when the operation is successful and rejected otherwise.
  */
-TraceablePeerConnection.prototype.configureSenderVideoEncodings = function() {
-    return this.setSenderVideoConstraints(this._senderVideoMaxHeight);
+TraceablePeerConnection.prototype.configureSenderVideoEncodings = function(localVideoTrack = null) {
+    if (FeatureFlags.isSourceNameSignalingEnabled()) {
+        if (localVideoTrack) {
+            return this.setSenderVideoConstraints(
+                this._senderMaxHeights.get(localVideoTrack.getSourceName()),
+                localVideoTrack);
+        }
+        const promises = [];
+
+        for (const track of this.getLocalVideoTracks()) {
+            promises.push(this.setSenderVideoConstraints(this._senderMaxHeights.get(track.getSourceName()), track));
+        }
+
+        return Promise.allSettled(promises);
+    }
+
+    let localTrack = localVideoTrack;
+
+    if (!localTrack) {
+        localTrack = this.getLocalVideoTracks()[0];
+    }
+
+    return this.setSenderVideoConstraints(this._senderVideoMaxHeight, localTrack);
 };
 
 TraceablePeerConnection.prototype.setLocalDescription = function(description) {
@@ -2396,9 +2423,10 @@ TraceablePeerConnection.prototype.setRemoteDescription = function(description) {
  * bitrates on the send stream.
  *
  * @param {number} frameHeight - The max frame height to be imposed on the outgoing video stream.
+ * @param {JitsiLocalTrack} - The local track for which the sender constraints have to be applied.
  * @returns {Promise} promise that will be resolved when the operation is successful and rejected otherwise.
  */
-TraceablePeerConnection.prototype.setSenderVideoConstraints = function(frameHeight) {
+TraceablePeerConnection.prototype.setSenderVideoConstraints = function(frameHeight, localVideoTrack) {
     if (frameHeight < 0) {
         throw new Error(`Invalid frameHeight: ${frameHeight}`);
     }
@@ -2408,13 +2436,16 @@ TraceablePeerConnection.prototype.setSenderVideoConstraints = function(frameHeig
         return Promise.resolve();
     }
 
-    this._senderVideoMaxHeight = frameHeight;
-    const localVideoTrack = this.getLocalVideoTracks()[0];
+    if (FeatureFlags.isSourceNameSignalingEnabled()) {
+        this._senderMaxHeights.set(localVideoTrack.getSourceName(), frameHeight);
+    } else {
+        this._senderVideoMaxHeight = frameHeight;
+    }
 
     if (!localVideoTrack || localVideoTrack.isMuted()) {
         return Promise.resolve();
     }
-    const videoSender = this.findSenderByKind(MediaType.VIDEO);
+    const videoSender = this.findSenderForTrack(localVideoTrack.getTrack());
 
     if (!videoSender) {
         return Promise.resolve();

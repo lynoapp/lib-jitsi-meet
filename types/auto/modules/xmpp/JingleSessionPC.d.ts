@@ -355,10 +355,11 @@ export default class JingleSessionPC extends JingleSession {
     /**
      * Sets the resolution constraint on the local camera track.
      * @param {number} maxFrameHeight - The user preferred max frame height.
+     * @param {string} sourceName - The source name of the track.
      * @returns {Promise} promise that will be resolved when the operation is
      * successful and rejected otherwise.
      */
-    setSenderVideoConstraint(maxFrameHeight: number): Promise<any>;
+    setSenderVideoConstraint(maxFrameHeight: number, sourceName?: string): Promise<any>;
     /**
      *
      * @param reasonCondition
@@ -454,6 +455,15 @@ export default class JingleSessionPC extends JingleSession {
      * @private
      */
     private _initiatorRenegotiate;
+    /**
+     * Adds a new track to the peerconnection. This method needs to be called only when a secondary JitsiLocalTrack is
+     * being added to the peerconnection for the first time.
+     *
+     * @param {JitsiLocalTrack} localTrack track to be added to the peer connection.
+     * @returns {Promise<void>} that resolves when the track is successfully added to the peerconnection, rejected
+     * otherwise.
+     */
+    addTrack(localTrack: any): Promise<void>;
     /**
      * Replaces <tt>oldTrack</tt> with <tt>newTrack</tt> and performs a single
      * offer/answer cycle after both operations are done. Either

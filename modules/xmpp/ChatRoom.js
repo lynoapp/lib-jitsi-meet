@@ -5,6 +5,7 @@ import { $iq, $msg, $pres, Strophe } from 'strophe.js';
 
 import * as JitsiTranscriptionStatus from '../../JitsiTranscriptionStatus';
 import * as MediaType from '../../service/RTC/MediaType';
+import VideoType from '../../service/RTC/VideoType';
 import XMPPEvents from '../../service/xmpp/XMPPEvents';
 import GlobalOnErrorHandler from '../util/GlobalOnErrorHandler';
 import Listenable from '../util/Listenable';
@@ -1177,6 +1178,7 @@ export default class ChatRoom extends Listenable {
             logger.warn('Maximum users limit for the room has been reached',
                 pres);
             this.eventEmitter.emit(XMPPEvents.ROOM_MAX_USERS_ERROR);
+            this.connection.emuc.doLeave(this.roomjid);
         } else if ($(pres)
             .find(
                 '>error[type="auth"]'
@@ -1616,7 +1618,7 @@ export default class ChatRoom extends Listenable {
         }
         const data = {
             muted: true, // muted by default
-            videoType: undefined // no video type by default
+            videoType: VideoType.CAMERA // 'camera' by default
         };
         let mutedNode = null;
 

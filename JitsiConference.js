@@ -31,8 +31,8 @@ import { E2EEncryption } from './modules/e2ee/E2EEncryption';
 import E2ePing from './modules/e2eping/e2eping';
 import Jvb121EventGenerator from './modules/event/Jvb121EventGenerator';
 import FeatureFlags from './modules/flags/FeatureFlags';
-import { ReceiveVideoController } from './modules/qualitycontrol/ReceiveVideoController';
-import { SendVideoController } from './modules/qualitycontrol/SendVideoController';
+import ReceiveVideoController from './modules/qualitycontrol/ReceiveVideoController';
+import SendVideoController from './modules/qualitycontrol/SendVideoController';
 import RecordingManager from './modules/recording/RecordingManager';
 import Settings from './modules/settings/Settings';
 import AudioOutputProblemDetector from './modules/statistics/AudioOutputProblemDetector';
@@ -730,9 +730,8 @@ JitsiConference.prototype.leave = async function() {
  * Returns the currently active media session if any.
  *
  * @returns {JingleSessionPC|undefined}
- * @private
  */
-JitsiConference.prototype._getActiveMediaSession = function() {
+JitsiConference.prototype.getActiveMediaSession = function() {
     return this.isP2PActive() ? this.p2pJingleSession : this.jvbJingleSession;
 };
 
@@ -740,9 +739,8 @@ JitsiConference.prototype._getActiveMediaSession = function() {
  * Returns an array containing all media sessions existing in this conference.
  *
  * @returns {Array<JingleSessionPC>}
- * @private
  */
-JitsiConference.prototype._getMediaSessions = function() {
+JitsiConference.prototype.getMediaSessions = function() {
     const sessions = [];
 
     this.jvbJingleSession && sessions.push(this.jvbJingleSession);
@@ -780,12 +778,9 @@ JitsiConference.prototype._sendBridgeVideoTypeMessage = function(localtrack) {
         videoType = BridgeVideoType.DESKTOP_HIGH_FPS;
     }
 
-    if (FeatureFlags.isSourceNameSignalingEnabled()) {
-        this.rtc.sendSourceVideoType(
-            getSourceNameForJitsiTrack(this.myUserId(), MediaType.VIDEO, 0),
-            videoType
-        );
-    } else {
+    if (FeatureFlags.isSourceNameSignalingEnabled() && localtrack) {
+        this.rtc.sendSourceVideoType(localtrack.getSourceName(), videoType);
+    } else if (!FeatureFlags.isSourceNameSignalingEnabled()) {
         this.rtc.setVideoType(videoType);
     }
 };
@@ -882,6 +877,14 @@ JitsiConference.prototype.getLocalAudioTrack = function() {
  */
 JitsiConference.prototype.getLocalVideoTrack = function() {
     return this.rtc ? this.rtc.getLocalVideoTrack() : null;
+};
+
+/**
+ * Returns all the local video tracks.
+ * @returns {Array<JitsiLocalTrack>}
+ */
+JitsiConference.prototype.getLocalVideoTracks = function() {
+    return this.rtc ? this.rtc.getLocalVideoTracks() : null;
 };
 
 /**
@@ -1095,6 +1098,23 @@ JitsiConference.prototype.addTrack = function(track) {
             return Promise.resolve(track);
         }
 
+        if (FeatureFlags.isMultiStreamSupportEnabled() && mediaType === MediaType.VIDEO) {
+            const addTrackPromises = [];
+
+            this.p2pJingleSession && addTrackPromises.push(this.p2pJingleSession.addTrack(track));
+            this.jvbJingleSession && addTrackPromises.push(this.jvbJingleSession.addTrack(track));
+
+            return Promise.all(addTrackPromises)
+                .then(() => {
+                    this._setupNewTrack(track);
+
+                    // TODO Update presence and sent videoType message.
+                    if (this.isMutedByFocus || this.isVideoMutedByFocus) {
+                        this._fireMuteChangeEvent(track);
+                    }
+                });
+        }
+
         return Promise.reject(new Error(`Cannot add second ${mediaType} track to the conference`));
     }
 
@@ -1229,6 +1249,13 @@ JitsiConference.prototype.removeTrack = function(track) {
  * @returns {Promise} resolves when the replacement is finished
  */
 JitsiConference.prototype.replaceTrack = function(oldTrack, newTrack) {
+    const oldVideoType = oldTrack?.getVideoType();
+    const newVideoType = newTrack?.getVideoType();
+
+    if (FeatureFlags.isMultiStreamSupportEnabled() && oldTrack && newTrack && oldVideoType !== newVideoType) {
+        throw new Error(`Replacing a track of videoType=${oldVideoType} with a track of videoType=${newVideoType} is`
+            + ' not supported in this mode.');
+    }
     const oldTrackBelongsToConference = this === oldTrack?.conference;
 
     if (oldTrackBelongsToConference && oldTrack.disposed) {
@@ -1258,7 +1285,7 @@ JitsiConference.prototype.replaceTrack = function(oldTrack, newTrack) {
 
                 // we do not want to send presence update during setEffect switching, which does remove and then add
                 && !(oldTrack?._setEffectInProgress || newTrack?._setEffectInProgress)) {
-                this._updateRoomPresence(this._getActiveMediaSession());
+                this._updateRoomPresence(this.getActiveMediaSession());
             }
 
             if (newTrack !== null && (this.isMutedByFocus || this.isVideoMutedByFocus)) {
@@ -1327,6 +1354,8 @@ JitsiConference.prototype._removeLocalSourceOnReject = function(jingleSession, e
  * @param {JitsiLocalTrack} newTrack the new track being created
  */
 JitsiConference.prototype._setupNewTrack = function(newTrack) {
+    const mediaType = newTrack.getType();
+
     if (newTrack.isAudioTrack() || (newTrack.isVideoTrack() && newTrack.videoType !== VideoType.DESKTOP)) {
         // Report active device to statistics
         const devices = RTC.getCurrentlyAvailableMediaDevices();
@@ -1336,6 +1365,16 @@ JitsiConference.prototype._setupNewTrack = function(newTrack) {
         if (device) {
             Statistics.sendActiveDeviceListEvent(RTC.getEventDataForActiveDevice(device));
         }
+    }
+
+    // Create a source name for this track if it doesn't exist.
+    if (FeatureFlags.isSourceNameSignalingEnabled() && !newTrack.getSourceName()) {
+        const sourceName = getSourceNameForJitsiTrack(
+            this.myUserId(),
+            mediaType,
+            this.getLocalTracks(mediaType)?.length);
+
+        newTrack.setSourceName(sourceName);
     }
 
     this.rtc.addLocalTrack(newTrack);
@@ -1360,35 +1399,30 @@ JitsiConference.prototype._setupNewTrack = function(newTrack) {
  * @private
  */
 JitsiConference.prototype._setNewVideoType = function(track) {
+    let videoTypeChanged = false;
+
     if (FeatureFlags.isSourceNameSignalingEnabled() && track) {
-        // FIXME once legacy signaling using 'sendCommand' is removed, signalingLayer.setTrackVideoType must be adjusted
-        // to send the presence (not just modify it).
-        this._signalingLayer.setTrackVideoType(
-            getSourceNameForJitsiTrack(
-                this.myUserId(),
-                track.getType(),
-                0
-            ),
-            track.videoType);
-
-        // TODO: Optimize to detect whether presence was changed, for now always report changed to send presence
-        return true;
+        videoTypeChanged = this._signalingLayer.setTrackVideoType(track.getSourceName(), track.videoType);
     }
 
-    const videoTypeTagName = 'videoType';
+    if (!FeatureFlags.isMultiStreamSupportEnabled()) {
+        const videoTypeTagName = 'videoType';
 
-    // if track is missing we revert to default type Camera, the case where we screenshare and
-    // we return to be video muted
-    const trackVideoType = track ? track.videoType : VideoType.CAMERA;
+        // If track is missing we revert to default type Camera, the case where we screenshare and
+        // we return to be video muted.
+        const trackVideoType = track ? track.videoType : VideoType.CAMERA;
 
-    // if video type is camera and there is no videoType in presence, we skip adding it, as this is the default one
-    if (trackVideoType !== VideoType.CAMERA || this.room.getFromPresence(videoTypeTagName)) {
-        // we will not use this.sendCommand here to avoid sending the presence immediately, as later we may also set
-        // and the mute status
-        return this.room.addOrReplaceInPresence(videoTypeTagName, { value: trackVideoType });
+        // If video type is camera and there is no videoType in presence, we skip adding it, as this is the default one
+        if (trackVideoType !== VideoType.CAMERA || this.room.getFromPresence(videoTypeTagName)) {
+            // We will not use this.sendCommand here to avoid sending the presence immediately, as later we may also
+            // set the mute status.
+            const legacyTypeChanged = this.room.addOrReplaceInPresence(videoTypeTagName, { value: trackVideoType });
+
+            videoTypeChanged = videoTypeChanged || legacyTypeChanged;
+        }
     }
 
-    return false;
+    return videoTypeChanged;
 };
 
 /**
@@ -1400,24 +1434,31 @@ JitsiConference.prototype._setNewVideoType = function(track) {
  * @private
  */
 JitsiConference.prototype._setTrackMuteStatus = function(mediaType, localTrack, isMuted) {
-    if (FeatureFlags.isSourceNameSignalingEnabled()) {
-        // TODO When legacy signaling part is removed, remember to adjust signalingLayer.setTrackMuteStatus, so that
-        // it triggers sending the presence (it only updates it for now, because the legacy code below sends).
-        this._signalingLayer.setTrackMuteStatus(
-            getSourceNameForJitsiTrack(this.myUserId(), mediaType, 0),
-            isMuted
-        );
+    let presenceChanged = false;
+
+    if (FeatureFlags.isSourceNameSignalingEnabled() && localTrack) {
+        presenceChanged = this._signalingLayer.setTrackMuteStatus(localTrack.getSourceName(), isMuted);
     }
 
-    if (!this.room) {
-        return false;
+    // Add the 'audioMuted' and 'videoMuted' tags when source name signaling is enabled for backward compatibility.
+    // It won't be used anymore when multiple stream support is enabled.
+    if (!FeatureFlags.isMultiStreamSupportEnabled()) {
+        let audioMuteChanged, videoMuteChanged;
+
+        if (!this.room) {
+            return false;
+        }
+
+        if (mediaType === MediaType.AUDIO) {
+            audioMuteChanged = this.room.addAudioInfoToPresence(isMuted);
+        } else {
+            videoMuteChanged = this.room.addVideoInfoToPresence(isMuted);
+        }
+
+        presenceChanged = presenceChanged || audioMuteChanged || videoMuteChanged;
     }
 
-    if (mediaType === MediaType.AUDIO) {
-        return this.room.addAudioInfoToPresence(isMuted);
-    }
-
-    return this.room.addVideoInfoToPresence(isMuted);
+    return presenceChanged;
 };
 
 /**
@@ -1444,11 +1485,7 @@ JitsiConference.prototype._addLocalTrackAsUnmute = function(track) {
         logger.debug('Add local MediaStream as unmute - no P2P Jingle session started yet');
     }
 
-    return Promise.allSettled(addAsUnmutePromises)
-        .then(() => {
-            // Signal the video type to the bridge.
-            track.isVideoTrack() && this._sendBridgeVideoTypeMessage(track);
-        });
+    return Promise.allSettled(addAsUnmutePromises);
 };
 
 /**
@@ -1472,11 +1509,7 @@ JitsiConference.prototype._removeLocalTrackAsMute = function(track) {
         logger.debug('Remove local MediaStream - no P2P JingleSession started yet');
     }
 
-    return Promise.allSettled(removeAsMutePromises)
-        .then(() => {
-            // Signal the video type to the bridge.
-            track.isVideoTrack() && this._sendBridgeVideoTypeMessage();
-        });
+    return Promise.allSettled(removeAsMutePromises);
 };
 
 /**
@@ -1891,7 +1924,7 @@ JitsiConference.prototype.onMemberLeft = function(jid) {
     }
 
     const participant = this.participants[id];
-    const mediaSessions = this._getMediaSessions();
+    const mediaSessions = this.getMediaSessions();
     let tracksToBeRemoved = [];
 
     for (const session of mediaSessions) {
@@ -3305,9 +3338,7 @@ JitsiConference.prototype._setP2PStatus = function(newStatus) {
         JitsiConferenceEvents.P2P_STATUS,
         this,
         this.p2p);
-    this.eventEmitter.emit(
-        JitsiConferenceEvents._MEDIA_SESSION_ACTIVE_CHANGED,
-        this._getActiveMediaSession());
+    this.eventEmitter.emit(JitsiConferenceEvents._MEDIA_SESSION_ACTIVE_CHANGED, this.getActiveMediaSession());
 
     // Refresh connection interrupted/restored
     this.eventEmitter.emit(
@@ -3584,27 +3615,26 @@ JitsiConference.prototype._updateRoomPresence = function(jingleSession, ctx) {
         ctx.skip = true;
     }
 
-    const localAudioTracks = jingleSession.peerconnection.getLocalTracks(MediaType.AUDIO);
-    const localVideoTracks = jingleSession.peerconnection.getLocalTracks(MediaType.VIDEO);
     let presenceChanged = false;
+    let muteStatusChanged, videoTypeChanged;
+    const localTracks = this.getLocalTracks();
 
-    if (localAudioTracks && localAudioTracks.length) {
-        presenceChanged = this._setTrackMuteStatus(MediaType.AUDIO, localAudioTracks[0], localAudioTracks[0].isMuted());
-    } else if (this._setTrackMuteStatus(MediaType.AUDIO, undefined, true)) {
-        presenceChanged = true;
+    // Set presence for all the available local tracks.
+    for (const track of localTracks) {
+        muteStatusChanged = this._setTrackMuteStatus(track.getType(), track, track.isMuted());
+        if (track.getType() === MediaType.VIDEO) {
+            videoTypeChanged = this._setNewVideoType(track);
+        }
+        presenceChanged = presenceChanged || muteStatusChanged || videoTypeChanged;
     }
 
-    if (localVideoTracks && localVideoTracks.length) {
-        const muteStatusChanged = this._setTrackMuteStatus(
-            MediaType.VIDEO, localVideoTracks[0], localVideoTracks[0].isMuted());
-        const videoTypeChanged = this._setNewVideoType(localVideoTracks[0]);
+    // Set the presence in the legacy format if there are no local tracks and multi stream support is not enabled.
+    if (!localTracks.length && !FeatureFlags.isMultiStreamSupportEnabled()) {
+        const audioMuteStatusChanged = this._setTrackMuteStatus(MediaType.AUDIO, undefined, true);
+        const videoMuteStatusChanged = this._setTrackMuteStatus(MediaType.VIDEO, undefined, true);
 
-        presenceChanged = presenceChanged || muteStatusChanged || videoTypeChanged;
-    } else {
-        const muteStatusChanged = this._setTrackMuteStatus(MediaType.VIDEO, undefined, true);
-        const videoTypeChanged = this._setNewVideoType(); // set back to default video type
-
-        presenceChanged = presenceChanged || muteStatusChanged || videoTypeChanged;
+        videoTypeChanged = this._setNewVideoType();
+        presenceChanged = audioMuteStatusChanged || videoMuteStatusChanged || videoTypeChanged;
     }
 
     presenceChanged && this.room.sendPresence();
@@ -3939,6 +3969,63 @@ JitsiConference.prototype.joinLobby = function(displayName, email) {
     }
 
     return Promise.reject(new Error('The conference not started'));
+};
+
+/**
+ * Gets the local id for a participant in a lobby room.
+ * Returns undefined when current participant is not in the lobby room.
+ * This is used for lobby room private chat messages.
+ *
+ * @returns {string}
+ */
+JitsiConference.prototype.myLobbyUserId = function() {
+    if (this.room) {
+        return this.room.getLobby().getLocalId();
+    }
+};
+
+/**
+ * Sends a message to a lobby room.
+ * When id is specified it sends a private message.
+ * Otherwise it sends the message to all moderators.
+ * @param {message} Object The message to send
+ * @param {string} id The participant id.
+ *
+ * @returns {void}
+ */
+JitsiConference.prototype.sendLobbyMessage = function(message, id) {
+    if (this.room) {
+        if (id) {
+            return this.room.getLobby().sendPrivateMessage(id, message);
+        }
+
+        return this.room.getLobby().sendMessage(message);
+    }
+};
+
+/**
+ * Adds a message listener to the lobby room
+ * @param {Function} listener The listener function,
+ * called when a new message is received in the lobby room.
+ *
+ * @returns {Function} Handler returned to be able to remove it later.
+ */
+JitsiConference.prototype.addLobbyMessageListener = function(listener) {
+    if (this.room) {
+        return this.room.getLobby().addMessageListener(listener);
+    }
+};
+
+/**
+ * Removes a message handler from the lobby room
+ * @param {Function} handler The handler function  to remove.
+ *
+ * @returns {void}
+ */
+JitsiConference.prototype.removeLobbyMessageHandler = function(handler) {
+    if (this.room) {
+        return this.room.getLobby().removeMessageHandler(handler);
+    }
 };
 
 /**
