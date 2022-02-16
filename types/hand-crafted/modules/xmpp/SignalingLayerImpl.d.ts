@@ -12,6 +12,6 @@ declare class SignalingLayerImpl extends SignalingLayer {
   getSSRCOwner: ( ssrc: number ) => string | null;
   setSSRCOwner: ( ssrc: number, endpointId: string ) => void;
   setTrackMuteStatus: ( sourceName: SourceName, muted: boolean ) => boolean;
-  setTrackVideoType: ( sourceName: SourceName, videoType: VideoType ) => void;
+  setTrackVideoType: ( sourceName: SourceName, videoType: VideoType ) => boolean;
   setTrackSourceName: ( ssrc: number, sourceName: SourceName ) => void;
 }

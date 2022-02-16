@@ -25,7 +25,7 @@ export default class TraceablePeerConnection {
   videoTransferActive: boolean;
   id: number;
   isP2P: boolean;
-  remoteTracks: Map<number, Map<MediaType, JitsiRemoteTrack>>; // TODO:
+  remoteTracks: Map<string, Map<MediaType, Set<JitsiRemoteTrack>>>;; // TODO:
   localTracks: Map<number, JitsiLocalTrack>; // TODO:
   localSSRCs: Map<number, {
     /**
@@ -106,11 +106,11 @@ export default class TraceablePeerConnection {
   /**
    * Configures the stream encodings depending on the video type and the bitrates configured.
    */
-  configureSenderVideoEncodings: () => Promise<void>;
+  configureSenderVideoEncodings: (localVideoTrack?: JitsiLocalTrack) => Promise<void>;
   setLocalDescription: ( description: unknown ) => Promise<unknown>;
   setAudioTransferActive: ( active: boolean ) => boolean;
   setRemoteDescription: ( description: unknown ) => unknown; // TODO:
-  setSenderVideoConstraints: ( frameHeight: number ) => Promise<void>;
+  setSenderVideoConstraints: ( frameHeight: number, localVideoTrack: JitsiLocalTrack ) => Promise<void>;
   setVideoTransferActive: ( active: boolean ) => boolean;
   sendTones: ( tones: string, duration: number, interToneGap: number ) => void;
   generateRecvonlySsrc: () => void;

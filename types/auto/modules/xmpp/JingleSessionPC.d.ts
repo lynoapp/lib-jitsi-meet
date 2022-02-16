@@ -463,7 +463,7 @@ export default class JingleSessionPC extends JingleSession {
      * @returns {Promise<void>} that resolves when the track is successfully added to the peerconnection, rejected
      * otherwise.
      */
-    addTrack(localTrack: any): Promise<void>;
+    addTrack(localTrack: JitsiLocalTrack): Promise<void>;
     /**
      * Replaces <tt>oldTrack</tt> with <tt>newTrack</tt> and performs a single
      * offer/answer cycle after both operations are done. Either

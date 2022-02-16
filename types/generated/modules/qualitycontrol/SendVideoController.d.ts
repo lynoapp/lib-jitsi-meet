@@ -5,7 +5,7 @@
  * because local tracks are shared and while JVB may have no preference, the remote p2p may have and they may be totally
  * different.
  */
-export class SendVideoController {
+export default class SendVideoController {
     /**
      * Creates new instance for a given conference.
      *
@@ -14,10 +14,21 @@ export class SendVideoController {
      * @param {RTC} rtc - the rtc instance that is responsible for sending the messages on the bridge channel.
      */
     constructor(conference: JitsiConference, rtc: RTC);
-    conference: JitsiConference;
-    layerSuspensionEnabled: any;
-    rtc: RTC;
-    _senderVideoConstraints: any;
+    _conference: JitsiConference;
+    _preferredSendMaxFrameHeight: number;
+    _rtc: RTC;
+    /**
+     * Source name based sender constraints.
+     * @type {Map<string, number>};
+     */
+    _sourceSenderConstraints: Map<string, number>;
+    /**
+     * Configures the video encodings on the local sources when a media connection is established or becomes active.
+     *
+     * @returns {Promise<void[]>}
+     * @private
+     */
+    private _configureConstraintsForLocalSources;
     /**
      * Handles the {@link JitsiConferenceEvents.MEDIA_SESSION_STARTED}, that is when the conference creates new media
      * session. It doesn't mean it's already active though. For example the JVB connection may be created after
@@ -28,9 +39,19 @@ export class SendVideoController {
      */
     private _onMediaSessionStarted;
     /**
-     * Figures out the send video constraint as specified by {@link selectSendMaxFrameHeight} and sets it on all media
+     * Propagates the video constraints if they have changed.
+     *
+     * @param {Object} videoConstraints - The sender video constraints received from the bridge.
+     * @returns {Promise<void[]>}
+     * @private
+     */
+    private _onSenderConstraintsReceived;
+    _senderVideoConstraints: any;
+    /**
+     * Figures out the send video constraint as specified by {@link _selectSendMaxFrameHeight} and sets it on all media
      * sessions for the reasons mentioned in this class description.
      *
+     * @param {string} sourceName - The source for which sender constraints have changed.
      * @returns {Promise<void[]>}
      * @private
      */
@@ -39,9 +60,11 @@ export class SendVideoController {
      * Selects the lowest common value for the local video send constraint by looking at local user's preference and
      * the active media session's receive preference set by the remote party.
      *
+     * @param {string} sourceName - The source for which sender constraints have changed.
      * @returns {number|undefined}
+     * @private
      */
-    selectSendMaxFrameHeight(): number | undefined;
+    private _selectSendMaxFrameHeight;
     /**
      * Sets local preference for max send video frame height.
      *
@@ -49,5 +72,4 @@ export class SendVideoController {
      * @returns {Promise<void[]>} - resolved when the operation is complete.
      */
     setPreferredSendMaxFrameHeight(maxFrameHeight: number): Promise<void[]>;
-    preferredSendMaxFrameHeight: number;
 }

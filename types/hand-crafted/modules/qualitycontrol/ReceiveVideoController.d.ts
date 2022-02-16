@@ -1,15 +1,15 @@
 import JitsiConference from '../../JitsiConference';
 import RTC from '../RTC/RTC';
 
-export class ReceiverVideoConstraints {
+declare class ReceiverVideoConstraints {
   readonly constraints: unknown; // TODO:
   updateLastN: ( value: number ) => boolean;
   updateReceiveResolution: ( maxFrameHeight: number ) => boolean;
   updateReceiverVideoConstraints: ( videoConstraints: ReceiverVideoConstraints ) => boolean; // TODO:
-  updateSelectedEndpoints: ( ids: unknown ) => void; // TODO:
+  updateSelectedEndpoints: ( ids: string[] ) => void; // TODO:
 }
 
-export class ReceiveVideoController {
+export default class ReceiveVideoController {
   constructor( conference: JitsiConference, rtc: RTC );
   getLastN: () => number;
   selectEndpoints: ( ids: unknown ) => unknown; // TODO:

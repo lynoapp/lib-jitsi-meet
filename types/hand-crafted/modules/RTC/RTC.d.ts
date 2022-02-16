@@ -21,6 +21,7 @@ export default class RTC extends Listenable {
   createPeerConnection: ( signaling: SignalingLayer, pcConfig: unknown, isP2P: boolean, options: { enableInsertableStreams: boolean, disableSimulcast: boolean, disableRtx: boolean, startSilent: boolean } ) => TraceablePeerConnection; // TODO:
   addLocalTrack: ( track: JitsiLocalTrack ) => void;
   getLocalVideoTrack: () => JitsiLocalTrack | undefined;
+  getLocalVideoTracks: () => JitsiLocalTrack[];
   getLocalAudioTrack: () => JitsiLocalTrack | undefined;
   getLocalEndpointId: () => string;
   getLocalTracks: ( mediaType: MediaType ) => JitsiLocalTrack[];

@@ -1,3 +1,5 @@
+import { MediaType } from '../../service/RTC/MediaType';
+
 export default function SDP( sdp: unknown ): void; // TODO:
 
 export default class SDP {
@@ -5,6 +7,7 @@ export default class SDP {
   failICE: boolean;
   removeTcpCandidates: boolean;
   removeUdpCandidates: boolean;
+  addMlineForNewLocalSource: (mediaType: MediaType) => void;
   getMediaSsrcMap: () => unknown; // TODO:
   containsSSRC: ( ssrc: unknown ) => boolean; // TODO:
   toJingle: ( elem: unknown, thecreator: unknown ) => unknown; // TODO:

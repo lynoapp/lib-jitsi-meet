@@ -8,8 +8,10 @@ export enum FacialExpressions {
   sad = 'sad',
 }
 
-export class SpeakerStats {
+export default class SpeakerStats {
   constructor( userId: string, displayName: string, isLocalStats: boolean );
+  totalDominantSpeakerTime: number;
+  displayName: string;
   getUserId: () => string;
   getDisplayName: () => string;
   setDisplayName: ( name: string ) => void;

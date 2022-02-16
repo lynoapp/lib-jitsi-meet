@@ -260,13 +260,13 @@ declare class JitsiConference {
      *
      * @returns {JingleSessionPC|undefined}
      */
-    getActiveMediaSession(): any | undefined;
+    getActiveMediaSession(): JingleSessionPC | undefined;
     /**
      * Returns an array containing all media sessions existing in this conference.
      *
      * @returns {Array<JingleSessionPC>}
      */
-    getMediaSessions(): Array<any>;
+    getMediaSessions(): Array<JingleSessionPC>;
     private _registerRtcListeners;
     private _sendBridgeVideoTypeMessage;
     /**
@@ -320,7 +320,7 @@ declare class JitsiConference {
      * Returns all the local video tracks.
      * @returns {Array<JitsiLocalTrack>}
      */
-    getLocalVideoTracks(): Array<any>;
+    getLocalVideoTracks(): Array<JitsiLocalTrack>;
     /**
      * Obtains the performance statistics.
      * @returns {Object|null}

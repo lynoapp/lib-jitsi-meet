@@ -29,13 +29,14 @@ export default class JingleSessionPC extends JingleSession {
   setReceiverVideoConstraint: ( maxFrameHeight: number ) => void;
   sendTransportAccept: ( localSDP: unknown, success: ( params: unknown ) => unknown, failure: ( params: unknown ) => unknown ) => void; // TODO:
   sendTransportReject: ( success: ( params: unknown ) => unknown, failure: ( params: unknown ) => unknown ) => void; // TODO:
-  setSenderVideoConstraint: ( maxFrameHeight: number ) => Promise<unknown>; // TODO:
+  setSenderVideoConstraint: ( maxFrameHeight: number, sourceName?: string ) => Promise<unknown>; // TODO:
   terminate: ( success: ( params: unknown ) => unknown, failure: ( params: unknown ) => unknown, options: { reason: string, reasonDescription: string, requestRestart?: boolean, sendSessionTerminate?: boolean } ) => void; // TODO:
   onTerminated: ( reasonCondition: unknown, reasonText: unknown ) => void; // TODO:
   onXmppStatusChanged: ( status: Strophe.Status ) => void;
   addRemoteStream: ( elem: unknown ) => void; // TODO:
   removeRemoteStream: ( elem: unknown ) => void; // TODO:
   removeRemoteStreamsOnLeave: ( id: string ) => Promise<JitsiRemoteTrack>;
+  addTrack: (localTrack: JitsiLocalTrack) => Promise<void>;
   replaceTrack: ( oldTrack: JitsiLocalTrack | null, newTrack: JitsiLocalTrack | null ) => Promise<unknown>; // TODO:
   addTrackAsUnmute: ( track: JitsiLocalTrack ) => Promise<unknown>; // TODO:
   removeTrackAsMute: ( track: JitsiLocalTrack ) => Promise<unknown>; // TODO:

@@ -1,5 +1,6 @@
 import { MediaDirection } from '../../service/RTC/MediaDirection';
 import { MediaType } from '../../service/RTC/MediaType';
+import * as transform from 'sdp-transform';
 
 export function parsePrimarySSRC( group: unknown ): number; // TODO:
 
@@ -28,6 +29,8 @@ export class MLineWrap {
 }
 
 export class SdpTransformWrap {
+  constructor(rawSDP: string);
+  parsedSDP: transform.SessionDescription;
   selectMedia: ( mediaType: MediaType ) => MLineWrap | null;
   toRawSDP: () => string;
 }

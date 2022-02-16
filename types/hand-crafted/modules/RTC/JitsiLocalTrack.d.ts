@@ -14,6 +14,7 @@ export default class JitsiLocalTrack extends JitsiTrack {
   getDeviceId: () => string;
   getDuration(): number;
   getParticipantId: () => string;
+  getSourceName: () => string | null;
   isEnded: () => boolean;
   isMuted: () => boolean;
   isReceivingData: () => boolean;
@@ -21,6 +22,7 @@ export default class JitsiLocalTrack extends JitsiTrack {
   onByteSentStatsReceived: (tpc: TraceablePeerConnection, bytesSent: number) => void;
   setConference(conference: JitsiConference): void;
   setEffect: ( effect: unknown ) => Promise<unknown>; // TODO:
+  setSourceName: ( name: string ) => void;
   stopStream: () => void;
   unmute: () => Promise<void>;
   toString: () => string;

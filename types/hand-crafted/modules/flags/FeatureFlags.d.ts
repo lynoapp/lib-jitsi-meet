@@ -9,6 +9,10 @@ declare class FeatureFlags {
     sourceNameSignaling: boolean;
   }): void;
   /**
+   * Checks if multiple local video streams support is enabled.
+   */
+  isMultiStreamSupportEnabled(): boolean;
+  /**
    * Checks if the source name signaling is enabled.
    */
   isSourceNameSignalingEnabled(): boolean;

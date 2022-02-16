@@ -113,7 +113,7 @@ export class TPCUtils {
      * @param {JitsiLocalTrack} newTrack - new track that needs to be added to the sender.
      * @returns {Promise<RTCRtpTransceiver>} - resolved with the associated transceiver when done, rejected otherwise.
      */
-    replaceTrack(oldTrack: any, newTrack: any): Promise<RTCRtpTransceiver>;
+    replaceTrack(oldTrack: JitsiLocalTrack, newTrack: JitsiLocalTrack): Promise<RTCRtpTransceiver>;
     /**
     * Enables/disables audio transmission on the peer connection. When
     * disabled the audio transceiver direction will be set to 'inactive'

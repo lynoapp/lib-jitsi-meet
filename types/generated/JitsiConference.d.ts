@@ -254,8 +254,18 @@ declare class JitsiConference {
      * @returns {Promise}
      */
     leave(): Promise<any>;
-    private _getActiveMediaSession;
-    private _getMediaSessions;
+    /**
+     * Returns the currently active media session if any.
+     *
+     * @returns {JingleSessionPC|undefined}
+     */
+    getActiveMediaSession(): JingleSessionPC | undefined;
+    /**
+     * Returns an array containing all media sessions existing in this conference.
+     *
+     * @returns {Array<JingleSessionPC>}
+     */
+    getMediaSessions(): Array<JingleSessionPC>;
     private _registerRtcListeners;
     private _sendBridgeVideoTypeMessage;
     /**
@@ -305,6 +315,11 @@ declare class JitsiConference {
      * @return {JitsiLocalTrack|null}
      */
     getLocalVideoTrack(): JitsiLocalTrack | null;
+    /**
+     * Returns all the local video tracks.
+     * @returns {Array<JitsiLocalTrack>}
+     */
+    getLocalVideoTracks(): Array<JitsiLocalTrack>;
     /**
      * Obtains the performance statistics.
      * @returns {Object|null}
@@ -626,11 +641,9 @@ declare class JitsiConference {
     onUserRoleChanged(jid: any, role: any): void;
     onDisplayNameChanged(jid: any, displayName: any): void;
     /**
-     * Notifies this JitsiConference that a JitsiRemoteTrack was added into
-     * the conference.
+     * Notifies this JitsiConference that a JitsiRemoteTrack was added to the conference.
      *
-     * @param {JitsiRemoteTrack} track the JitsiRemoteTrack which was added to this
-     * JitsiConference
+     * @param {JitsiRemoteTrack} track the JitsiRemoteTrack which was added to this JitsiConference.
      */
     onRemoteTrackAdded(track: JitsiRemoteTrack): void;
     /**
@@ -1088,6 +1101,39 @@ declare class JitsiConference {
      */
     joinLobby(displayName: string, email: string): Promise<never>;
     /**
+     * Gets the local id for a participant in a lobby room.
+     * Returns undefined when current participant is not in the lobby room.
+     * This is used for lobby room private chat messages.
+     *
+     * @returns {string}
+     */
+    myLobbyUserId(): string;
+    /**
+     * Sends a message to a lobby room.
+     * When id is specified it sends a private message.
+     * Otherwise it sends the message to all moderators.
+     * @param {message} Object The message to send
+     * @param {string} id The participant id.
+     *
+     * @returns {void}
+     */
+    sendLobbyMessage(message: any, id: string): void;
+    /**
+     * Adds a message listener to the lobby room
+     * @param {Function} listener The listener function,
+     * called when a new message is received in the lobby room.
+     *
+     * @returns {Function} Handler returned to be able to remove it later.
+     */
+    addLobbyMessageListener(listener: Function): Function;
+    /**
+     * Removes a message handler from the lobby room
+     * @param {Function} handler The handler function  to remove.
+     *
+     * @returns {void}
+     */
+    removeLobbyMessageHandler(handler: Function): void;
+    /**
      * Denies an occupant in the lobby room access to the conference.
      * @param {string} id The participant id.
      */
@@ -1163,8 +1209,8 @@ import { E2EEncryption } from "./modules/e2ee/E2EEncryption";
 import { CodecSelection } from "./modules/RTC/CodecSelection";
 import E2ePing from "./modules/e2eping/e2eping";
 import RTC from "./modules/RTC/RTC";
-import { ReceiveVideoController } from "./modules/qualitycontrol/ReceiveVideoController";
-import { SendVideoController } from "./modules/qualitycontrol/SendVideoController";
+import ReceiveVideoController from "./modules/qualitycontrol/ReceiveVideoController";
+import SendVideoController from "./modules/qualitycontrol/SendVideoController";
 import ParticipantConnectionStatusHandler from "./modules/connectivity/ParticipantConnectionStatus";
 import Statistics from "./modules/statistics/statistics";
 import VADAudioAnalyser from "./modules/detection/VADAudioAnalyser";

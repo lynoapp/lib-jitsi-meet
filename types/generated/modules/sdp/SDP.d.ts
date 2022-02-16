@@ -30,6 +30,13 @@ export default class SDP {
      */
     removeUdpCandidates: boolean;
     /**
+     * Adds a new m-line to the description so that a new local source can then be attached to the transceiver that gets
+     * added after a reneogtiation cycle.
+     *
+     * @param {MediaType} mediaType media type of the new source that is being added.
+     */
+    addMlineForNewLocalSource(mediaType: MediaType): void;
+    /**
      * Returns map of MediaChannel mapped per channel idx.
      */
     getMediaSsrcMap(): {};

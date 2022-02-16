@@ -92,6 +92,7 @@ export declare const VIDEOBRIDGE_NOT_AVAILABLE = "conference.videobridgeNotAvail
 export declare enum JitsiConferenceErrors {
     AUTHENTICATION_REQUIRED = "conference.authenticationRequired",
     CHAT_ERROR = "conference.chatError",
+    SETTINGS_ERROR = "conference.settingsError",
     CONFERENCE_DESTROYED = "conference.destroyed",
     CONFERENCE_MAX_USERS = "conference.max_users",
     CONNECTION_ERROR = "conference.connectionError",

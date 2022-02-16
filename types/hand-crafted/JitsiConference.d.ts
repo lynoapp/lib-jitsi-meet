@@ -33,6 +33,8 @@ export default class JitsiConference {
   isP2PEnabled: () => boolean;
   isP2PTestModeEnabled: () => boolean;
   leave: () => Promise<unknown>; // TODO:
+  getActiveMediaSession: () => JingleSessionPC | undefined;
+  getMediaSessions: () => JingleSessionPC[];
   getName: () => string;
   getConnection: () => JitsiConnection;
   isAuthEnabled: () => boolean;
@@ -43,6 +45,7 @@ export default class JitsiConference {
   getLocalTracks: ( mediaType: MediaType ) => JitsiLocalTrack[];
   getLocalAudioTrack: () => JitsiLocalTrack | null;
   getLocalVideoTrack: () => JitsiLocalTrack | null;
+  getLocalVideoTracks: () => JitsiLocalTrack[];
   getPerformanceStats: () => unknown | null; // TODO:
   on: ( eventId: JitsiConferenceEvents, handler: () => unknown ) => void; // TODO:
   off: ( eventId: JitsiConferenceEvents, handler: () => unknown ) => void; // TODO:
@@ -156,6 +159,10 @@ export default class JitsiConference {
   enableLobby: () => Promise<unknown>;
   disableLobby: () => void;
   joinLobby: ( displayName: string, email: string ) => Promise<never>;
+  myLobbyUserId: () => string;
+  sendLobbyMessage: ( message: unknown, id: string ) => void;
+  addLobbyMessageListener: ( listener: Function ) => Function;
+  removeLobbyMessageHandler: ( handler: Function ) => void;
   lobbyDenyAccess: ( id: string ) => void;
   lobbyApproveAccess: ( id: string ) => void;
   isAVModerationSupported(): boolean;

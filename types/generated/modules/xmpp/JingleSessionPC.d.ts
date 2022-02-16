@@ -285,7 +285,19 @@ export default class JingleSessionPC extends JingleSession {
      * @param {CodecMimeType} preferred the preferred codec.
      * @param {CodecMimeType} disabled the codec that needs to be disabled.
      */
-    setVideoCodecs(preferred?: typeof CodecMimeType, disabled?: typeof CodecMimeType): void;
+    setVideoCodecs(preferred?: {
+        H264: string;
+        OPUS: string;
+        ULPFEC: string;
+        VP8: string;
+        VP9: string;
+    }, disabled?: {
+        H264: string;
+        OPUS: string;
+        ULPFEC: string;
+        VP8: string;
+        VP9: string;
+    }): void;
     /**
      * Although it states "replace transport" it does accept full Jingle offer
      * which should contain new ICE transport details.
@@ -343,10 +355,11 @@ export default class JingleSessionPC extends JingleSession {
     /**
      * Sets the resolution constraint on the local camera track.
      * @param {number} maxFrameHeight - The user preferred max frame height.
+     * @param {string} sourceName - The source name of the track.
      * @returns {Promise} promise that will be resolved when the operation is
      * successful and rejected otherwise.
      */
-    setSenderVideoConstraint(maxFrameHeight: number): Promise<any>;
+    setSenderVideoConstraint(maxFrameHeight: number, sourceName?: string): Promise<any>;
     /**
      *
      * @param reasonCondition
@@ -381,7 +394,7 @@ export default class JingleSessionPC extends JingleSession {
      */
     removeRemoteStream(elem: any): void;
     /**
-     * Handles the deletion of the remote tracks and SSRCs associated with a remote endpoint.
+     * Handles the deletion of SSRCs associated with a remote user from the remote description when the user leaves.
      *
      * @param {string} id Endpoint id of the participant that has left the call.
      * @returns {void}
@@ -442,6 +455,15 @@ export default class JingleSessionPC extends JingleSession {
      * @private
      */
     private _initiatorRenegotiate;
+    /**
+     * Adds a new track to the peerconnection. This method needs to be called only when a secondary JitsiLocalTrack is
+     * being added to the peerconnection for the first time.
+     *
+     * @param {JitsiLocalTrack} localTrack track to be added to the peer connection.
+     * @returns {Promise<void>} that resolves when the track is successfully added to the peerconnection, rejected
+     * otherwise.
+     */
+    addTrack(localTrack: JitsiLocalTrack): Promise<void>;
     /**
      * Replaces <tt>oldTrack</tt> with <tt>newTrack</tt> and performs a single
      * offer/answer cycle after both operations are done. Either
@@ -643,7 +665,6 @@ export type JingleSessionPCOptions = {
 };
 import JingleSession from "./JingleSession";
 import AsyncQueue from "../util/AsyncQueue";
-import * as CodecMimeType from "../../service/RTC/CodecMimeType";
 import { Strophe } from "strophe.js";
 import SDP from "../sdp/SDP";
 import XmppConnection from "./XmppConnection";

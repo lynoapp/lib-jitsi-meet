@@ -13,10 +13,10 @@ export default class SendVideoController {
      * the send video quality constraints.
      * @param {RTC} rtc - the rtc instance that is responsible for sending the messages on the bridge channel.
      */
-    constructor(conference: any, rtc: any);
-    _conference: any;
+    constructor(conference: JitsiConference, rtc: RTC);
+    _conference: JitsiConference;
     _preferredSendMaxFrameHeight: number;
-    _rtc: any;
+    _rtc: RTC;
     /**
      * Source name based sender constraints.
      * @type {Map<string, number>};

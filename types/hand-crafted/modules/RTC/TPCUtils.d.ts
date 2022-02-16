@@ -26,7 +26,7 @@ export default class TPCUtils {
    * type and other considerations associated with screenshare.
    */
   calculateEncodingsBitrates: (localVideoTrack: JitsiLocalTrack) => Array<number>;
-  replaceTrack: ( oldTrack: JitsiLocalTrack, newTrack: JitsiLocalTrack ) => Promise<void>;
+  replaceTrack: ( oldTrack: JitsiLocalTrack, newTrack: JitsiLocalTrack ) => Promise<RTCRtpTransceiver>;
   setAudioTransferActive: ( active: boolean ) => void;
   setEncodings: ( track: JitsiLocalTrack ) => Promise<void>;
   setMediaTransferActive: ( mediaType: MediaType, active: boolean ) => void;
