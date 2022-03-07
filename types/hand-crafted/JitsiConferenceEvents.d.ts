@@ -233,15 +233,15 @@
   RECORDER_STATE_CHANGED = "conference.recorderStateChanged",
   /**
    * Indicates that video SIP GW state changed.
-   * @param {VideoSIPGWConstants} status.
+   * @param {VideoSIPGWStatusConstants} status.
    */
   VIDEO_SIP_GW_AVAILABILITY_CHANGED = "conference.videoSIPGWAvailabilityChanged",
   /**
    * Indicates that video SIP GW Session state changed.
    * @param {options} event - {
    *     {string} address,
-   *     {VideoSIPGWConstants} oldState,
-   *     {VideoSIPGWConstants} newState,
+   *     {VideoSIPGWStateConstants} oldState,
+   *     {VideoSIPGWStateConstants} newState,
    *     {string} displayName}
    * }.
    */

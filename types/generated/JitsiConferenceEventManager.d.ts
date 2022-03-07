@@ -15,7 +15,7 @@ export default class JitsiConferenceEventManager {
      * Setups event listeners related to conference.chatRoom
      */
     setupChatRoomListeners(): void;
-    chatRoomForwarder: any;
+    chatRoomForwarder: EventEmitterForwarder;
     /**
      * Setups event listeners related to conference.rtc
      */
@@ -37,3 +37,4 @@ export default class JitsiConferenceEventManager {
      */
     setupStatisticsListeners(): void;
 }
+import EventEmitterForwarder from "./modules/util/EventEmitterForwarder";

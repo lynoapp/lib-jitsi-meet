@@ -1,10 +1,11 @@
+/// <reference types="node" />
 declare var _default: JitsiMediaDevices;
 export default _default;
 /**
  * Media devices utilities for Jitsi.
  */
 declare class JitsiMediaDevices {
-    _eventEmitter: any;
+    _eventEmitter: EventEmitter;
     _permissions: {};
     _permissionsApiSupported: Promise<any>;
     /**
@@ -96,3 +97,4 @@ declare class JitsiMediaDevices {
      */
     emitEvent(event: string, ...args: any[]): void;
 }
+import EventEmitter from "events";

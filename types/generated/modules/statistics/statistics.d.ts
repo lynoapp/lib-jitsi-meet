@@ -1,3 +1,4 @@
+/// <reference types="node" />
 /**
  * The options to configure Statistics.
  * @typedef {Object} StatisticsOptions
@@ -51,7 +52,7 @@ declare class Statistics {
      * @type {Map<string, RTPStats}
      */
     rtpStatsMap: Map<string, RTPStats>;
-    eventEmitter: any;
+    eventEmitter: EventEmitter;
     xmpp: any;
     options: {};
     callStatsIntegrationEnabled: boolean;
@@ -346,6 +347,7 @@ export type StatisticsOptions = {
     configParams: string;
 };
 import RTPStats from "./RTPStatsCollector";
+import EventEmitter from "events";
 import CallStats from "./CallStats";
 import { PerformanceObserverStats } from "./PerformanceObserverStats";
 import analytics from "./AnalyticsAdapter";

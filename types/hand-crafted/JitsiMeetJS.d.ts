@@ -19,7 +19,7 @@ import JitsiLocalTrack from './modules/RTC/JitsiLocalTrack';
 import PrecallTest from './modules/statistics/PrecallTest';
 import AuthUtil from './modules/util/AuthUtil';
 import ScriptUtil from './modules/util/ScriptUtil';
-import { VideoSIPGWConstants } from './modules/videosipgw/VideoSIPGWConstants';
+import { VideoSIPGWStateConstants } from './modules/videosipgw/VideoSIPGWConstants';
 import AudioMixer from './modules/webaudio/AudioMixer';
 import { ConnectionQualityEvents } from './service/connectivity/ConnectionQualityEvents';
 import { E2ePingEvents } from './service/e2eping/E2ePingEvents';
@@ -71,7 +71,7 @@ export type JitsiMeetJSType = {
   constants: {
     participantConnectionStatus: typeof ParticipantConnectionStatus,
     recording: typeof RecordingConstants,
-    sipVideoGW: typeof VideoSIPGWConstants,
+    sipVideoGW: typeof VideoSIPGWStateConstants,
     transcriptionStatus: typeof JitsiTranscriptionStatus,
   };
 

@@ -1,3 +1,4 @@
+/// <reference types="node" />
 /**
  * The class implements basic event operations - add/remove listener.
  * NOTE: The purpose of the class is to be extended in order to add
@@ -30,3 +31,4 @@ export default class Listenable {
      */
     removeListener(eventName: string, listener: Function): void;
 }
+import EventEmitter from "events";

@@ -1,4 +1,4 @@
-import SignalingLayer, { PeerMediaInfo, SourceName } from '../../service/RTC/SignalingLayer';
+import SignalingLayer, { PeerMediaInfo, SourceInfo, SourceName } from '../../service/RTC/SignalingLayer';
 import ChatRoom from './ChatRoom';
 import { MediaType } from '../../service/RTC/MediaType';
 import { VideoType } from '../../service/RTC/VideoType';
@@ -9,7 +9,7 @@ declare class SignalingLayerImpl extends SignalingLayer {
   constructor();
   setChatRoom: ( room: ChatRoom ) => void;
   getPeerMediaInfo: ( owner: string, mediaType: MediaType ) => PeerMediaInfo | null;
-  getPeerSourceInfo: ( owner: string, sourceName: SourceName ) => unknown; // TODO:
+  getPeerSourceInfo: ( owner: string, sourceName: SourceName ) => SourceInfo;
   getSSRCOwner: ( ssrc: number ) => string | null;
   setSSRCOwner: ( ssrc: number, endpointId: string ) => void;
   setTrackMuteStatus: ( sourceName: SourceName, muted: boolean ) => boolean;

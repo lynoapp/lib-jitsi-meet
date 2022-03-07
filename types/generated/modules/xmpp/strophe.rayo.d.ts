@@ -22,7 +22,7 @@ export default class RayoConnectionPlugin extends RayoConnectionPlugin_base {
      * @param focusMucJid
      */
     dial(to: any, from: any, roomName: any, roomPass: any, focusMucJid: any): Promise<any>;
-    callResource: any;
+    callResource: string;
     /**
      *
      */

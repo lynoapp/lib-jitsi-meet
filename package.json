@@ -91,7 +91,7 @@
     "release": "yarn publish --access public .",
     "release:beta": "yarn release --tag beta",
     "watch": "webpack --config webpack.config.js --watch --mode development",
-    "types": "tsc JitsiMeetJS.js --declaration --allowJs --emitDeclarationOnly --outDir types/generated",
+    "types": "tsc JitsiMeetJS.js --declaration --allowJs --esModuleInterop --emitDeclarationOnly --outDir types/generated",
     "types:copy": "cpx \"./types/hand-crafted/**/*\" dist/esm --clean"
   },
   "module": "dist/esm/JitsiMeetJS.js",

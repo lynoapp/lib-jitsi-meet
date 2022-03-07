@@ -37,7 +37,10 @@ export default class JitsiRemoteTrack extends JitsiTrack {
      * will become interrupted.
      */
     _enteredForwardedSourcesTimestamp: number;
+    addEventListener: any;
     on: any;
+    removeEventListener: any;
+    off: any;
     hasBeenMuted: boolean;
     _containerHandlers: {};
     /**

@@ -15,12 +15,18 @@ export default class JitsiRemoteTrack extends JitsiTrack {
   setMute: ( value: boolean ) => void;
   isMuted: () => boolean;
   getParticipantId: () => string;
+  isLocal: () => false;
   getSSRC: () => number;
   /**
    * Returns the tracks source name
    */
   getSourceName(): SourceName;
+  toString: () => string;
   getTrackStreamingStatus: () => string;
+  _setTrackStreamingStatus: (newStatus: string) => void;
+  _clearEnteredForwardedSourcesTimestamp: () => void;
+  _setEnteredForwardedSourcesTimestamp: (timestamp: number) => void;
+  _getEnteredForwardedSourcesTimestamp: () => number | null;
 
   containerEvents: [ 'abort', 'canplay', 'canplaythrough', 'emptied', 'ended', 'error', 'loadeddata',
     'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'ratechange', 'stalled', 'suspend',

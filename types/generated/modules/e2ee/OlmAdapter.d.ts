@@ -25,6 +25,10 @@ export class OlmAdapter extends Listenable {
      * @returns {boolean}
      */
     static isSupported(): boolean;
+    /**
+     * Creates an adapter instance for the given conference.
+     */
+    constructor(conference: any);
     _conf: any;
     _init: Deferred;
     _key: boolean | Uint8Array;

@@ -1,10 +1,11 @@
+/// <reference types="node" />
 /**
  * Detect if there is no audio input on the current TraceAblePeerConnection selected track. The no audio
  * state must be constant for a configured amount of time in order for the event to be triggered.
  * @fires DetectionEvents.AUDIO_INPUT_STATE_CHANGE
  * @fires DetectionEvents.NO_AUDIO_INPUT
  */
-export default class NoAudioSignalDetection {
+export default class NoAudioSignalDetection extends EventEmitter {
     /**
      * Creates new NoAudioSignalDetection.
      *
@@ -53,3 +54,4 @@ export default class NoAudioSignalDetection {
     _trackAdded(track: JitsiTrack): void;
     _audioTrack: JitsiTrack;
 }
+import EventEmitter from "events";

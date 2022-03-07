@@ -1,3 +1,4 @@
+/// <reference types="node" />
 /**
  * Creates a JitsiConference object with the given name and properties.
  * Note: this constructor is not a part of the public API (objects should be
@@ -79,7 +80,7 @@ declare class JitsiConference {
     constructor(options: any);
     connection: any;
     xmpp: any;
-    eventEmitter: any;
+    eventEmitter: EventEmitter;
     options: any;
     eventManager: JitsiConferenceEventManager;
     participants: {};
@@ -1202,6 +1203,7 @@ declare namespace JitsiConference {
     function resourceCreator(jid: string, isAuthenticatedUser: boolean): string;
 }
 export default JitsiConference;
+import EventEmitter from "events";
 import JitsiConferenceEventManager from "./JitsiConferenceEventManager";
 import ComponentsVersions from "./modules/version/ComponentsVersions";
 import ConnectionQuality from "./modules/connectivity/ConnectionQuality";

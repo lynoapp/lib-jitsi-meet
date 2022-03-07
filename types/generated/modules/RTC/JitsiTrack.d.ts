@@ -1,7 +1,8 @@
+/// <reference types="node" />
 /**
  * Represents a single media track (either audio or video).
  */
-export default class JitsiTrack {
+export default class JitsiTrack extends EventEmitter {
     /**
      * Represents a single media track (either audio or video).
      * @constructor
@@ -15,9 +16,9 @@ export default class JitsiTrack {
      * @param videoType the VideoType for this track if any
      */
     constructor(conference: any, stream: any, track: any, streamInactiveHandler: any, trackMediaType: any, videoType: any);
-    addEventListener: any;
-    removeEventListener: any;
-    off: any;
+    addEventListener: (eventName: string | symbol, listener: (...args: any[]) => void) => JitsiTrack;
+    removeEventListener: (eventName: string | symbol, listener: (...args: any[]) => void) => JitsiTrack;
+    off: (eventName: string | symbol, listener: (...args: any[]) => void) => JitsiTrack;
     /**
      * Array with the HTML elements that are displaying the streams.
      * @type {Array}
@@ -237,3 +238,4 @@ export default class JitsiTrack {
      */
     setAudioOutput(audioOutputDeviceId: string): Promise<any>;
 }
+import EventEmitter from "events";

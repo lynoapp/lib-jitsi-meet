@@ -1,3 +1,4 @@
+/// <reference types="node" />
 /**
  * Connects an audio JitsiLocalTrack to a vadProcessor using WebAudio ScriptProcessorNode.
  * Once an object is created audio from the local track flows through the ScriptProcessorNode as raw PCM.
@@ -7,7 +8,7 @@
  *
  * @fires VAD_SCORE_PUBLISHED
  */
-export default class TrackVADEmitter {
+export default class TrackVADEmitter extends EventEmitter {
     /**
      * Factory method that sets up all the necessary components for the creation of the TrackVADEmitter.
      *
@@ -125,3 +126,4 @@ export default class TrackVADEmitter {
     destroy(): void;
     _destroyed: boolean;
 }
+import EventEmitter from "events";
