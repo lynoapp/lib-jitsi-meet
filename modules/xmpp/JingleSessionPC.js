@@ -4,12 +4,12 @@ import { $iq, Strophe } from 'strophe.js';
 
 import CodecMimeType from '../../service/RTC/CodecMimeType';
 import MediaDirection from '../../service/RTC/MediaDirection';
-import * as MediaType from '../../service/RTC/MediaType';
+import { MediaType } from '../../service/RTC/MediaType';
 import {
     ICE_DURATION,
     ICE_STATE_CHANGED
 } from '../../service/statistics/AnalyticsEvents';
-import XMPPEvents from '../../service/xmpp/XMPPEvents';
+import { XMPPEvents } from '../../service/xmpp/XMPPEvents';
 import { SS_DEFAULT_FRAME_RATE } from '../RTC/ScreenObtainer';
 import FeatureFlags from '../flags/FeatureFlags';
 import SDP from '../sdp/SDP';
@@ -1513,14 +1513,6 @@ export default class JingleSessionPC extends JingleSession {
         if (this._assertNotEnded()) {
             logger.info(`${this} setSenderVideoConstraint: ${maxFrameHeight}, sourceName: ${sourceName}`);
 
-            // RN doesn't support RTCRtpSenders yet, aggresive layer suspension on RN is implemented
-            // by changing the media direction in the SDP. This is applicable to jvb sessions only.
-            if (!this.isP2P && browser.isReactNative() && typeof maxFrameHeight !== 'undefined') {
-                const videoActive = maxFrameHeight > 0;
-
-                return this.setMediaTransferActive(true, videoActive);
-            }
-
             const jitsiLocalTrack = sourceName
                 ? this.rtc.getLocalVideoTracks().find(track => track.getSourceName() === sourceName)
                 : this.rtc.getLocalVideoTrack();
@@ -1875,17 +1867,9 @@ export default class JingleSessionPC extends JingleSession {
                     const mid = remoteSdp.media.findIndex(mLine => mLine.includes(line));
 
                     if (mid > -1) {
-                        const mediaType = SDPUtil.parseMLine(remoteSdp.media[mid].split('\r\n')[0])?.media;
-
+                        remoteSdp.media[mid] = remoteSdp.media[mid].replace(`${line}\r\n`, '');
                         if (this.isP2P) {
-                            // Do not remove ssrcs from m-line in p2p mode. If the ssrc is removed and added back to
-                            // the same m-line (on source-add), Chrome/Safari do not render the media even if it is
-                            // being received and decoded from the remote peer. The webrtc spec is not clear about
-                            // m-line re-use and the browser vendors have implemented this differently. Currently work
-                            // around this by changing the media direction, that should be enough for the browser to
-                            // fire the "removetrack" event on the associated MediaStream. Also, the current direction
-                            // of the transceiver for p2p will depend on whether a local sources is added or not. It
-                            // will be 'sendrecv' if the local source is present, 'sendonly' otherwise.
+                            const mediaType = SDPUtil.parseMLine(remoteSdp.media[mid].split('\r\n')[0])?.media;
                             const desiredDirection = this.peerconnection.getDesiredMediaDirection(mediaType, false);
 
                             [ MediaDirection.SENDRECV, MediaDirection.SENDONLY ].forEach(direction => {
@@ -1893,14 +1877,9 @@ export default class JingleSessionPC extends JingleSession {
                                     .replace(`a=${direction}`, `a=${desiredDirection}`);
                             });
                         } else {
-                            // Change the port to 0 to reject the m-line associated with the source. The rejected
-                            // m-lines are recycled when new ssrcs need to be added to the remote description.
-                            const port = SDPUtil.parseMLine(remoteSdp.media[mid].split('\r\n')[0])?.port;
-
-                            remoteSdp.media[mid] = remoteSdp.media[mid].replace(`${line}\r\n`, '');
-                            remoteSdp.media[mid] = remoteSdp.media[mid].replace(
-                                `m=${mediaType} ${port}`,
-                                `m=${mediaType} 0`);
+                            // Jvb connections will have direction set to 'sendonly' for the remote sources.
+                            remoteSdp.media[mid] = remoteSdp.media[mid]
+                                .replace(`a=${MediaDirection.SENDONLY}`, `a=${MediaDirection.INACTIVE}`);
                         }
                     }
                 });

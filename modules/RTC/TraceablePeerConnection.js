@@ -4,7 +4,7 @@ import transform from 'sdp-transform';
 
 import CodecMimeType from '../../service/RTC/CodecMimeType';
 import MediaDirection from '../../service/RTC/MediaDirection';
-import * as MediaType from '../../service/RTC/MediaType';
+import { MediaType } from '../../service/RTC/MediaType';
 import RTCEvents from '../../service/RTC/RTCEvents';
 import * as SignalingEvents from '../../service/RTC/SignalingEvents';
 import { getSourceNameForJitsiTrack } from '../../service/RTC/SignalingLayer';
@@ -1651,14 +1651,12 @@ TraceablePeerConnection.prototype.addTrack = function(track, isInitiator = false
 
     if (this._usesUnifiedPlan) {
         logger.debug(`${this} TPC.addTrack using unified plan`);
-        if (webrtcStream || !this.isP2P) {
-            try {
-                this.tpcUtils.addTrack(track, isInitiator);
-            } catch (error) {
-                logger.error(`${this} Adding track=${track} failed: ${error?.message}`);
+        try {
+            this.tpcUtils.addTrack(track, isInitiator);
+        } catch (error) {
+            logger.error(`${this} Adding track=${track} failed: ${error?.message}`);
 
-                return Promise.reject(error);
-            }
+            return Promise.reject(error);
         }
     } else {
         // Use addStream API for the plan-b case.
@@ -1736,7 +1734,7 @@ TraceablePeerConnection.prototype.addTrackUnmute = function(track) {
     }
 
     if (this._usesUnifiedPlan) {
-        return this.tpcUtils.replaceTrack(null, track).then(() => this.isP2P);
+        return this.tpcUtils.replaceTrack(null, track).then(() => false);
     }
 
     this._addStream(webRtcStream);
@@ -1980,8 +1978,8 @@ TraceablePeerConnection.prototype.replaceTrack = function(oldTrack, newTrack) {
                     ? Promise.resolve()
                     : this.tpcUtils.setEncodings(newTrack);
 
-                // Renegotiate only in the case of P2P. We rely on 'negotiationeeded' to be fired for JVB.
-                return configureEncodingsPromise.then(() => this.isP2P || negotiationNeeded);
+                // Force renegotiation only when the source is added for the first time.
+                return configureEncodingsPromise.then(() => negotiationNeeded);
             });
     }
 
@@ -2020,7 +2018,7 @@ TraceablePeerConnection.prototype.removeTrackMute = function(localTrack) {
     }
 
     if (this._usesUnifiedPlan) {
-        return this.tpcUtils.replaceTrack(localTrack, null);
+        return this.tpcUtils.replaceTrack(localTrack, null).then(() => false);
     }
 
     if (webRtcStream) {

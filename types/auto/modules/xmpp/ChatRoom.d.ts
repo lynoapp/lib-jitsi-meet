@@ -27,6 +27,8 @@ export default class ChatRoom extends Listenable {
      * @param {boolean} options.disableDiscoInfo - when set to {@code false} will skip disco info.
      * This is intended to be used only for lobby rooms.
      * @param {boolean} options.enableLobby - when set to {@code false} will skip creating lobby room.
+     * @param {boolean} options.hiddenFromRecorderFeatureEnabled - when set to {@code true} we will check identity tag
+     * for node presence.
      */
     constructor(connection: XmppConnection, jid: any, password: any, XMPP: any, options: any);
     xmpp: any;
@@ -55,7 +57,7 @@ export default class ChatRoom extends Listenable {
     connectionTimes: {};
     participantPropertyListener: any;
     locked: boolean;
-    transcriptionStatus: string;
+    transcriptionStatus: JitsiTranscriptionStatus.JitsiTranscriptionStatus;
     /**
      *
      */
@@ -291,7 +293,7 @@ export default class ChatRoom extends Listenable {
      * info or <tt>null</tt> either if there is no presence available or if
      * the media type given is invalid.
      */
-    getMediaPresenceInfo(endpointId: string, mediaType: typeof MediaType): PeerMediaInfo;
+    getMediaPresenceInfo(endpointId: string, mediaType: MediaType): any;
     /**
      * Returns the last presence advertised by a MUC member.
      * @param {string} mucNick
@@ -373,5 +375,5 @@ import Moderator from "./moderator";
 import Lobby from "./Lobby";
 import AVModeration from "./AVModeration";
 import BreakoutRooms from "./BreakoutRooms";
-import { Strophe } from "strophe.js";
-import * as MediaType from "../../service/RTC/MediaType";
+import * as JitsiTranscriptionStatus from "../../JitsiTranscriptionStatus";
+import { MediaType } from "../../service/RTC/MediaType";

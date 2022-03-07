@@ -2,7 +2,7 @@ import { getLogger } from '@jitsi/logger';
 import $ from 'jquery';
 import { Strophe } from 'strophe.js';
 
-import XMPPEvents from '../../service/xmpp/XMPPEvents';
+import { XMPPEvents } from '../../service/xmpp/XMPPEvents';
 
 import ChatRoom from './ChatRoom';
 import { ConnectionPluginListenable } from './ConnectionPlugin';

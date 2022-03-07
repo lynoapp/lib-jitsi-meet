@@ -2,7 +2,7 @@ import { getLogger } from '@jitsi/logger';
 import $ from 'jquery';
 import { $build } from 'strophe.js';
 
-import * as MediaType from '../../service/RTC/MediaType';
+import { MediaType } from '../../service/RTC/MediaType';
 import FeatureFlags from '../flags/FeatureFlags';
 
 const logger = getLogger(__filename);

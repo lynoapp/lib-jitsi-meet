@@ -84,7 +84,7 @@ export default class JitsiParticipant {
      * @returns {Array.<JitsiTrack>} an array of media tracks for this
      * participant, for given media type.
      */
-    getTracksByMediaType(mediaType: typeof MediaType): Array<JitsiTrack>;
+    getTracksByMediaType(mediaType: MediaType): Array<any>;
     /**
      * @returns {String} The ID of this participant.
      */
@@ -116,7 +116,13 @@ export default class JitsiParticipant {
      */
     isHidden(): boolean;
     /**
-     * @returns {Boolean} Wheter this participants replaces another participant
+     * @returns {Boolean} Whether this participant is a hidden participant. Some
+     * special system participants may want to join hidden (like for example the
+     * recorder).
+     */
+    isHiddenFromRecorder(): boolean;
+    /**
+     * @returns {Boolean} Whether this participant replaces another participant
      * from the meeting.
      */
     isReplacing(): boolean;
@@ -198,4 +204,4 @@ export default class JitsiParticipant {
     setBotType(newBotType: string): void;
     _botType: string;
 }
-import * as MediaType from "./service/RTC/MediaType";
+import { MediaType } from "./service/RTC/MediaType";

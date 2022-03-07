@@ -53,7 +53,7 @@ import {
 } from './modules/xmpp/xmpp';
 import BridgeVideoType from './service/RTC/BridgeVideoType';
 import CodecMimeType from './service/RTC/CodecMimeType';
-import * as MediaType from './service/RTC/MediaType';
+import { MediaType } from './service/RTC/MediaType';
 import RTCEvents from './service/RTC/RTCEvents';
 import { getSourceNameForJitsiTrack } from './service/RTC/SignalingLayer';
 import VideoType from './service/RTC/VideoType';
@@ -71,7 +71,7 @@ import {
     createJingleEvent,
     createP2PEvent
 } from './service/statistics/AnalyticsEvents';
-import XMPPEvents from './service/xmpp/XMPPEvents';
+import { XMPPEvents } from './service/xmpp/XMPPEvents';
 
 const logger = getLogger(__filename);
 
@@ -1613,6 +1613,14 @@ JitsiConference.prototype.getLastN = function() {
 };
 
 /**
+ * Obtains the forwarded sources list in this conference.
+ * @return {Array<string>|null}
+ */
+JitsiConference.prototype.getForwardedSources = function() {
+    return this.rtc.getForwardedSources();
+};
+
+/**
  * Selects a new value for "lastN". The requested amount of videos are going
  * to be delivered after the value is in effect. Set to -1 for unlimited or
  * all available videos.
@@ -2136,8 +2144,7 @@ JitsiConference.prototype.onRemoteTrackRemoved = function(removedTrack) {
                 // considered equal the result of splice can be ignored.
                 participant._tracks.splice(i, 1);
 
-                this.eventEmitter.emit(
-                    JitsiConferenceEvents.TRACK_REMOVED, removedTrack);
+                this.eventEmitter.emit(JitsiConferenceEvents.TRACK_REMOVED, removedTrack);
 
                 if (this.transcriber) {
                     this.transcriber.removeTrack(removedTrack);
