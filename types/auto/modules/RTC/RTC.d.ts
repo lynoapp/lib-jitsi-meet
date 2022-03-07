@@ -394,7 +394,7 @@ export default class RTC extends Listenable {
      *      by their media type if this argument is specified.
      * @return {Array<JitsiRemoteTrack>}
      */
-    getRemoteTracks(mediaType?: MediaType): Array<any>;
+    getRemoteTracks(mediaType?: MediaType): Array<JitsiRemoteTrack>;
     /**
      * Set mute for all local audio streams attached to the conference.
      * @param value The mute value.

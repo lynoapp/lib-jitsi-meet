@@ -293,7 +293,7 @@ export default class ChatRoom extends Listenable {
      * info or <tt>null</tt> either if there is no presence available or if
      * the media type given is invalid.
      */
-    getMediaPresenceInfo(endpointId: string, mediaType: MediaType): any;
+    getMediaPresenceInfo(endpointId: string, mediaType: MediaType): PeerMediaInfo;
     /**
      * Returns the last presence advertised by a MUC member.
      * @param {string} mucNick
@@ -376,4 +376,5 @@ import Lobby from "./Lobby";
 import AVModeration from "./AVModeration";
 import BreakoutRooms from "./BreakoutRooms";
 import * as JitsiTranscriptionStatus from "../../JitsiTranscriptionStatus";
+import { Strophe } from "strophe.js";
 import { MediaType } from "../../service/RTC/MediaType";

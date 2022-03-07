@@ -29,7 +29,7 @@ export default class JitsiRemoteTrack extends JitsiTrack {
     isP2P: boolean;
     _sourceName: string;
     _trackStreamingStatus: any;
-    _trackStreamingStatusImpl: TrackStreamingStatusImpl;
+    _trackStreamingStatusImpl: any;
     /**
      * This holds the timestamp indicating when remote video track entered forwarded sources set. Track entering
      * forwardedSources will have streaming status restoring and when we start receiving video will become active,
@@ -37,6 +37,10 @@ export default class JitsiRemoteTrack extends JitsiTrack {
      * will become interrupted.
      */
     _enteredForwardedSourcesTimestamp: number;
+    addEventListener: any;
+    on: any;
+    removeEventListener: any;
+    off: any;
     hasBeenMuted: boolean;
     _containerHandlers: {};
     /**
@@ -118,6 +122,14 @@ export default class JitsiRemoteTrack extends JitsiTrack {
      */
     _playCallback(): void;
     /**
+     * Attach time to first media tracker only if there is conference and only
+     * for the first element.
+     * @param container the HTML container which can be 'video' or 'audio'
+     * element.
+     * @private
+     */
+    private _attachTTFMTracker;
+    /**
      * An event handler for events triggered by the attached container.
      *
      * @param {string} type - The type of the event.
@@ -170,4 +182,3 @@ export default class JitsiRemoteTrack extends JitsiTrack {
     _getEnteredForwardedSourcesTimestamp(): number;
 }
 import JitsiTrack from "./JitsiTrack";
-import TrackStreamingStatusImpl from "../connectivity/TrackStreamingStatus";

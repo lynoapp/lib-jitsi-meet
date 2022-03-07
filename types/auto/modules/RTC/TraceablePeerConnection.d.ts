@@ -305,7 +305,7 @@ export default class TraceablePeerConnection {
      * @param {MediaType} [mediaType]
      * @return {Array<JitsiLocalTrack>}
      */
-    getLocalTracks(mediaType?: MediaType): Array<any>;
+    getLocalTracks(mediaType?: MediaType): Array<JitsiLocalTrack>;
     /**
      * Retrieves the local video tracks.
      *

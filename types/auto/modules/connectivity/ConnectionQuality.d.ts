@@ -59,7 +59,7 @@ export default class ConnectionQuality {
      * @param resolutionName {Resolution} the input resolution used by the camera.
      * @returns {*} the newly calculated connection quality.
      */
-    _calculateConnectionQuality(videoType: VideoType, isMuted: boolean, resolutionName: any): any;
+    _calculateConnectionQuality(videoType: VideoType, isMuted: boolean, resolutionName: Resolution): any;
     /**
      * Updates the localConnectionQuality value
      * @param values {number} the new value. Should be in [0, 100].
