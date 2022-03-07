@@ -3,7 +3,7 @@ import $ from 'jquery';
 import { $iq } from 'strophe.js';
 
 import { MediaType } from '../../service/RTC/MediaType';
-import VideoType from '../../service/RTC/VideoType';
+import { VideoType } from '../../service/RTC/VideoType';
 import RTC from '../RTC/RTC';
 
 import ProxyConnectionPC from './ProxyConnectionPC';
