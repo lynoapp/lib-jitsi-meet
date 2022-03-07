@@ -74,6 +74,7 @@ export default class JitsiConference {
   selectParticipant: ( participantId: string ) => void;
   selectParticipants: ( participantIds: string[] ) => void;
   getLastN: () => number;
+  getForwardedSources: () => string[] | null;
   setLastN: ( lastN: number ) => void;
   isInLastN: ( participantId: string ) => boolean;
   getParticipants: () => JitsiParticipant[];

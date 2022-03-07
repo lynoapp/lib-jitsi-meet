@@ -1,5 +1,14 @@
-export enum MediaType {
-  AUDIO = 'audio',
-  PRESENTER = 'presenter',
-  VIDEO = 'video'
+export declare enum MediaType {
+  /**
+   * The audio type.
+   */
+  AUDIO = "audio",
+  /**
+   * The presenter type.
+   */
+  PRESENTER = "presenter",
+  /**
+   * The video type.
+   */
+  VIDEO = "video"
 }

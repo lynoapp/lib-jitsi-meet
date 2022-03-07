@@ -182,6 +182,11 @@ export default class JingleSessionPC extends JingleSession {
      * @returns {boolean} {@code true} if operation or {@code false} otherwise.
      */
     private _assertNotEnded;
+    /**
+     * @inheritDoc
+     * @param {JingleSessionPCOptions} options  - a set of config options.
+     */
+    doInitialize(options: JingleSessionPCOptions): void;
     failICE: boolean;
     options: JingleSessionPCOptions;
     /**
@@ -226,6 +231,10 @@ export default class JingleSessionPC extends JingleSession {
      */
     sendIceFailedNotification(): void;
     /**
+     * {@inheritDoc}
+     */
+    addIceCandidates(elem: any): void;
+    /**
      *
      * @param contents
      */
@@ -240,6 +249,26 @@ export default class JingleSessionPC extends JingleSession {
      * Returns the video codec configured as the preferred codec on the peerconnection.
      */
     getConfiguredVideoCodec(): any;
+    /**
+     * Accepts incoming Jingle 'session-initiate' and should send
+     * 'session-accept' in result.
+     * @param jingleOffer jQuery selector pointing to the jingle element of
+     * the offer IQ
+     * @param success callback called when we accept incoming session
+     * successfully and receive RESULT packet to 'session-accept' sent.
+     * @param failure function(error) called if for any reason we fail to accept
+     * the incoming offer. 'error' argument can be used to log some details
+     * about the error.
+     * @param {Array<JitsiLocalTrack>} [localTracks] the optional list of
+     * the local tracks that will be added, before the offer/answer cycle
+     * executes. We allow the localTracks to optionally be passed in so that
+     * the addition of the local tracks and the processing of the initial offer
+     * can all be done atomically. We want to make sure that any other
+     * operations which originate in the XMPP Jingle messages related with
+     * this session to be executed with an assumption that the initial
+     * offer/answer cycle has been executed already.
+     */
+    acceptOffer(jingleOffer: any, success: any, failure: any, localTracks?: Array<JitsiLocalTrack>): void;
     /**
      * Creates an offer and sends Jingle 'session-initiate' to the remote peer.
      * @param {Array<JitsiLocalTrack>} localTracks the local tracks that will be
@@ -360,6 +389,10 @@ export default class JingleSessionPC extends JingleSession {
      * successful and rejected otherwise.
      */
     setSenderVideoConstraint(maxFrameHeight: number, sourceName?: string): Promise<any>;
+    /**
+     * @inheritDoc
+     */
+    terminate(success: any, failure: any, options: any): void;
     /**
      *
      * @param reasonCondition

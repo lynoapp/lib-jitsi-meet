@@ -18,6 +18,7 @@ export default class JitsiParticipant {
   getStatus: () => string;
   isModerator: () => boolean;
   isHidden: () => boolean;
+  isHiddenFromRecorder: () => boolean;
   isReplacing: () => boolean;
   isReplaced: () => boolean;
   isAudioMuted: () => boolean;

@@ -82,6 +82,18 @@ export default class SignalingLayerImpl extends SignalingLayer {
      */
     private _findEndpointSourceInfoForMediaType;
     /**
+     * @inheritDoc
+     */
+    getPeerMediaInfo(owner: any, mediaType: any): any;
+    /**
+     * @inheritDoc
+     */
+    getPeerSourceInfo(owner: any, sourceName: any): any;
+    /**
+     * @inheritDoc
+     */
+    getSSRCOwner(ssrc: any): string;
+    /**
      * Set an SSRC owner.
      * @param {number} ssrc an SSRC to be owned
      * @param {string} endpointId owner's ID (MUC nickname)
@@ -102,10 +114,11 @@ export default class SignalingLayerImpl extends SignalingLayer {
      * @param {VideoType} videoType - the new video type.
      * @returns {boolean}
      */
-    setTrackVideoType(sourceName: SourceName, videoType: {
-        CAMERA: string;
-        DESKTOP: string;
-    }): boolean;
+    setTrackVideoType(sourceName: SourceName, videoType: VideoType): boolean;
+    /**
+     * @inheritDoc
+     */
+    getTrackSourceName(ssrc: any): string;
     /**
      * Saves the source name for a track identified by it's ssrc.
      * @param {number} ssrc the ssrc of the target track.
@@ -115,3 +128,4 @@ export default class SignalingLayerImpl extends SignalingLayer {
     setTrackSourceName(ssrc: number, sourceName: SourceName): void;
 }
 import SignalingLayer from "../../service/RTC/SignalingLayer";
+import { VideoType } from "../../service/RTC/VideoType";

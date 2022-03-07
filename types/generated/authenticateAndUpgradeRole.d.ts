@@ -63,7 +63,7 @@ export type UpgradeRoleError = {
     /**
      * - One of XMPP error conditions
      * returned by Jicofo on authentication attempt. See
-     * {@link https ://xmpp.org/rfcs/rfc3920.html#streams-error}.
+     * {@link https://xmpp.org/rfcs/rfc3920.html#streams-error}.
      */
     authenticationError?: string;
     /**

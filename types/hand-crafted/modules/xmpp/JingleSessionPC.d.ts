@@ -4,11 +4,73 @@ import JitsiLocalTrack from '../RTC/JitsiLocalTrack';
 import { CodecMimeType } from '../../service/RTC/CodecMimeType';
 import JitsiRemoteTrack from '../RTC/JitsiRemoteTrack';
 
+export type JingleSessionPCOptions = {
+  /**
+   * - A/B testing related options (ask George).
+   */
+  abTesting: {
+      enableSuspendVideoTest: boolean;
+  };
+  /**
+   * - Described in the config.js[1].
+   */
+  disableH264: boolean;
+  /**
+   * - Described in the config.js[1].
+   */
+  disableRtx: boolean;
+  /**
+   * - Described in the config.js[1].
+   */
+  disableSimulcast: boolean;
+  /**
+   * - Set to true when the insertable streams constraints is to be enabled
+   * on the PeerConnection.
+   */
+  enableInsertableStreams: boolean;
+  /**
+   * - Described in the config.js[1].
+   */
+  enableLayerSuspension: boolean;
+  /**
+   * - it's an option used in the tests. Set to
+   * <tt>true</tt> to block any real candidates and make the ICE fail.
+   */
+  failICE: boolean;
+  /**
+   * - Described in the config.js[1].
+   */
+  gatherStats: boolean;
+  /**
+   * - Peer to peer related options (FIXME those could be
+   * fetched from config.p2p on the upper level).
+   */
+  p2p: object;
+  /**
+   * - Described in the config.js[1].
+   */
+  preferH264: boolean;
+  /**
+   * - Testing and/or experimental options.
+   */
+  testing: object;
+  /**
+   * - Described in the config.js[1].
+   */
+  webrtcIceUdpDisable: boolean;
+  /**
+   * - Described in the config.js[1].
+   *
+   * [1]: https://github.com/jitsi/jitsi-meet/blob/master/config.js
+   */
+  webrtcIceTcpDisable: boolean;
+};
+
 export default class JingleSessionPC extends JingleSession {
   static parseVideoSenders: ( jingleContents: JQuery ) => string | null;
   static parseMaxFrameHeight: ( jingleContents: JQuery ) => number | null;
   constructor( sid: string, localJid: string, remoteJid: string, connection: XmppConnection, mediaConstraints: unknown, pcConfig: unknown, isP2P: boolean, isInitiator: boolean ); // TODO:
-  doInitialize: ( options: {} ) => void;
+  doInitialize: ( options: JingleSessionPCOptions ) => void;
   getRemoteRecvMaxFrameHeight: () => number | undefined;
   sendIceCandidate: ( candidate: RTCIceCandidate ) => void;
   sendIceCandidates: ( candidates: RTCIceCandidate[] ) => void;
