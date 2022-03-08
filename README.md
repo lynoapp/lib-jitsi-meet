@@ -36,28 +36,25 @@ import `@solyd/lib-jitsi-meet/dist/umd/lib-jitsi-meet.min.js`
 
 ## Building the sources
 
-NOTE: you need Node.js >= 12 and npm >= 7
+NOTE: you need Node.js >= 14, npm >= 7 and yarn >= 1
 
 To build the library, just type:
-
 ```bash
 yarn install
 yarn build
 ```
-npm install
-npm run build
-```
+
 To lint:
 ```
-npm run lint
+yarn lint
 ```
 and to run unit tests:
 ```
-npm test
+yarn test
 ```
 if you need to rebuild lib-jitsi-meet.min.js
 ```
-npm run build
+yarn build
 ```
 
 ### Release
